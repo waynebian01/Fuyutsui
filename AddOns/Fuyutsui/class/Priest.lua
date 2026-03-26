@@ -33,6 +33,8 @@ local staticSpells = {
     [26] = "心灵尖啸",
     [27] = "[@cursor]群体驱散",
     [28] = "[@cursor]真言术：障",
+    [29] = "神圣赞美诗",
+    [30] = "光晕",
 }
 
 function fu.CreateClassMacro()
@@ -47,6 +49,29 @@ function fu.updateSpellSuccess(spellID)
             fu.blocks.auras.entropicRift.expirationTime = fu.blocks.auras.entropicRift.expirationTime + 1
             fu.blocks.auras.entropicRift.castCount = fu.blocks.auras.entropicRift.castCount + 1
         end
+    elseif spellID == 472433 then -- 福音
+        fu.blocks.auras.evangelism.expirationTime = GetTime() + fu.blocks.auras.evangelism.duration
+        fu.blocks.auras.evangelism.applications = 2
+    elseif spellID == 194509 and fu.blocks.auras.evangelism.expirationTime then -- 真言术：耀
+        fu.blocks.auras.evangelism.applications = fu.blocks.auras.evangelism.applications - 1
+    elseif spellID == 596 and fu.blocks.auras.lightweaver.expirationTime then
+        fu.blocks.auras.lightweaver.applications = math.max(0, fu.blocks.auras.lightweaver.applications - 1)
+        creat(fu.blocks.auras.lightweaver.index2, fu.blocks.auras.lightweaver.applications / 255)
+    elseif spellID == 232633 and fu.blocks.auras.evangelism.expirationTime then
+        fu.blocks.auras.evangelism.applications = math.max(0, fu.blocks.auras.evangelism.applications - 1)
+        creat(fu.blocks.auras.evangelism.index2, fu.blocks.auras.evangelism.applications / 255)
+    end
+end
+
+-- 更新法术冷却更新
+function fu.updateSpellCooldownByEvent(spellId)
+    if not fu.blocks or not fu.blocks.auras then return end
+    if spellId == 390993 and fu.blocks.auras.lightweaver then
+        fu.blocks.auras.lightweaver.expirationTime = GetTime() + fu.blocks.auras.lightweaver.duration
+        fu.blocks.auras.lightweaver.applications = math.min(4, fu.blocks.auras.lightweaver.applications + 1)
+        creat(fu.blocks.auras.lightweaver.index2, fu.blocks.auras.lightweaver.applications / 255)
+    elseif spellId == 1262766 and fu.blocks.auras.benediction then
+        fu.blocks.auras.benediction.expirationTime = GetTime() + fu.blocks.auras.benediction.duration
     end
 end
 
@@ -64,13 +89,13 @@ end
 function fu.updateSpellIcon(spellId)
     if not fu.blocks.auras then return end
     local overrideSpellID = C_Spell.GetOverrideSpell(spellId)
-    if spellId == 585 then
+    if spellId == 585 and fu.blocks.auras.entropicRift then
         if overrideSpellID == 450215 then
             fu.blocks.auras.entropicRift.expirationTime = GetTime() + fu.blocks.auras.entropicRift.duration
         elseif overrideSpellID == 585 then
             fu.blocks.auras.entropicRift.expirationTime = nil
         end
-    elseif spellId == 2061 then
+    elseif spellId == 2061 and fu.blocks.auras.shadowMend then
         if overrideSpellID == 186263 then
             fu.blocks.auras.shadowMend.expirationTime = GetTime() + fu.blocks.auras.shadowMend.duration
         elseif overrideSpellID == 2061 then
@@ -155,6 +180,14 @@ function fu.updateSpecInfo()
                     duration = 15,
                     expirationTime = nil,
                 },
+                evangelism = {
+                    name = "福音",
+                    index = 37,
+                    remaining = 0,
+                    duration = 120,
+                    applications = 0,
+                    expirationTime = nil,
+                },
             },
             spell_cd = {
                 [17] = { index = 23, spellId = 17, name = "真言术：盾" },
@@ -190,6 +223,75 @@ function fu.updateSpecInfo()
             [589] = 4,   -- 暗言术：痛
             [21562] = 5, -- 真言术：韧
             [47540] = 6, -- 苦修
+        }
+    elseif specIndex == 2 then
+        fu.powerType = "MANA"
+        fu.blocks = {
+            assistant = 11,
+            target_valid = 12,
+            group_type = 13,
+            members_count = 14,
+            hero_talent = 15,
+            encounterID = 16,
+            difficultyID = 17,
+            failedSpell = 18,
+            auras = {
+                lightweaver = {
+                    name = "织光者",
+                    index = 19,
+                    index2 = 20,
+                    remaining = 0,
+                    duration = 20,
+                    applications = 0,
+                    expirationTime = nil,
+                },
+                lightBurst = {
+                    name = "圣光涌动",
+                    index = 21,
+                    remaining = 0,
+                    duration = 20,
+                    expirationTime = nil,
+                },
+                benediction = {
+                    name = "祈福",
+                    index = 22,
+                    remaining = 0,
+                    duration = 30,
+                    expirationTime = nil,
+                },
+            },
+            spell_cd = {
+                [33076] = { index = 23, name = "愈合祷言" },
+                [2050] = { index = 24, name = "圣言术：静" },
+                [88625] = { index = 26, name = "圣言术：罚" },
+                [527] = { index = 27, name = "纯净术" },
+                [19236] = { index = 28, name = "绝望祷言" },
+                [200183] = { index = 29, name = "神圣化身", failed = true },
+                [120517] = { index = 30, name = "光晕", failed = true },
+                [64843] = { index = 31, name = "神圣赞美诗", failed = true },
+                [14914] = { index = 32, name = "神圣之火" },
+                [8122] = { index = 33, name = "心灵尖啸", failed = true },
+                [32375] = { index = 34, name = "群体驱散", failed = true },
+                [232633] = { index = 35, name = "奥术洪流" },
+            },
+            spell_charge = {
+                [2050] = { index = 25, name = "圣言术：静" }
+            },
+        }
+        fu.group_blocks = {
+            unit_start = 40,
+            block_num = 5,
+            healthPercent = 1,
+            role = 2,
+            dispel = 3,
+            aura = { [4] = { 41635 }, [5] = { 139 }, },
+        }
+        fu.assistant_spells = {
+            [88625] = 1,  -- 圣言术：罚
+            [585] = 2,    -- 惩击
+            [14914] = 3,  -- 神圣之火
+            [132157] = 4, -- 神圣新星
+            [21562] = 5,  -- 真言术：韧
         }
     elseif specIndex == 3 then
         fu.powerType = "INSANITY"
@@ -237,6 +339,8 @@ function fu.updateHeroTalent()
             hero_talent = 1
         elseif C_SpellBook.IsSpellKnown(447444) then
             hero_talent = 2
+        elseif C_SpellBook.IsSpellKnown(120517) then
+            hero_talent = 3
         end
         creat(fu.blocks.hero_talent, hero_talent / 255)
     end
@@ -255,6 +359,8 @@ function fu.updateOnUpdate()
             end
         else
             aura.remaining = 0
+            if aura.applications then aura.applications = 0 end
+            if aura.index2 then creat(aura.index2, 0) end
             creat(aura.index, 0)
         end
         if aura.applications and aura.applications <= 0 then
