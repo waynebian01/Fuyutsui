@@ -242,6 +242,7 @@ function fu.updateSpecInfo()
             encounterID = 16,
             difficultyID = 17,
             failedSpell = 18,
+            castingSpell = 36,
             auras = {
                 lightweaver = {
                     name = "织光者",
