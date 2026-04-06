@@ -17,6 +17,14 @@ local curve80 = fu.creatColorCurve(1, 80)
 local curve255 = fu.creatColorCurve(255, 255)
 local curve10 = fu.creatColorCurve(10, 100)
 
+-- 单体读条治疗法术
+-- 施法目标的生命值倍率,防止对同一个目标重复施法,导致过量治疗
+local helpfulSpells = {
+    [2061] = curve115,    -- 快速治疗
+    [1262763] = curve115, -- 祈福
+    [82326] = curve140,   -- 圣光术
+    [19750] = curve115,   -- 圣光闪现
+}
 -- ================================================================
 --                          玩家信息
 -- ================================================================
@@ -42,7 +50,7 @@ local function getPlayerInfo()
     state.powerType = fu.powerType or nil -- 更新能量类型
     group_blocks = fu.group_blocks        -- 更新队伍块
     blocks = fu.blocks                    -- 更新色块
-
+    print(fu.classId)
     -- 创建固定色块
     creat(fu.fixed_blocks.anchor, 0)
     creat(fu.fixed_blocks.class, fu.classId / 255)
@@ -144,11 +152,11 @@ end
 
 local function updatePlayerCasting(spellId)
     if blocks then
-        if blocks.castUnit then
+        if blocks.castingUnit then
             if state.castTargetIndex then
-                creat(blocks.castUnit, state.castTargetIndex / 255)
+                creat(blocks.castingUnit, state.castTargetIndex / 255)
             else
-                creat(blocks.castUnit, 0)
+                creat(blocks.castingUnit, 0)
             end
         end
         if blocks.castingSpell then
@@ -200,22 +208,28 @@ local function updatePlayerStagger()
     end
 end
 
+
+
 ---@param spellID number 光环ID,
 -- 通过事件 "SPELL_UPDATE_COOLDOWN"获取光环,
 -- 更新光环的结束时间, 并更新光环的层数
 local function updateAuraBySpellCooldown(spellID)
     local updateAura = fu.updateAuras.bySpellCooldown[spellID]
     if not updateAura then return end
-    local aura = fu.auras[updateAura.name]
-    if not aura then return end
-    if aura.duration then
-        aura.expirationTime = GetTime() + aura.duration
-    end
-    if aura.count and updateAura.step then
-        if updateAura.step > 0 then
-            aura.count = math.min(aura.countMax, aura.count + updateAura.step)
-        else
-            aura.count = math.max(aura.countMin, aura.count + updateAura.step)
+    if type(updateAura) == "table" then
+        for _, info in pairs(updateAura) do
+            local aura = fu.auras[info.name]
+            if not aura then return end
+            if aura.duration then
+                aura.expirationTime = GetTime() + aura.duration
+            end
+            if aura.count and info.step then
+                if info.step > 0 then
+                    aura.count = math.min(aura.countMax, aura.count + info.step)
+                else
+                    aura.count = math.max(aura.countMin, aura.count + info.step)
+                end
+            end
         end
     end
 end
@@ -476,8 +490,8 @@ end
 -- 更新法术失败
 local function updateSpellFailed(spellID)
     if not blocks or not blocks.failedSpell then return end
-    if blocks.spell_cd[spellID] and blocks.spell_cd[spellID].failed then
-        creat(blocks.failedSpell, blocks.spell_cd[spellID].index / 255)
+    if fu.failedSpells[spellID] then
+        creat(blocks.failedSpell, fu.failedSpells[spellID] / 255)
         if failedSpellTimer then
             failedSpellTimer:Cancel()
             failedSpellTimer = nil
@@ -671,11 +685,7 @@ local function updateUnitCurve(unit)
     end)
 end
 
--- 单体读条治疗法术
-local helpfulSpells = {
-    [2061] = curve115,    -- 快速治疗
-    [1262763] = curve115, -- 祈福
-}
+
 
 local function updateCastUnitCurve(spellID, boolean)
     local unit = state.castTargetUnit
@@ -700,7 +710,7 @@ local function OnUpdateUnitAura()
     if not group_blocks then return end
     for unit, data in pairs(group) do
         for i, spellIds in pairs(group_blocks.aura) do
-            local index = group_blocks.unit_start + data.index * group_blocks.block_num + i
+            local index = group_blocks.unit_start + (data.index - 1) * group_blocks.block_num + i
             local hasAura = false
             for j, spellId in ipairs(spellIds) do
                 local aura = C_UnitAuras.GetUnitAuraBySpellID(unit, spellId)
@@ -724,7 +734,7 @@ local function OnUpdateUnitAura()
     if fu.group_blocks.rejuv then
         for unit, data in pairs(fu.group) do
             local has_rejuv_count = 0
-            local index = fu.group_blocks.unit_start + data.index * fu.group_blocks.block_num + fu.group_blocks.rejuv
+            local index = fu.group_blocks.unit_start + (data.index - 1) * fu.group_blocks.block_num + fu.group_blocks.rejuv
             local rejuv_aura = C_UnitAuras.GetUnitAuraBySpellID(unit, 774)
             local rejuv2_aura = C_UnitAuras.GetUnitAuraBySpellID(unit, 155777)
             if rejuv_aura and rejuv_aura.sourceUnit == "player" then
@@ -816,6 +826,7 @@ frame:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end
 
 frame:RegisterEvent("PLAYER_LOGIN")
 function frame:PLAYER_LOGIN()
+    SetCVar("ActionButtonUseKeyDown", 1)
     getPlayerInfo()
     updatePlayerState()
     updatePlayerCombat()
@@ -1082,6 +1093,8 @@ end
 
 frame:RegisterEvent("SPELL_UPDATE_COOLDOWN") -- 法术冷却更新
 function frame:SPELL_UPDATE_COOLDOWN(spellID)
+    print(spellID, C_Spell.GetSpellName(spellID))
+
     updateAuraBySpellCooldown(spellID)
 end
 
