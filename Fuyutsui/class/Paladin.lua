@@ -40,15 +40,15 @@ function fu.updateSpecInfo()
             spell_cd = {
                 [20473] = { index = 21, spellId = 20473, name = "神圣震击" },
                 [4987] = { index = 22, spellId = 4987, name = "清洁术" },
-                [115750] = { index = 23, spellId = 115750, name = "盲目之光", failed = true },
+                [115750] = { index = 23, spellId = 115750, name = "盲目之光" },
                 [275773] = { index = 24, spellId = 275773, name = "审判" },
                 [375576] = { index = 25, spellId = 375576, name = "圣洁鸣钟" },
                 [114165] = { index = 26, spellId = 114165, name = "神圣棱镜" },
-                [31821] = { index = 27, spellId = 31821, name = "光环掌握", failed = true },
+                [31821] = { index = 27, spellId = 31821, name = "光环掌握" },
                 [6940] = { index = 28, spellId = 6940, name = "牺牲祝福" },
-                [1044] = { index = 29, spellId = 1044, name = "自由祝福", failed = true },
-                [853] = { index = 30, spellId = 853, name = "制裁之锤", failed = true },
-                [1022] = { index = 31, spellId = 1022, name = "保护祝福", failed = true },
+                [1044] = { index = 29, spellId = 1044, name = "自由祝福" },
+                [853] = { index = 30, spellId = 853, name = "制裁之锤" },
+                [1022] = { index = 31, spellId = 1022, name = "保护祝福" },
                 [633] = { index = 32, spellId = 633, name = "圣疗术" },
             },
             spell_charge = {
@@ -66,8 +66,6 @@ function fu.updateSpecInfo()
                 [5] = { 1244893 },       -- 救世道标
                 [6] = { 53563, 156910 }, -- 圣光道标, 信仰道标
             },
-        }
-        fu.assistant_spells = {
         }
     elseif specIndex == 2 then
         fu.HarmfulSpellId = 275779
@@ -106,13 +104,13 @@ function fu.updateSpecInfo()
             },
             spell_cd = {
                 [213644] = { index = 21, spellId = 213644, name = "清毒术" },
-                [115750] = { index = 22, spellId = 115750, name = "盲目之光", failed = true },
+                [115750] = { index = 22, spellId = 115750, name = "盲目之光" },
                 [275779] = { index = 23, spellId = 275779, name = "审判" },
                 [375576] = { index = 24, spellId = 375576, name = "圣洁鸣钟" },
                 [6940] = { index = 25, spellId = 6940, name = "牺牲祝福" },
-                [1044] = { index = 26, spellId = 1044, name = "自由祝福", failed = true },
-                [853] = { index = 27, spellId = 853, name = "制裁之锤", failed = true },
-                [1022] = { index = 28, spellId = 1022, name = "保护祝福", failed = true },
+                [1044] = { index = 26, spellId = 1044, name = "自由祝福" },
+                [853] = { index = 27, spellId = 853, name = "制裁之锤" },
+                [1022] = { index = 28, spellId = 1022, name = "保护祝福" },
                 [432459] = { index = 29, spellId = 432459, name = "神圣壁垒" },
                 [31935] = { index = 31, spellId = 31935, name = "复仇者之盾" },
                 [26573] = { index = 32, spellId = 26573, name = "奉献" },
@@ -122,14 +120,6 @@ function fu.updateSpecInfo()
             spell_charge = {
                 [432459] = { index = 30, spellId = 432459, name = "神圣壁垒" },
             },
-        }
-        fu.assistant_spells = {
-            [375576] = 1, -- 圣洁鸣钟
-            [31935] = 2,  -- 复仇者之盾
-            [26573] = 3,  -- 奉献
-            [275779] = 4, -- 审判
-            [53600] = 5,  -- 正义盾击
-            [204019] = 6, -- 祝福之锤
         }
     elseif specIndex == 3 then
         fu.HarmfulSpellId = 20271
@@ -148,13 +138,13 @@ function fu.updateSpecInfo()
             },
             spell_cd = {
                 [213644] = { index = 31, spellId = 213644, name = "清毒术" },
-                [115750] = { index = 32, spellId = 115750, name = "盲目之光", failed = true },
+                [115750] = { index = 32, spellId = 115750, name = "盲目之光" },
                 [20271] = { index = 33, spellId = 20271, name = "审判" },
                 [375576] = { index = 34, spellId = 375576, name = "圣洁鸣钟" },
                 [6940] = { index = 35, spellId = 6940, name = "牺牲祝福" },
-                [1044] = { index = 36, spellId = 1044, name = "自由祝福", failed = true },
-                [853] = { index = 37, spellId = 853, name = "制裁之锤", failed = true },
-                [1022] = { index = 38, spellId = 1022, name = "保护祝福", failed = true },
+                [1044] = { index = 36, spellId = 1044, name = "自由祝福" },
+                [853] = { index = 37, spellId = 853, name = "制裁之锤" },
+                [1022] = { index = 38, spellId = 1022, name = "保护祝福" },
                 [184575] = { index = 39, spellId = 184575, name = "公正之剑" },
                 [343527] = { index = 40, spellId = 343527, name = "处决宣判" },
                 [255937] = { index = 41, spellId = 255937, name = "灰烬觉醒" },
@@ -162,17 +152,6 @@ function fu.updateSpecInfo()
             spell_charge = {
                 [20271] = { index = 42, spellId = 20271, name = "审判充能" },
             },
-        }
-        fu.assistant_spells = {
-            [184575] = 1, -- 公正之剑
-            [375576] = 2, -- 圣洁鸣钟
-            [20271] = 3,  -- 审判
-            [383328] = 4, -- 最终审判
-            [255937] = 5, -- 灰烬觉醒
-            [53385] = 6,  -- 神圣风暴
-            [427453] = 7, -- 圣光之锤(灰烬觉醒)
-            [24275] = 8,  -- 愤怒之锤(审判)
-            [343527] = 9, -- 处决宣判
         }
     end
 end
