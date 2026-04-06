@@ -74,27 +74,27 @@ def run_deathknight_logic(state_dict, spec_name):
         if not 目标有效:
             current_step = "目标无效,不执行任何操作"
             return None, current_step, unit_info
-        if 一键辅助 == 1:
+        if 一键辅助 == 9:
             current_step = "施放 亡者复生-一键"
             action_hotkey = get_hotkey(0, "亡者复生")
+        elif 一键辅助 == 14:
+            current_step = "施放 爆发-一键"
+            action_hotkey = get_hotkey(0, "爆发")
+        elif 一键辅助 == 16:
+            current_step = "施放 腐化 一键辅助"
+            action_hotkey = get_hotkey(0, "腐化")
         elif 黑暗援助 > 0 and 生命值 <= 80:
             current_step = "施放 灵界打击"
             action_hotkey = get_hotkey(0, "灵界打击")
         elif 生命值 <= 30 and 能量值 >= 40:
             current_step = "施放 灵界打击"
             action_hotkey = get_hotkey(0, "灵界打击")
-        elif 一键辅助 == 6:
-            current_step = "施放 爆发-一键"
-            action_hotkey = get_hotkey(0, "爆发")
         elif 黑暗突变cd == 0:
             current_step = "施放 黑暗突变-cd好了"
             action_hotkey = get_hotkey(0, "黑暗突变")
         elif 灵魂收割cd == 0 and state_dict.get("目标生命值") < 20:
             current_step = "施放 灵魂收割"
             action_hotkey = get_hotkey(0, "灵魂收割")
-        elif 一键辅助 == 16:
-            current_step = "施放 腐化 一键辅助"
-            action_hotkey = get_hotkey(0, "腐化")
         elif  腐化cd < 1:
             current_step = "施放 腐化-快好了"
             action_hotkey = get_hotkey(0, "腐化")
