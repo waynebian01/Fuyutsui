@@ -1093,8 +1093,6 @@ end
 
 frame:RegisterEvent("SPELL_UPDATE_COOLDOWN") -- 法术冷却更新
 function frame:SPELL_UPDATE_COOLDOWN(spellID)
-    print(spellID, C_Spell.GetSpellName(spellID))
-
     updateAuraBySpellCooldown(spellID)
 end
 

@@ -670,6 +670,24 @@ def get_vk(key_str):
     return _get_vk(key_str)
 
 
+def is_modifier_pressed():
+    """
+    检查是否按下了 Shift、Ctrl 或 Alt 修饰键中的任意一个。
+    返回 True 表示有修饰键被按下，应该暂停发送按键。
+    """
+    # 虚拟键码：Shift=0x10, Ctrl=0x11, Alt=0x12
+    VK_SHIFT = 0x10
+    VK_CONTROL = 0x11
+    VK_MENU = 0x12  # Alt键
+    
+    # GetAsyncKeyState 返回值如果最高位为1，表示按键被按下
+    return (
+        (ctypes.windll.user32.GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0 or
+        (ctypes.windll.user32.GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0 or
+        (ctypes.windll.user32.GetAsyncKeyState(VK_MENU) & 0x8000) != 0
+    )
+
+
 def send_key_to_wow(keys_str, window_title="魔兽世界"):
     """
     向指定窗口后台发送按键（不要求窗口在前台）。
@@ -677,9 +695,15 @@ def send_key_to_wow(keys_str, window_title="魔兽世界"):
     参数 window_title: 目标窗口标题，默认 "魔兽世界"。
     找到窗口则发送并返回 True，否则返回 False。
     注意：部分游戏使用 DirectInput/原始输入，可能不响应 PostMessage，此时需另用驱动或前台模拟。
+    注意：如果按下了 Shift、Ctrl 或 Alt 修饰键，将暂停发送按键。
     """
     if not keys_str:
         return False
+    
+    # 检查是否按下了修饰键，如果是则暂停发送
+    if is_modifier_pressed():
+        return False
+    
     mods, main_key = _parse_hotkey(keys_str)
     vk_main = _get_vk(main_key)
     if vk_main is None:
