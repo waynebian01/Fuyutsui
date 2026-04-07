@@ -76,6 +76,7 @@ _class_id = None
 _spec_name = None
 _spec_id = None
 _current_step = ""  # 当前步骤，每次逻辑循环都会更新
+_step_history = []  # 步骤历史记录，最多保存10条
 _unit_info = {}  # 单位信息，供 GUI 显示
 
 _CONFIG_CACHE = None
@@ -146,10 +147,11 @@ def get_class_spec_view_data(class_id, spec_id):
 
 def _run_priest_loop():
     """后台运行的全职业主循环（根据职业/专精自动适配）"""
-    global _logic_enabled, _state_dict, _class_name, _class_id, _spec_name, _spec_id, _current_step, _unit_info, _send_mode, _click_pending
+    global _logic_enabled, _state_dict, _class_name, _class_id, _spec_name, _spec_id, _current_step, _step_history, _unit_info, _send_mode, _click_pending
     prev_pressed = False
     prev_vk = _toggle_vk
     last_logic_time = 0.0
+    last_step = None
 
     while True:
         if _binding_key_mode:
@@ -227,6 +229,13 @@ def _run_priest_loop():
             time.sleep(TOGGLE_INTERVAL)
             continue
 
+        # 检查是否按下了修饰键（Shift、Ctrl、Alt），如果是则暂停
+        from utils import is_modifier_pressed
+        if is_modifier_pressed():
+            _current_step = "修饰键按下，暂停发送"
+            time.sleep(TOGGLE_INTERVAL)
+            continue
+
         sd = _state_dict
         if not sd or not sd.get("有效性"):
             _current_step = "等待游戏状态"
@@ -241,6 +250,15 @@ def _run_priest_loop():
 
         logic_func = LOGIC_FUNCS_BY_CLASS.get(class_id, _default_logic)
         action_hotkey, _current_step, unit_info_update = logic_func(state_dict, spec_name)
+        
+        # 更新步骤历史记录（只在步骤变化时添加）
+        if _current_step != last_step and _current_step != "无操作":
+            with _state_lock:
+                _step_history.insert(0, _current_step)
+                if len(_step_history) > 10:
+                    _step_history.pop()
+            last_step = _current_step
+        
         if unit_info_update:
             with _state_lock:
                 _unit_info = unit_info_update
@@ -768,7 +786,15 @@ def create_gui():
             status_vars[k] = lbl
 
     action_label = ctk.CTkLabel(status_frame, text="当前步骤: -", font=("Microsoft YaHei", 12), text_color=FG_LIGHT)
-    action_label.pack(anchor="w", padx=12, pady=(8, 10))
+    action_label.pack(anchor="w", padx=12, pady=(8, 4))
+
+    # ---- 步骤历史 ----
+    history_frame = ctk.CTkFrame(status_frame, fg_color="transparent")
+    history_frame.pack(fill="x", padx=12, pady=(4, 10))
+    ctk.CTkLabel(history_frame, text="历史步骤:", font=("Microsoft YaHei", 11), text_color=FG_DIM).pack(anchor="w")
+    history_textbox = ctk.CTkTextbox(history_frame, height=120, font=("Microsoft YaHei", 10), text_color=FG_DIM, fg_color="transparent", border_width=0)
+    history_textbox.pack(fill="x", pady=(2, 0))
+    history_textbox.configure(state="disabled")
 
     # ---- 技能冷却 ----
     cooldown_frame = ctk.CTkFrame(content_frame, fg_color=BG_FRAME, corner_radius=8)
@@ -857,6 +883,17 @@ def create_gui():
             status_vars[k].configure(text=txt, text_color=GREEN if v is True else (RED if v is False else FG_LIGHT))
 
         action_label.configure(text=f"当前步骤: {_current_step}")
+
+        # 更新历史步骤显示（每行一条）
+        with _state_lock:
+            if len(_step_history) > 1:
+                history_lines = "\n".join([f"  {i+1}. {step}" for i, step in enumerate(_step_history[1:])])
+            else:
+                history_lines = "  -"
+        history_textbox.configure(state="normal")
+        history_textbox.delete("1.0", "end")
+        history_textbox.insert("end", history_lines)
+        history_textbox.configure(state="disabled")
 
         root.after(GUI_UPDATE_MS, update_display)
 

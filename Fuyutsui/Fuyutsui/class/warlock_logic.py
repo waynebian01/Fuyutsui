@@ -35,17 +35,17 @@ def run_warlock_logic(state_dict, spec_name):
         #    current_step = "施放 内爆"
         #    action_hotkey = get_hotkey(0, "内爆")
         elif combat and target_valid:
-            if spells.get("魔典：邪能破坏者") == 0 and state_dict.get("法术封锁", -1) == 1:
-                current_step = "施放 魔典：邪能破坏者"
+            if spells.get("魔典：邪能破坏者") == 0 and state_dict.get("法术封锁", -1) == 1 and state_dict.get("灵魂碎片", -1) >= 1:
+                current_step = "施放 逻辑-魔典：邪能破坏者"
                 action_hotkey = get_hotkey(0, "魔典：邪能破坏者")
             elif state_dict.get("小鬼数量", 0) >= 6 and spells.get("内爆") == 0:
-                current_step = "施放 内爆"
+                current_step = "施放 逻辑-内爆"
                 action_hotkey = get_hotkey(0, "内爆")
             elif state_dict.get("施法技能", -1) == 18 and state_dict.get("灵魂碎片", -1) == 5:
-                current_step = "施放 古尔丹之手"
+                current_step = "施放 逻辑-古尔丹之手"
                 action_hotkey = get_hotkey(0, "古尔丹之手")
             elif state_dict.get("施法技能", -1) == 18 and state_dict.get("灵魂碎片", -1) < 5:
-                current_step = "施放 暗影箭"
+                current_step = "施放 逻辑-暗影箭"
                 action_hotkey = get_hotkey(0, "暗影箭")
             elif assistant == 3 and spells.get("邪能统御") == 0:
                 current_step = "施放 邪能统御"
