@@ -185,6 +185,7 @@ function fu.CreateClassMacro()
         [25] = "分筋错骨",
         [26] = "风领主之击",
         [27] = "怒雷破",
+        [28] = "升龙霸",
     }
     fu.CreateMacro(dynamicSpells, staticSpells, _)
 end
