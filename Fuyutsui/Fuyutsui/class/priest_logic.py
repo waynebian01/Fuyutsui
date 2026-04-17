@@ -93,8 +93,8 @@ def _priest_discipline_logic(state_dict):
     失败法术 = _get_failed_spell(state_dict)
 
     治疗限值 = int(60 + (能量值 * 0.3)) # 90-60
-    暗影愈合阈值 = 70 - (暗影愈合 * 2) + (暗影层数 * 15) # 55 - 100
-    涌动阈值 = 80 - 圣光涌动 + (涌动层数 * 10) # 70 - 80
+    暗影愈合阈值 = int(70 - (暗影愈合 * 2) + (暗影层数 * 15)) # 55 - 100
+    涌动阈值 = int(80 - 圣光涌动 + (涌动层数 * 10)) # 70 - 80
 
     dispel_unit_magic, _ = get_unit_with_dispel_type(state_dict, 1)
     dispel_unit_disease, _ = get_unit_with_dispel_type(state_dict, 3)

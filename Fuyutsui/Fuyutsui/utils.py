@@ -65,9 +65,22 @@ def get_hotkey(unit, spell):
             s = entry.get("spell") or entry.get("技能")
             h = entry.get("hotkey") or entry.get("热键")
             if s is not None and h is not None:
-                u = int(u) if u is not None else 0
+                # unit 可能为 None / 空字符串 / 非数字，统一安全转换；失败视为 0（玩家）
+                try:
+                    u = int(u) if u not in (None, "") else 0
+                except (TypeError, ValueError):
+                    u = 0
                 _unit_spell_to_hotkey_cache[(u, s)] = h
-    u = 0 if unit in (None, "") else (int(unit) if isinstance(unit, str) else unit)
+    # 调用侧传进来的 unit 也做一次安全转换
+    if unit in (None, ""):
+        u = 0
+    elif isinstance(unit, str):
+        try:
+            u = int(unit)
+        except (TypeError, ValueError):
+            u = 0
+    else:
+        u = unit
     return _unit_spell_to_hotkey_cache.get((u, spell))
 
 def load_config():
