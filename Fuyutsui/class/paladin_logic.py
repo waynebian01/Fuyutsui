@@ -45,10 +45,66 @@ def _get_failed_spell(state_dict):
         return spell_name
     return None
 
+def _get_ret_helper_finisher(one_key_value, finisher_mode=0):
+    """
+    返回惩戒终结技对应的 (显示名, 实际按键技能名)。
+    终结技规则：
+    群体模式:
+    - 推荐最终审判 -> 打最终审判
+    - 推荐神圣风暴 -> 打神圣风暴
+    - 推荐圣光之锤 -> 打神圣风暴
+    - 推荐处决宣判 -> 打神圣风暴
+    单体模式:
+    - 推荐最终审判 -> 打最终审判
+    - 推荐神圣风暴 -> 打最终审判
+    - 推荐圣光之锤 -> 打最终审判
+    - 推荐处决宣判 -> 打最终审判
+    """
+    if one_key_value == 15:
+        return ("最终审判", "最终审判")
+    if one_key_value == 17:
+        if finisher_mode == 1:
+            return ("神圣风暴", "最终审判")
+        return ("神圣风暴", "神圣风暴")
+    if one_key_value == 18:
+        if finisher_mode == 1:
+            return ("圣光之锤", "最终审判")
+        return ("圣光之锤", "神圣风暴")
+    if one_key_value == 20:
+        if finisher_mode == 1:
+            return ("处决宣判", "最终审判")
+        return ("处决宣判", "神圣风暴")
+    return None
+
+
+def _resolve_ret_3hp_action(公正之剑, 审判, 一键辅助, helper_finisher=None, finisher_mode=0):
+    """
+    3豆时：
+    1. 公正之剑可用 -> 先打公正之剑
+    2. 否则审判可用 -> 先打审判（开翅膀时这个键位实际就是愤怒之锤）
+    3. 两个都不可用 -> 跟一键辅助终结技
+    """
+    if helper_finisher is None:
+        helper_finisher = _get_ret_helper_finisher(一键辅助, finisher_mode)
+
+    if 公正之剑 <= 1:
+        return get_hotkey(0, "公正之剑"), "3豆先补豆: 公正之剑"
+
+    if 审判 <= 1:
+        shown_name = "愤怒之锤" if 一键辅助 in (19, 21) else "审判"
+        return get_hotkey(0, "审判"), f"3豆先补豆: {shown_name}"
+
+    if helper_finisher:
+        shown_name, cast_name = helper_finisher
+        return get_hotkey(0, cast_name), f"3豆无补豆技能，终结技: {shown_name}"
+
+    return None, "3豆无可用技能"
+
 def run_paladin_logic(state_dict, spec_name):
     spells = state_dict.get("spells") or {}
 
     战斗 = state_dict.get("战斗", False)
+    有效性 = state_dict.get("有效性", False)
     移动 = state_dict.get("移动", False)
     施法 = state_dict.get("施法", 0)
     引导 = state_dict.get("引导", 0)
@@ -226,16 +282,52 @@ def run_paladin_logic(state_dict, spec_name):
                     current_step = "战斗中-无匹配技能"
 
     elif spec_name == "惩戒":
+        生命值 = int(state_dict.get("生命值", 100) or 100)
+        神圣能量 = int(state_dict.get("神圣能量", 0) or 0)
+        惩戒终结模式 = int(state_dict.get("惩戒终结模式", 0) or 0)
+
+        公正之剑 = spells.get("公正之剑", 99)
+        审判 = spells.get("审判", 99)
+        荣耀圣令 = spells.get("荣耀圣令", 99)
+
+        helper_finisher = _get_ret_helper_finisher(一键辅助, 惩戒终结模式)
+
+        unit_info["神圣能量"] = 神圣能量
+        unit_info["一键辅助"] = 一键辅助
+        unit_info["惩戒终结模式"] = 惩戒终结模式
+
         if 法术失败 != 0 and 失败法术 is not None:
             current_step = f"施放 {失败法术}"
             action_hotkey = get_hotkey(0, 失败法术)
-        elif 战斗 and 1 <= 目标类型 <= 3:
-            
-            tup = action_map.get(一键辅助)
-            if tup:
-                current_step = f"施放 {tup[0]}"
-                action_hotkey = get_hotkey(0, tup[1])
-            else:
-                current_step = "战斗中-无匹配技能"
+        elif not 战斗:
+            current_step = "脱战待机"
+        elif not 有效性:
+            current_step = "无有效目标"
+        elif 施法 or 引导:
+            current_step = "正在施法/引导"
+        elif 生命值 < 50 and 神圣能量 >= 3 and 荣耀圣令 <= 1:
+            current_step = "保命: 对自己施放 荣耀圣令"
+            action_hotkey = get_hotkey(1, "荣耀圣令")
+        elif 神圣能量 == 5 and helper_finisher:
+            shown_name, cast_name = helper_finisher
+            current_step = f"5豆终结技: {shown_name}"
+            action_hotkey = get_hotkey(0, cast_name)
+        elif 神圣能量 == 4 and helper_finisher:
+            shown_name, cast_name = helper_finisher
+            current_step = f"4豆终结技: {shown_name}"
+            action_hotkey = get_hotkey(0, cast_name)
+        elif 神圣能量 == 3 and (公正之剑 <= 1 or 审判 <= 1 or helper_finisher):
+            action_hotkey, current_step = _resolve_ret_3hp_action(
+                公正之剑, 审判, 一键辅助, helper_finisher, 惩戒终结模式
+            )
+        elif 公正之剑 <= 1:
+            current_step = "常规: 公正之剑"
+            action_hotkey = get_hotkey(0, "公正之剑")
+        elif 审判 <= 1:
+            shown_name = "愤怒之锤" if 一键辅助 in (19, 21) else "审判"
+            current_step = f"常规: {shown_name}"
+            action_hotkey = get_hotkey(0, "审判")
+        else:
+            current_step = "战斗中-无匹配技能"
 
     return action_hotkey, current_step, unit_info

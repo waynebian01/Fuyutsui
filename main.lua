@@ -37,6 +37,39 @@ fixed["队伍人数"] = 15
 fixed["首领战"] = 16
 fixed["难度"] = 17
 fixed["英雄天赋"] = 18
+fixed["惩戒终结模式"] = 19
+
+local RET_FINISHER_MODE_AOE = 0
+local RET_FINISHER_MODE_SINGLE = 1
+state.retFinisherMode = RET_FINISHER_MODE_AOE
+
+local function updateRetFinisherMode()
+    creat(fixed["惩戒终结模式"], (state.retFinisherMode or RET_FINISHER_MODE_AOE) / 255)
+end
+
+local function printRetFinisherMode()
+    local modeText = (state.retFinisherMode == RET_FINISHER_MODE_SINGLE) and "单体" or "群体"
+    DEFAULT_CHAT_FRAME:AddMessage("当前终结模式：" .. modeText, 1, 1, 0)
+end
+
+SLASH_FUYURETFINISHER1 = "/fuyu_ret_finisher"
+SLASH_FUYURETFINISHER2 = "/fuyuret"
+SlashCmdList["FUYURETFINISHER"] = function(msg)
+    local input = msg and strtrim(strlower(msg)) or ""
+    if input == "single" or input == "st" or input == "单体" then
+        state.retFinisherMode = RET_FINISHER_MODE_SINGLE
+    elseif input == "aoe" or input == "mt" or input == "群体" then
+        state.retFinisherMode = RET_FINISHER_MODE_AOE
+    else
+        if state.retFinisherMode == RET_FINISHER_MODE_SINGLE then
+            state.retFinisherMode = RET_FINISHER_MODE_AOE
+        else
+            state.retFinisherMode = RET_FINISHER_MODE_SINGLE
+        end
+    end
+    updateRetFinisherMode()
+    printRetFinisherMode()
+end
 
 -- ================================================================
 --                          创建颜色曲线
@@ -147,6 +180,7 @@ local function getPlayerInfo()
     creat(fixed["锚点"], 0)
     creat(fixed["职业"], fu.classId / 255)
     creat(fixed["专精"], specIndex / 255)
+    updateRetFinisherMode()
 end
 
 -- 各法术的驱散能力映射
@@ -1198,6 +1232,7 @@ function frame:PLAYER_LOGIN()
     updateGroupCount()
     updateGroupType()
     fu.readKeybindings()
+    updateRetFinisherMode()
 end
 
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")

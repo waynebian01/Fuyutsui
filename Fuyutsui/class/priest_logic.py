@@ -164,19 +164,15 @@ def _priest_discipline_logic(state_dict):
             elif 暗影愈合 > 0 and 暗影层数 > 0 and 施法技能 != 34 and 最低单位 is not None and 最低生命值 is not None and 最低生命值 < 暗影愈合阈值:
                 current_step = f"施放 暗影愈合 on {最低单位}, 暗影愈合"
                 action_hotkey = get_hotkey(int(最低单位), "快速治疗")
-            elif 盾 == 0 and (虚空之盾 > 0 or (无盾最低 is not None and 无盾生命值 < 治疗限值)) and (无救赎最低 is not None or 无盾最低 is not None or 无盾坦克 is not None):
-                if 无救赎生命值 is not None and 无救赎生命值 < 90:
-                    current_step = f"施放 真言术：盾 on {无救赎最低}, 无救赎单位"
-                    action_hotkey = get_hotkey(int(无救赎最低), "真言术：盾")
-                elif 无盾生命值 is not None and 无盾生命值 < 90:
-                    current_step = f"施放 真言术：盾 on {无盾最低}, 无盾生命最低的单位"
-                    action_hotkey = get_hotkey(int(无盾最低), "真言术：盾")
-                elif 无盾坦克 is not None:
-                    current_step = f"施放 真言术：盾 on {无盾坦克}, 无盾单位"
-                    action_hotkey = get_hotkey(int(无盾坦克), "真言术：盾")
-                else:
-                    current_step = f"施放 真言术：盾 on {无盾最低}, 无盾生命最低的单位"
-                    action_hotkey = get_hotkey(int(无盾最低), "真言术：盾")
+            elif 盾 == 0 and 无救赎最低 and 无救赎生命值 is not None and (无救赎生命值 < 治疗限值 or 虚空之盾 > 0):
+                current_step = f"施放 真言术：盾 on {无救赎最低}, 无救赎单位"
+                action_hotkey = get_hotkey(int(无救赎最低), "真言术：盾")
+            elif 盾 == 0 and 无盾最低 and 无盾生命值 is not None and (无盾生命值 < 治疗限值 or 虚空之盾 > 0):
+                current_step = f"施放 真言术：盾 on {无盾最低}, 无盾生命最低的单位"
+                action_hotkey = get_hotkey(int(无盾最低), "真言术：盾")
+            elif 盾 == 0 and 无盾坦克 is not None:
+                current_step = f"施放 真言术：盾 on {无盾坦克}, 无盾单位"
+                action_hotkey = get_hotkey(int(无盾坦克), "真言术：盾")
             elif 无救赎90数量 >= 5 and 耀 == 0 and 施法技能 != 30:
                 current_step = "施放 真言术：耀"
                 action_hotkey = get_hotkey(0, "真言术：耀")
@@ -220,19 +216,15 @@ def _priest_discipline_logic(state_dict):
             elif 暗影愈合 > 0 and 暗影层数 > 0 and 施法技能 != 34 and 最低单位 is not None and 最低生命值 is not None and 最低生命值 < 暗影愈合阈值:
                 current_step = f"施放 暗影愈合 on {最低单位}, 暗影愈合"
                 action_hotkey = get_hotkey(int(最低单位), "快速治疗")
-            elif 盾 == 0 and (无救赎最低 is not None or 无盾最低 is not None or 无盾坦克 is not None):
-                if 无救赎生命值 is not None and 无救赎生命值 < 90:
-                    current_step = f"施放 真言术：盾 on {无救赎最低}, 无救赎单位"
-                    action_hotkey = get_hotkey(int(无救赎最低), "真言术：盾")
-                elif 无盾生命值 is not None and 无盾生命值 < 90:
-                    current_step = f"施放 真言术：盾 on {无盾最低}, 无盾生命最低的单位"
-                    action_hotkey = get_hotkey(int(无盾最低), "真言术：盾")
-                elif 无盾坦克 is not None:
-                    current_step = f"施放 真言术：盾 on {无盾坦克}, 无盾单位"
-                    action_hotkey = get_hotkey(int(无盾坦克), "真言术：盾")
-                else:
-                    current_step = f"施放 真言术：盾 on {无盾最低}, 无盾生命最低的单位"
-                    action_hotkey = get_hotkey(int(无盾最低), "真言术：盾")
+            elif 盾 == 0 and 无救赎最低 and 无救赎生命值 is not None and (无救赎生命值 < 90 or 虚空之盾 > 0):
+                current_step = f"施放 真言术：盾 on {无救赎最低}, 无救赎单位"
+                action_hotkey = get_hotkey(int(无救赎最低), "真言术：盾")
+            elif 盾 == 0 and 无盾最低 and 无盾生命值 is not None and (无盾生命值 < 90 or 虚空之盾 > 0):
+                current_step = f"施放 真言术：盾 on {无盾最低}, 无盾生命最低的单位"
+                action_hotkey = get_hotkey(int(无盾最低), "真言术：盾")
+            elif 盾 == 0 and 无盾坦克 is not None:
+                current_step = f"施放 真言术：盾 on {无盾坦克}, 无盾单位"
+                action_hotkey = get_hotkey(int(无盾坦克), "真言术：盾")
             elif 无救赎90数量 >= 3 and 耀 == 0 and 施法技能 != 30:
                 current_step = "施放 真言术：耀"
                 action_hotkey = get_hotkey(0, "真言术：耀")
