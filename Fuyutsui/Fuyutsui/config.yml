@@ -779,7 +779,281 @@ state:
       灵魂收割:
         step: 49
         type: "int"
-      
+7:
+  keymap: "shaman.yml"
+  1:
+    目标生命值:
+      step: 21
+      type: "int"
+    敌人人数:
+      step: 22
+      type: "int"
+    spells:
+      天怒:
+        step: 31
+        type: "int"
+      闪电之盾:
+        step: 32
+        type: "int"
+      闪电箭:
+        step: 33
+        type: "int"
+      闪电链:
+        step: 34
+        type: "int"
+      治疗链:
+        step: 35
+        type: "int"
+      大地之盾:
+        step: 36
+        type: "int"
+      风剪:
+        step: 37
+        type: "int"
+      土元素:
+        step: 38
+        type: "int"
+      电能图腾:
+        step: 39
+        type: "int"
+      先祖迅捷:
+        step: 40
+        type: "int"
+      元素冲击:
+        step: 41
+        type: "int"
+      地震术:
+        step: 42
+        type: "int"
+      大地震击:
+        step: 43
+        type: "int"
+      流电炽焰:
+        step: 44
+        type: "int"
+      火舌武器:
+        step: 45
+        type: "int"
+      熔岩爆裂:
+        step: 46
+        type: "int"
+      风暴守护者:
+        step: 47
+        type: "int"
+      狂风怒号:
+        step: 48
+        type: "int"
+  2:
+    目标生命值:
+      step: 21
+      type: "int"
+    敌人人数:
+      step: 22
+      type: "int"
+    spells:
+      天怒:
+        step: 31
+        type: "int"
+      闪电之盾:
+        step: 32
+        type: "int"
+      闪电箭:
+        step: 33
+        type: "int"
+      闪电链:
+        step: 34
+        type: "int"
+      治疗链:
+        step: 35
+        type: "int"
+      大地之盾:
+        step: 36
+        type: "int"
+      风剪:
+        step: 37
+        type: "int"
+      土元素:
+        step: 38
+        type: "int"
+      电能图腾:
+        step: 39
+        type: "int"
+      毁灭闪电:
+        step: 40
+        type: "int"
+      流电炽焰:
+        step: 41
+        type: "int"
+      涌动图腾:
+        step: 42
+        type: "int"
+      火舌武器:
+        step: 43
+        type: "int"
+      熔岩猛击:
+        step: 44
+        type: "int"
+      裂地术:
+        step: 45
+        type: "int"
+      始源风暴:
+        step: 46
+        type: "int"
+      风怒武器:
+        step: 48
+        type: "int"
+      风暴打击:
+        step: 49
+        type: "int"
+      风暴打击充能:
+        step: 50
+        type: "int"
+      狂风怒号:
+        step: 51
+        type: "int"
+      风切:
+        step: 52
+        type: "int"
+  3:
+    施法技能:
+      step: 22
+      type: "int"
+    施法目标:
+      step: 23
+      type: "int"
+    飞旋之土:
+      step: 24
+      type: "int"
+    潮汐奔涌:
+      step: 25
+      type: "int"
+    风暴涌流图腾层数:
+      step: 26
+      type: "int"
+    大地生命武器:
+      step: 27
+      type: "int"
+    生命释放:
+      step: 28
+      type: "int"
+    spells:
+      天怒:
+        step: 31
+        type: "int"
+      闪电之盾:
+        step: 32
+        type: "int"
+      闪电箭:
+        step: 33
+        type: "int"
+      闪电链:
+        step: 34
+        type: "int"
+      治疗链:
+        step: 35
+        type: "int"
+      大地之盾:
+        step: 36
+        type: "int"
+      风剪:
+        step: 37
+        type: "int"
+      土元素:
+        step: 38
+        type: "int"
+      电能图腾:
+        step: 39
+        type: "int"
+      唤潮者的护卫:
+        step: 40
+        type: "int"
+      大地生命武器:
+        step: 41
+        type: "int"
+      激流充能:
+        step: 61
+        type: "int"
+      水之护盾:
+        step: 42
+        type: "int"
+      烈焰震击:
+        step: 43
+        type: "int"
+      熔岩爆裂:
+        step: 44
+        type: "int"
+      治疗波:
+        step: 45
+        type: "int"
+      激流:
+        step: 46
+        type: "int"
+      治疗之泉图腾充能:
+        step: 62
+        type: "int"
+      净化灵魂:
+        step: 47
+        type: "int"
+      治疗之泉图腾:
+        step: 48
+        type: "int"
+      生命释放:
+        step: 49
+        type: "int"
+      先祖迅捷:
+        step: 50
+        type: "int"
+      自然迅捷:
+        step: 51
+        type: "int"
+      涌动图腾:
+        step: 52
+        type: "int"
+      阵风:
+        step: 53
+        type: "int"
+      灵魂链接图腾:
+        step: 54
+        type: "int"
+      土元素:
+        step: 55
+        type: "int"
+      战栗图腾:
+        step: 56
+        type: "int"
+      清毒图腾:
+        step: 57
+        type: "int"
+      图腾投射:
+        step: 58
+        type: "int"
+      升腾:
+        step: 59
+        type: "int"
+      治疗之潮图腾:
+        step: 60
+        type: "int"
+    group:
+      start: 70
+      num: 6
+      生命值:
+        step: 1
+        type: "int"
+      职责:
+        step: 2
+        type: "int"
+      驱散:
+        step: 3
+        type: "int"
+      激流:
+        step: 4
+        type: "int"
+      大地之盾:
+        step: 5
+        type: "int"
+      大地生命武器:
+        step: 6
+        type: "int" 
 8:
   keymap: "mage.yml"
   3:

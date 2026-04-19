@@ -20,7 +20,7 @@ except Exception:
 # config.yml 与 GetPixels.py 同目录
 CONFIG_PATH = os.path.join(_SCRIPT_DIR, "config.yml")
 
-PIXELS_PER_ROW = 255  # 扫描 255 个数据点
+PIXELS_PER_ROW = 256  # 扫描 256 个数据点
 
 def load_config():
     """加载 config.yml"""
@@ -97,8 +97,158 @@ def scan_top_bar(window_title="魔兽世界"):
         return row_data if row_data else None
 
 
+def _is_rgb_red_marker(b, g, r):
+    """RGB (1, 0, 0)；mss 为 BGRA 顺序入参。"""
+    return r == 1 and g == 0 and b == 0
+
+
+def _is_rgb_red_green_marker(b, g, r):
+    """RGB (1, 1, 0)；与 (1,0,0) 配对表示一个「开始」。"""
+    return r == 1 and g == 1 and b == 0
+
+
+def _is_rgb_white(b, g, r):
+    """RGB (255, 255, 255)。"""
+    return r == 255 and g == 255 and b == 255
+
+
+def scan_row_data_red_white_markers(window_title="魔兽世界"):
+    """
+    从魔兽世界客户区左上角开始，沿左边界 (x=0) 向下扫描，找到首个 RGB(1,0,0) 的像素所在行。
+    在该行上从左到右扫描，每识别到一种「开始」则新建一个键（从 1 递增）：
+    - 顺序出现 (1,0,0) 之后出现 (1,1,0)，这一对算作一次开始（中间可夹其它像素）；
+    - 或出现 (255,255,255)：连续白像素只作为一次开始（取每段连续白的第一格）。
+    每次开始之后：向右先找到 (255,255,255)；若在遇到下一个 (1,0,0) 或行尾前未出现白，则该键值为 0；
+    出现白之后继续向右，第一个非 (255,255,255) 的像素的 G 记入该键；否则 0。
+    未找到游戏窗口返回 None；左列无 (1,0,0) 返回空字典 {}。
+    """
+    hwnd = ctypes.windll.user32.FindWindowW(None, window_title)
+    if not hwnd:
+        return None
+
+    point = wintypes.POINT(0, 0)
+    ctypes.windll.user32.ClientToScreen(hwnd, ctypes.byref(point))
+
+    rect = wintypes.RECT()
+    ctypes.windll.user32.GetClientRect(hwnd, ctypes.byref(rect))
+    width = rect.right - rect.left
+    height = rect.bottom - rect.top
+    if width <= 0 or height <= 0:
+        return None
+
+    base_x, base_y = point.x, point.y
+
+    with mss.mss() as sct:
+        monitor = {"top": base_y, "left": base_x, "width": width, "height": height}
+        img = sct.grab(monitor)
+        raw_data = img.raw
+        total_bytes = len(raw_data)
+
+        def pixel_at(x, y):
+            offset = (y * width + x) * 4
+            if offset + 2 >= total_bytes or x < 0 or x >= width or y < 0 or y >= height:
+                return None, None, None
+            return raw_data[offset], raw_data[offset + 1], raw_data[offset + 2]
+
+        marker_y = None
+        for y in range(height):
+            b, g, r = pixel_at(0, y)
+            if r is None:
+                break
+            if _is_rgb_red_marker(b, g, r):
+                marker_y = y
+                break
+
+        if marker_y is None:
+            return {}
+
+        def consume_value_from(from_x, already_saw_white=False):
+            """
+            从 from_x 起取该键的数值。already_saw_white=True 表示「开始」本身就是白，从右侧找非白即可。
+            遇到 (1,0,0) 视为中断当前取值（未完成则记 0），返回的 next_x 指向该 (1,0,0) 供外层处理。
+            返回 (记录的 G 或 0, 下一个扫描位置 x)。
+            """
+            sx = from_x
+            need_white = not already_saw_white
+            while sx < width:
+                b2, g2, r2 = pixel_at(sx, marker_y)
+                if r2 is None:
+                    break
+                if _is_rgb_red_marker(b2, g2, r2):
+                    return 0, sx
+                if need_white:
+                    if _is_rgb_white(b2, g2, r2):
+                        need_white = False
+                    sx += 1
+                    continue
+                if _is_rgb_white(b2, g2, r2):
+                    sx += 1
+                    continue
+                return int(g2), sx + 1
+            if need_white:
+                return 0, width
+            return 0, width
+
+        def _dict_value_from_raw_g(raw_g):
+            """原始 G>0 时存 G-1，否则 0；等价于 max(0, G-1)。"""
+            return max(0, int(raw_g) - 1)
+
+        row_result = {}
+        seg_idx = 0
+        x = 0
+        pending_1_0_0 = False
+        while x < width:
+            b, g, r = pixel_at(x, marker_y)
+            if r is None:
+                break
+
+            if pending_1_0_0 and _is_rgb_red_green_marker(b, g, r):
+                pending_1_0_0 = False
+                seg_idx += 1
+                val, next_x = consume_value_from(x + 1, already_saw_white=False)
+                row_result[seg_idx] = _dict_value_from_raw_g(val)
+                x = next_x
+                continue
+
+            if _is_rgb_red_marker(b, g, r):
+                pending_1_0_0 = True
+                x += 1
+                continue
+
+            if _is_rgb_white(b, g, r):
+                prev_white = x > 0 and _is_rgb_white(*pixel_at(x - 1, marker_y))
+                if not prev_white:
+                    pending_1_0_0 = False
+                    seg_idx += 1
+                    val, next_x = consume_value_from(x + 1, already_saw_white=True)
+                    row_result[seg_idx] = _dict_value_from_raw_g(val)
+                    x = next_x
+                    continue
+
+            x += 1
+
+        return row_result
+
+
 # 可与 state 分开展开在 YAML 顶层的像素元字段（step 与 state 同一套索引）
 _META_PIXEL_KEYS = ("锚点", "职业", "专精")
+
+
+def _resolve_raw_from_field(field, row_data, bar_data):
+    """
+    从 row_data 或 bar 扫描字典取原始值。
+    step 为 bar 时，用配置中的 bar 整数为键，取 scan_row_data_red_white_markers 返回字典中的值。
+    """
+    if not isinstance(field, dict) or "step" not in field:
+        return None
+    step = field["step"]
+    if step == "bar":
+        bd = bar_data or {}
+        bi = field.get("bar")
+        if bi is None:
+            return None
+        return bd.get(int(bi))
+    return row_data.get(step)
 
 
 def _get_spec_config(config, class_id, spec_id):
@@ -119,12 +269,13 @@ def _get_spec_config(config, class_id, spec_id):
     return merged
 
 
-def build_state_dict(config, row_data, state_config, class_id=None, spec_id=None):
+def build_state_dict(config, row_data, state_config, class_id=None, spec_id=None, bar_data=None):
     """
     根据 state_config 和 row_data 构建完整字典。
     键 = 配置的 key（如 职业、专精、生命值），值 = 按 type 转换后的整数/布尔/字符串；
     spells 和 group 为子字典；
     group 从 start 开始，每隔 num 个 step 为一个子字典（每个队友/小队成员）。
+    bar_data：scan_row_data_red_white_markers 的返回值；字段 step 为 bar 时用 bar 为下标从中取值。
     """
     result = {}
     if class_id is None and 2 in row_data:
@@ -138,10 +289,9 @@ def build_state_dict(config, row_data, state_config, class_id=None, spec_id=None
             continue
         if not isinstance(field, dict) or "step" not in field:
             continue
-        step = field["step"]
         name = key
         type_ = field.get("type", "int")
-        raw = row_data.get(step)
+        raw = _resolve_raw_from_field(field, row_data, bar_data)
 
         if type_ == "int":
             result[name] = int(raw) if raw is not None else 0
@@ -157,9 +307,8 @@ def build_state_dict(config, row_data, state_config, class_id=None, spec_id=None
         for spell_key, spell_field in spells_config.items():
             if not isinstance(spell_field, dict) or "step" not in spell_field:
                 continue
-            step = spell_field["step"]
             type_ = spell_field.get("type", "int")
-            raw = row_data.get(step)
+            raw = _resolve_raw_from_field(spell_field, row_data, bar_data)
             if type_ == "int":
                 spells_sub[spell_key] = int(raw) if raw is not None else 0
             elif type_ == "bool":
@@ -185,8 +334,11 @@ def build_state_dict(config, row_data, state_config, class_id=None, spec_id=None
                     continue
                 rel_step = field.get("step")
                 type_ = field.get("type", "int")
-                row_key = base_step + rel_step
-                raw = row_data.get(row_key)
+                if rel_step == "bar":
+                    raw = _resolve_raw_from_field(field, row_data, bar_data)
+                else:
+                    row_key = base_step + rel_step
+                    raw = row_data.get(row_key)
                 if type_ == "int":
                     sub[field_key] = int(raw) if raw is not None else 0
                 elif type_ == "bool":
@@ -211,18 +363,31 @@ def get_info(window_title="魔兽世界"):
     spec_id = row_data.get(3)
 
     state_config = _get_spec_config(config, class_id, spec_id)
-    return build_state_dict(config, row_data, state_config, class_id, spec_id)
+    bar_data = scan_row_data_red_white_markers(window_title)
+    if bar_data is None:
+        bar_data = {}
+    return build_state_dict(config, row_data, state_config, class_id, spec_id, bar_data=bar_data)
 
 
 if __name__ == "__main__":
+    import json
+
     start_time = time.perf_counter()
     info = get_info()
     elapsed_ms = (time.perf_counter() - start_time) * 1000
 
     print(f"扫描耗时: {elapsed_ms:.2f} ms")
     if info:
-        import json
         # 简单打印（json 对中文友好）
         print(json.dumps(info, ensure_ascii=False, indent=2))
     else:
         print("未找到游戏窗口或扫描失败")
+
+    print("--- scan_row_data_red_white_markers ---")
+    t0 = time.perf_counter()
+    rw = scan_row_data_red_white_markers()
+    print(f"扫描耗时: {(time.perf_counter() - t0) * 1000:.2f} ms")
+    if rw is None:
+        print("未找到游戏窗口")
+    else:
+        print(json.dumps(rw, ensure_ascii=False, indent=2))

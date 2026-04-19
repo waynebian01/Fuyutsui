@@ -62,7 +62,13 @@ function fu.updateSpecInfo()
             [132578] = { index = 52, name = "玄牛下凡" },
         }
     elseif specIndex == 2 then
-        fu.HarmfulSpellId, fu.HelpfulSpellId = 100780, 115151
+        local eventTable = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD" }
+        local getCount = C_Spell.GetSpellCastCount
+        -- 法力茶
+        fu.CreateAutoLayoutBar(0, 20, function() return getCount(115294) end, eventTable)
+        -- 神龙之赐
+        fu.CreateAutoLayoutBar(0, 10, function() return getCount(399491) end, eventTable)
+
         fu.blocks = {
             ["敌人人数"] = 21,
             ["施法技能"] = 22,

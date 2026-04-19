@@ -37,4 +37,5 @@ class/Mage.lua
 class/Monk.lua
 class/Hunter.lua
 class/DemonHunter.lua
+class/Shaman.lua
 main.lua
