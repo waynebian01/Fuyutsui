@@ -142,6 +142,37 @@ function fu.updateSpecInfo()
     end
 end
 
+-- =========================================================================
+-- 添加自定义终结模式切换宏 (/fu)
+-- 0 = 单体 (最终审判),  1 = 群体 (神圣风暴)
+-- =========================================================================
+fu.RetFinisherMode = 0 
+if fu.FinisherModeTicker then fu.FinisherModeTicker:Cancel() fu.FinisherModeTicker = nil end
+
+SLASH_FUYUTSUI_RET_MODE1 = "/fu"
+SlashCmdList["FUYUTSUI_RET_MODE"] = function(msg)
+    if not (fu.classId == 2 and C_SpecializationInfo.GetSpecialization() == 3) then return end
+    
+    fu.RetFinisherMode = (fu.RetFinisherMode == 0) and 1 or 0
+    local text = (fu.RetFinisherMode == 1) and "单体" or "群体"
+    
+    print("|cffffffff" .. text .. "|r")
+    UIErrorsFrame:AddMessage(text, 1.0, 1.0, 0.0)
+end
+
+-- 延迟注册绘画任务，高频刷新 Block 50，让 Python 端稳定读取
+C_Timer.After(2.0, function()
+    if fu.classId == 2 then
+        fu.FinisherModeTicker = C_Timer.NewTicker(0.5, function()
+            if C_SpecializationInfo.GetSpecialization() == 3 then
+                if type(fu.updateOrCreatTextureByIndex) == "function" then
+                    fu.updateOrCreatTextureByIndex(50, fu.RetFinisherMode / 255)
+                end
+            end
+        end)
+    end
+end)
+
 -- 创建圣骑士宏
 function fu.CreateClassMacro()
     local dynamicSpells = { "神圣震击", "圣光闪现", "圣光术", "荣耀圣令", "清洁术", "圣疗术" }
