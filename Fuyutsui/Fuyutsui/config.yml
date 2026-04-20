@@ -932,11 +932,8 @@ state:
     风暴涌流图腾层数:
       step: 26
       type: "int"
-    大地生命武器:
-      step: 27
-      type: "int"
     生命释放:
-      step: 28
+      step: 27
       type: "int"
     spells:
       天怒:

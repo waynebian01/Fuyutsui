@@ -89,13 +89,8 @@ function fu.updateSpecInfo()
                     auraRef = fu.auras["风暴涌流图腾层数"],
                     showKey = "count",
                 },
-                ["大地生命武器"] = {
-                    index = 27,
-                    auraRef = fu.auras["大地生命武器"],
-                    showKey = "remaining",
-                },
                 ["生命释放"] = {
-                    index = 28,
+                    index = 27,
                     auraRef = fu.auras["生命释放"],
                     showKey = "remaining",
                 },

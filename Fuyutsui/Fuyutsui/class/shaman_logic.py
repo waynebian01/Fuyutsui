@@ -3,8 +3,9 @@
 
 ''' 奶萨天赋
     涌动图腾手动释放
-    大秘天赋 CgQARUG2fGwHkLP0T7/MoTNl/AAAAgBAAAAjZMLbmZmZmxMjxwwCsBzYRjtBkZgNmZGMbzMmpZbZmZzMmFWMmZMYWmBAgBwMDmZAYmBD
+    大秘天赋 CgQARUG2fGwHkLP0T7/MoTNl/AAAAgBAAAAjZMLbmZmZmxMjxMGWgFYGLasNgMDshZGMbzMmpZbZmZzMmNWMmZMYWGAAMAzMDmZAYmBD
     团本天赋 CgQARUG2fGwHkLP0T7/MoTNl/AAAAgBAAAAzMzMLLbDzMGzMzMzYGLwGMjFN2GQmB2MDDmtxYmmttZGmxswiZmZMYWGAAAYmZwMDAMYA
+
 '''
 
 
@@ -165,8 +166,9 @@ def run_shaman_logic(state_dict, spec_name):
         count92 = get_count_units_below_health(state_dict, 92)   # 血量低于92%的单位数量
         count88 = get_count_units_below_health(state_dict, 88)   # 血量低于88%的单位数量
         count70 = get_count_units_below_health(state_dict, 70)   # 血量低于70%的单位数量
+        count60 = get_count_units_below_health(state_dict, 60)   # 血量低于60%的单位数量
         count80 = get_count_units_below_health(state_dict, 80)   # 血量低于80%的单位数量
-        治疗限值 = int(80 + (能量值 * 0.1)) # 80-90 
+        治疗限值 = int(70 + (能量值 * 0.2)) # 70-90 
         群疗限值数量 = get_count_units_below_health(state_dict, 治疗限值 + 2)
         无激流最低, 无激流最低血量= get_lowest_health_unit_without_aura(state_dict, "激流", 100) # 没有激流且需要补血的最低血量单位
 
@@ -179,6 +181,7 @@ def run_shaman_logic(state_dict, spec_name):
                 驱散单位 = dispel_unit_magic
         if 驱散单位 is None:
             驱散单位 = dispel_unit_curse
+
 
         if 引导 > 0:
             current_step = "引导,不执行任何操作"
@@ -193,50 +196,40 @@ def run_shaman_logic(state_dict, spec_name):
             elif 目标类型 == 12:
                 current_step = f"施放 净化灵魂 on 目标"
                 action_hotkey = get_hotkey(0, "净化灵魂")
-            #没有激流的最低生命值玩家存在 释放激流给没有激流的最低生命值玩家
+            elif (count60 >= 2 or count70 >= 3) and (风暴涌流图腾层数 > 0 or 治疗之泉图腾 == 0):
+                current_step = f"施放治疗图腾 on {lowest_u}"
+                action_hotkey = get_hotkey(0, "治疗之泉图腾")
+            elif count70 >=3 and (生命释放buff > 0 or 自然迅捷 == 255):
+                current_step = f"施放 治疗链 on {lowest_u}, 释放治疗链"
+                action_hotkey = get_hotkey(int(lowest_u), "治疗链")
+            elif lowest_u is not None and lowest_p is not None and lowest_p <= 60:
+                if 生命释放 == 0:
+                    current_step = f"施放 生命释放 on {lowest_u}, 释放生命释放"
+                    action_hotkey = get_hotkey(int(lowest_u), "生命释放")
+                elif 自然迅捷 == 0:
+                    current_step = f"施放 自然迅捷 on {lowest_u}, 释放自然迅捷"
+                    action_hotkey = get_hotkey(0, "自然迅捷")
+                elif 自然迅捷 == 255:
+                    current_step = f"施放 治疗波 on {lowest_u}, 释放治疗波"
+                    action_hotkey = get_hotkey(int(lowest_u), "治疗波")
+                elif 风暴涌流图腾层数 > 0 and lowest_p <= 35:
+                    current_step = f"施放 风暴涌流图腾 on {lowest_u}, 释放风暴涌流图腾"
+                    action_hotkey = get_hotkey(int(lowest_u), "治疗之泉图腾")
+                elif 治疗波 == 0:
+                    current_step = f"施放 治疗波 on {lowest_u}, 释放治疗波"
+                    action_hotkey = get_hotkey(int(lowest_u), "治疗波")
             elif 激流 == 0 and 无激流最低 is not None and 无激流最低血量 is not None:
                 current_step = f"施放 激流 on {无激流最低}, 释放激流"
                 action_hotkey = get_hotkey(int(无激流最低), "激流")
-            # 有迅捷buff 
-            elif count70 >= 3 and 自然迅捷 == 255:
-                current_step = f"施放 治疗链 on {lowest_u}, 释放治疗链"
-                action_hotkey = get_hotkey(int(lowest_u), "治疗链")
-            elif lowest_u is not None and lowest_p is not None and lowest_p < 50 and 自然迅捷 == 255:
-                current_step = f"施放 治疗波 on {lowest_u}, 释放治疗波"
-                action_hotkey = get_hotkey(int(lowest_u), "治疗波")
-            # 有生命释放buff
-            elif 生命释放buff > 0 and count88 >= 3:
-                current_step = f"施放 治疗链 on {lowest_u}, 释放治疗链"
-                action_hotkey = get_hotkey(int(lowest_u), "治疗链")
-            #三人生命值小于80 且风暴涌流图腾cd == 0 释放风暴涌流图腾
-            elif count80 >= 3 and 风暴涌流图腾层数 > 0 :
-                current_step = f"施放 风暴涌流图腾 on {lowest_u}, 释放风暴涌流图腾"
-                action_hotkey = get_hotkey(0, "治疗之泉图腾")
-            # 如果没有潮汐奔涌 释放激流给最低生命玩家
-            elif 激流 == 0 and 潮汐奔涌 == 0 and lowest_u is not None and lowest_p is not None and lowest_p < 90:
-                current_step = f"施放 激流 on {lowest_u}, 释放激流"
-                action_hotkey = get_hotkey(int(lowest_u), "激流")
-            #生命释放 
-            elif 生命释放 == 0 and lowest_u is not None and lowest_p < 90:
-                current_step = f"施放 生命释放 on {lowest_u}, 释放生命释放"
-                action_hotkey = get_hotkey(int(lowest_u), "生命释放")
-            #(三人生命低于70 或 有最低生命小于50) 释放迅捷
-            elif (count70 >= 3 or (lowest_u is not None and lowest_p is not None and lowest_p < 50)) and 自然迅捷 == 0 :
-                current_step = f"施放 自然迅捷 on {lowest_u}, 释放自然迅捷"
-                action_hotkey = get_hotkey(0, "自然迅捷")
-            #三人生命值小于88  治疗之泉图腾 两层治疗之泉
-            elif count88 >= 3 and 治疗之泉图腾 == 0 and 治疗之泉图腾充能 == 0 :
+            elif count80 >= 3 and 治疗之泉图腾 == 0 and 治疗之泉图腾充能 == 0 :
                 current_step = f"施放 治疗之泉图腾 on {lowest_u}, 释放治疗之泉图腾"
                 action_hotkey = get_hotkey(0, "治疗之泉图腾")
-            #三人生命值小于70  治疗之泉图腾 
-            elif count70 >= 3 and 治疗之泉图腾 == 0 :
-                current_step = f"施放 治疗之泉图腾 on {lowest_u}, 释放治疗之泉图腾"
-                action_hotkey = get_hotkey(0, "治疗之泉图腾")
-            #三人生命值小于80  治疗链
             elif count80 >= 3 and 治疗链 == 0 :
                 current_step = f"施放 治疗链 on {lowest_u}, 释放治疗链"
                 action_hotkey = get_hotkey(int(lowest_u), "治疗链")
-            #单人生命小于 90   释放治疗波
+            elif 激流 == 0  and lowest_u is not None and lowest_p is not None and lowest_p <= 90:
+                current_step = f"施放 激流 on {lowest_u}, 释放激流"
+                action_hotkey = get_hotkey(int(lowest_u), "激流")
             elif lowest_u is not None and lowest_p is not None and lowest_p <= 90:
                 current_step = f"施放 治疗波 on {lowest_u}, 释放治疗波"
                 action_hotkey = get_hotkey(int(lowest_u), "治疗波")
@@ -266,25 +259,21 @@ def run_shaman_logic(state_dict, spec_name):
                 current_step = f"施放 激流 on {无激流最低}, 释放激流"
                 action_hotkey = get_hotkey(int(无激流最低), "激流")
             #4人生命值小于80 且风暴涌流图腾cd == 0 释放风暴涌流图腾
-            elif count80 >= 4 and 风暴涌流图腾层数 > 0 :
+            elif count80 >= 3 and 风暴涌流图腾层数 > 0 :
                 current_step = f"施放 风暴涌流图腾 on {lowest_u}, 释放风暴涌流图腾"
                 action_hotkey = get_hotkey(0, "治疗之泉图腾")
             #生命释放卡cd释放
-            elif 生命释放 == 0 and lowest_u is not None and lowest_p is not None and lowest_p < 92:
+            elif 生命释放 == 0 and lowest_u is not None and lowest_p is not None and lowest_p < 90:
                 current_step = f"施放 生命释放 on {lowest_u}, 释放生命释放"
                 action_hotkey = get_hotkey(int(lowest_u), "生命释放")
-            # 3人生命值小于92 and 治疗之泉图腾充能 == 0 and 生命释放buff == 0   释放治疗之泉图腾 
-            elif count92 >= 3 and 治疗之泉图腾 == 0 and 治疗之泉图腾充能 == 0 and (生命释放buff == 0 or 生命释放 < 10):
+            # 3人生命值小于88
+            elif count88 >= 3 and 治疗之泉图腾 == 0 :
                 current_step = f"施放 治疗之泉图腾 on {lowest_u}, 释放治疗之泉图腾"
                 action_hotkey = get_hotkey(0, "治疗之泉图腾")
-            #有迅捷且4人生命低于80 huo 释放迅捷
-            elif count80 >= 4  and 自然迅捷 == 0 :
+            #有迅捷且3人生命低于80 huo 释放迅捷
+            elif count80 >= 3  and 自然迅捷 == 0 :
                 current_step = f"施放 自然迅捷 on {lowest_u}, 释放自然迅捷"
                 action_hotkey = get_hotkey(0, "自然迅捷")
-            # 3人生命小于88  释放治疗之泉  
-            elif count88 >= 3  and 治疗之泉图腾 == 0:
-                current_step = f"施放 治疗之泉图腾 on {lowest_u}, 释放治疗之泉图腾"
-                action_hotkey = get_hotkey(0, "治疗之泉图腾")
             # 群疗限值数量 >= 4 释放治疗链
             elif 群疗限值数量 >= 4 and 治疗链 == 0 :
                 current_step = f"施放 治疗链 on {lowest_u}, 释放治疗链"
