@@ -309,9 +309,9 @@ fu.spellsList = {
     [212084]  = { index = 26, failed = true }, -- 邪能毁灭
     [202137]  = { index = 27, failed = true }, -- 沉默咒符
     [1234195] = { index = 28, failed = true }, -- 虚空新星
-    [1217605] = { index = 29, failed = true }, -- 虚空变形
+    [1217605] = { index = 29, },               -- 虚空变形
     [1245412] = { index = 30, },               -- 虚空之刃
-    [1234796] = { index = 31, failed = true }, -- 变换
+    [1234796] = { index = 31, },               -- 变换
     [1226019] = { index = 32, },               -- 收割
     [473662]  = { index = 33, },               -- 吞噬
     [473728]  = { index = 34, },               -- 虚空射线
@@ -371,6 +371,7 @@ fu.spellsList = {
     [974]     = { index = 41, },               -- 大地之盾
     [77130]   = { index = 42, },               -- 净化灵魂
     [73685]   = { index = 43, },               -- 生命释放
+    [1267068] = { index = 44, },               -- 风暴涌流图腾
 }
 -- 光环列表
 fu.auras = {
@@ -705,11 +706,38 @@ fu.auras = {
         expirationTime = nil,
     },
     -- 萨满祭司
+    ["飞旋之土"] = {
+        name = "飞旋之土",
+        spellId = 453406,
+        remaining = 0,
+        duration = 25,
+        expirationTime = nil,
+    },
     ["潮汐奔涌"] = {
         name = "潮汐奔涌",
         spellId = 53390,
         remaining = 0,
         duration = 15,
+        count = 0,
+        countMin = 0,
+        countMax = 2,
+        expirationTime = nil,
+    },
+    ["风暴涌流图腾层数"] = {
+        name = "风暴涌流图腾层数",
+        spellId = 1267089,
+        remaining = 0,
+        duration = 60,
+        count = 0,
+        countMin = 0,
+        countMax = 2,
+        expirationTime = nil,
+    },
+    ["生命释放"] = {
+        name = "生命释放",
+        spellId = 73685,
+        remaining = 0,
+        duration = 10,
         count = 0,
         countMin = 0,
         countMax = 2,
@@ -770,7 +798,10 @@ fu.updateAuras = {
         -- 战士
         [132404] = { { name = "盾牌格挡" } },
         -- 萨满祭司
+        [453406] = { { name = "飞旋之土" } },
         [53390] = { { name = "潮汐奔涌", step = 1 } },
+        [1267089] = { { name = "风暴涌流图腾层数", step = 1 } },
+        [73685] = { { name = "生命释放", step = 2 } },
     },
     -- COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED
     -- 法术覆盖事件, 检测参数: 基本法术ID, 覆盖法术ID
@@ -868,10 +899,24 @@ fu.updateAuras = {
             { name = "生生不息2", auraID = 197919 } },
         -- 旭日东升踢
         [107428] = { { name = "生生不息1", auraID = 197919 } },
+        -- 激流
+        [61295] = {
+            { name = "生命释放", auraID = 73685, step = -1 },
+        },
         -- 治疗波
-        [77472] = { { name = "潮汐奔涌", auraID = 53390, step = -1 } },
+        [77472] = {
+            { name = "潮汐奔涌", auraID = 53390, step = -1 },
+            { name = "生命释放", auraID = 73685, step = -1 },
+        },
         -- 治疗链
-        [1064] = { { name = "潮汐奔涌", auraID = 53390, step = -1, castBar = true } },
+        [1064] = {
+            { name = "潮汐奔涌", auraID = 53390, step = -1, castBar = true },
+            { name = "飞旋之土", auraID = 453406 },
+            { name = "生命释放", auraID = 73685, step = -1 },
+        },
+        -- 风暴涌流图腾
+        [1267068] = { { name = "风暴涌流图腾层数", auraID = 1267089, step = -1 } },
+
     },
     -- 法术图标事件"SPELL_UPDATE_ICON",
     -- 检测参数: 基础法术ID
@@ -914,6 +959,12 @@ fu.updateAuras = {
             auraID = 1262766,
             spellId = 2061,
             overrideSpellID = 1262763
+        },
+        [5394] = {
+            name = "风暴涌流图腾层数",
+            auraID = 1267089,
+            spellId = 5394,
+            overrideSpellID = 1267068
         },
     }
 }
