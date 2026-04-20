@@ -120,8 +120,9 @@ def run_paladin_logic(state_dict, spec_name):
             驱散单位 = dispel_unit_disease
         if 驱散单位 is None:
             驱散单位 = dispel_unit_poison
-
-        if 法术失败 != 0 and 失败法术 is not None:
+        if 引导 > 0:
+            current_step = "在引导,不执行任何操作"
+        elif 法术失败 != 0 and 失败法术 is not None:
             current_step = f"施放 {失败法术}"
             action_hotkey = get_hotkey(0, 失败法术)
         elif 清洁术 == 0 and 驱散单位 is not None:

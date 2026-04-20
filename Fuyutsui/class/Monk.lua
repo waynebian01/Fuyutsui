@@ -1,6 +1,9 @@
 local _, fu = ...
 if fu.classId ~= 10 then return end
 
+local eventTable = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD" }
+local getCount = C_Spell.GetSpellCastCount
+
 fu.HarmfulSpellId, fu.HelpfulSpellId = 100780, 116670
 
 fu.heroSpell = {
@@ -17,7 +20,10 @@ function fu.updateSpecInfo()
     fu.group_blocks = nil
     fu.assistant_spells = nil
     if specIndex == 1 then
+        -- 疗伤珠
+        fu.CreateAutoLayoutBar(0, 10, 322101, eventTable)
         fu.HarmfulSpellId = 121253
+
         fu.blocks = {
             ["酒池"] = 21,
             ["目标生命值"] = 22,
@@ -62,12 +68,10 @@ function fu.updateSpecInfo()
             [132578] = { index = 52, name = "玄牛下凡" },
         }
     elseif specIndex == 2 then
-        local eventTable = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD" }
-        local getCount = C_Spell.GetSpellCastCount
         -- 法力茶
-        fu.CreateAutoLayoutBar(0, 20, function() return getCount(115294) end, eventTable)
+        fu.CreateAutoLayoutBar(0, 20, 115294, eventTable)
         -- 神龙之赐
-        fu.CreateAutoLayoutBar(0, 10, function() return getCount(399491) end, eventTable)
+        fu.CreateAutoLayoutBar(0, 10, 399491, eventTable)
 
         fu.blocks = {
             ["敌人人数"] = 21,

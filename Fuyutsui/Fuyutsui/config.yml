@@ -730,7 +730,8 @@ state:
       type: "int"
     
     次级食尸鬼:
-      step: 25
+      step: bar
+      bar: 1
       type: "int"
     食尸鬼层数:
       step: 26
@@ -779,6 +780,7 @@ state:
       灵魂收割:
         step: 49
         type: "int"
+
 7:
   keymap: "shaman.yml"
   1:
@@ -1054,6 +1056,7 @@ state:
       大地生命武器:
         step: 6
         type: "int" 
+
 8:
   keymap: "mage.yml"
   3:
@@ -1125,7 +1128,8 @@ state:
   keymap: "warlock.yml"
   2:
     小鬼数量:
-      step: 22
+      step: bar
+      bar: 1
       type: "int"
     灵魂碎片:
       step: 23
@@ -1133,7 +1137,6 @@ state:
     施法技能:
       step: 24
       type: "int"
- 
     法术封锁:
       step: 25
       type: "int"
@@ -1205,7 +1208,8 @@ state:
       type: "int"
 
     疗伤珠:
-      step: 25
+      step: bar
+      bar: 1
       type: "int"
     活力苏醒:
       step: 26
@@ -1293,7 +1297,8 @@ state:
       type: "int"
     
     法力茶层数:
-      step: 24
+      step: bar
+      bar: 1
       type: "int"
     生生不息1:
       step: 25
@@ -1302,7 +1307,8 @@ state:
       step: 26
       type: "int"
     神龙层数:
-      step: 27
+      step: bar
+      bar: 2
       type: "int"
     灵泉:
       step: 28

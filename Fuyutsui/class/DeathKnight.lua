@@ -48,9 +48,8 @@ function fu.updateSpecInfo()
         }
     elseif specIndex == 3 then
         local eventTable = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD" }
-        local getCount = C_Spell.GetSpellCastCount
-        -- 天灾打击
-        fu.CreateAutoLayoutBar(0, 20, function() return getCount(55090) end, eventTable)
+        fu.CreateAutoLayoutBar(0, 20, 55090, eventTable) -- 天灾打击
+
         fu.blocks = {
             ["符文"] = 21,
             ["目标生命值"] = 22,

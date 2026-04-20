@@ -1,7 +1,6 @@
 local _, fu = ...
 if fu.classId ~= 9 then return end
 local creat = fu.updateOrCreatTextureByIndex
-fu.HarmfulSpellId, fu.HelpfulSpellId = 686, 2061
 
 fu.heroSpell = {
     [445486] = 1, -- 地狱召唤者
@@ -18,9 +17,10 @@ function fu.updateSpecInfo()
     if specIndex == 1 then
     elseif specIndex == 2 then
         fu.powerType = "MANA"
+        local eventTable = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD" }
+        fu.CreateAutoLayoutBar(0, 20, 196277, eventTable) -- 内爆
         fu.blocks = {
-            wildImpCount = 22,
-            soulShards = 23,
+            ["灵魂碎片"] = 23,
             ["施法技能"] = 24,
             auras = {
                 ["魔典：邪能破坏者"] = {
@@ -74,77 +74,8 @@ local staticSpells = {
     [17] = "召唤恶魔卫士",
     [18] = "法术封锁",
     [19] = "暗影箭",
-
 }
 
 function fu.CreateClassMacro()
     fu.CreateMacro({}, staticSpells)
 end
-
--- ================================================================
---                          小鬼数量检测
--- ================================================================
-
--- 初始化数据结构
-local WildImps = {}
-local handOfGuldan = 105174 -- 古尔丹之手, 召唤3个"野生小鬼"
-local Implosion = 196277    -- 内爆, 消耗6个"野生小鬼"，每2个返还1个
-local Imp_Duration = 11     -- "野生小鬼"持续时间11秒
-
--- 清理过期的小鬼并返回当前数量
-local function GetCurrentImpCount()
-    local currentTime = GetTime()
-    for i = #WildImps, 1, -1 do
-        if WildImps[i] <= currentTime then
-            table.remove(WildImps, i)
-        end
-    end
-    return #WildImps
-end
-
-local function updateSpellSuccess(spellID)
-    if not fu.blocks then return end
-    local currentTime = GetTime()
-    if fu.blocks.auras[spellID] then
-        fu.blocks.auras[spellID].expirationTime = currentTime + fu.blocks.auras[spellID].duration
-    elseif spellID == handOfGuldan then
-        for i = 1, 3 do
-            table.insert(WildImps, currentTime + Imp_Duration)
-        end
-    elseif spellID == Implosion then
-        local currentCount = GetCurrentImpCount()
-        local toConsume = math.min(currentCount, 6) -- 最多消耗6个
-        local toRefund = math.floor(toConsume / 2)  -- 每2个返还1个
-        local netLoss = toConsume - toRefund        -- 实际从队列移除的数量
-        for i = 1, netLoss do
-            if #WildImps > 0 then
-                table.remove(WildImps, 1)
-            end
-        end
-    end
-end
-
-local function updateOnUpdate()
-    if not fu.blocks then return end
-    local wildImpCount = GetCurrentImpCount()
-    creat(fu.blocks.wildImpCount, wildImpCount / 255)
-end
-
-local frame = CreateFrame("Frame")
-frame:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
-
-frame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
-function frame:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID, castBarID)
-    if not issecretvalue(spellID) then
-        updateSpellSuccess(spellID)
-    end
-end
-
-local timer10 = 0
-frame:SetScript("OnUpdate", function(_, update)
-    timer10 = timer10 + update
-    if timer10 >= 1 then
-        updateOnUpdate()
-        timer10 = 0
-    end
-end)

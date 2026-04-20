@@ -8,7 +8,7 @@ fu.HarmfulSpellId = 188196
 
 fu.spellCooldown = {
     [462854] = { index = 31, name = "天怒" },
-    [192106] = { index = 32, name = "闪电之盾"},
+    [192106] = { index = 32, name = "闪电之盾" },
     [188196] = { index = 33, name = "闪电箭" },
     [188443] = { index = 34, name = "闪电链" },
     [1064] = { index = 35, name = "治疗链" },
@@ -45,9 +45,8 @@ function fu.updateSpecInfo()
         fu.spellCooldown[191634] = { index = 47, name = "风暴守护者" }
         fu.spellCooldown[452201] = { index = 48, name = "狂风怒号" }
         fu.spellCooldown[114050] = { index = 49, name = "升腾" }
-
     end
-    if specIndex == 2 then 
+    if specIndex == 2 then
         fu.powerType = "MANA"
         fu.blocks = {
             ["目标生命值"] = 21,
@@ -68,9 +67,7 @@ function fu.updateSpecInfo()
         fu.spellCooldown[452201] = { index = 49, name = "狂风怒号" }
         fu.spellCooldown[115356] = { index = 50, name = "风切" }
         fu.spellCooldown[114051] = { index = 51, name = "升腾" }
-
-        
-    end    
+    end
     if specIndex == 3 then
         fu.powerType = "MANA"
         fu.blocks = {
@@ -105,28 +102,28 @@ function fu.updateSpecInfo()
             },
         }
 
-        
-            fu.spellCooldown[457481] = { index = 40, name = "唤潮者的护卫" }
-            fu.spellCooldown[382021] = { index = 41, name = "大地生命武器" }
-            fu.spellCooldown[52127] = { index = 42, name = "水之护盾" }
-            fu.spellCooldown[470411] = { index = 43, name = "烈焰震击" }
-            fu.spellCooldown[51505] = { index = 44, name = "熔岩爆裂" }
-            fu.spellCooldown[77472] = { index = 45, name = "治疗波" }
-            fu.spellCooldown[61295] = { index = 46, name = "激流", charge = 61 }
-            fu.spellCooldown[77130] = { index = 47, name = "净化灵魂" }
-            fu.spellCooldown[5394] = { index = 48, name = "治疗之泉图腾", charge = 62 }
-            fu.spellCooldown[73685] = { index = 49, name = "生命释放" }
-            fu.spellCooldown[443454] = { index = 50, name = "先祖迅捷" }
-            fu.spellCooldown[378081] = { index = 51, name = "自然迅捷" }
-            fu.spellCooldown[444995] = { index = 52, name = "涌动图腾" }
-            fu.spellCooldown[192063] = { index = 53, name = "阵风" }
-            fu.spellCooldown[98008] = { index = 54, name = "灵魂链接图腾" }
-            fu.spellCooldown[8143] = { index = 56, name = "战栗图腾" }
-            fu.spellCooldown[383013] = { index = 57, name = "清毒图腾" }
-            fu.spellCooldown[108287] = { index = 58, name = "图腾投射" }
-            fu.spellCooldown[114052] = { index = 59, name = "升腾" }
-            fu.spellCooldown[108280] = { index = 60, name = "治疗之潮图腾" }
-        
+
+        fu.spellCooldown[457481] = { index = 40, name = "唤潮者的护卫" }
+        fu.spellCooldown[382021] = { index = 41, name = "大地生命武器" }
+        fu.spellCooldown[52127] = { index = 42, name = "水之护盾" }
+        fu.spellCooldown[470411] = { index = 43, name = "烈焰震击" }
+        fu.spellCooldown[51505] = { index = 44, name = "熔岩爆裂" }
+        fu.spellCooldown[77472] = { index = 45, name = "治疗波" }
+        fu.spellCooldown[61295] = { index = 46, name = "激流", charge = 61 }
+        fu.spellCooldown[77130] = { index = 47, name = "净化灵魂" }
+        fu.spellCooldown[5394] = { index = 48, name = "治疗之泉图腾", charge = 62 }
+        fu.spellCooldown[73685] = { index = 49, name = "生命释放" }
+        fu.spellCooldown[443454] = { index = 50, name = "先祖迅捷" }
+        fu.spellCooldown[378081] = { index = 51, name = "自然迅捷" }
+        fu.spellCooldown[444995] = { index = 52, name = "涌动图腾", forcedKnown = true }
+        fu.spellCooldown[192063] = { index = 53, name = "阵风" }
+        fu.spellCooldown[98008] = { index = 54, name = "灵魂链接图腾" }
+        fu.spellCooldown[8143] = { index = 56, name = "战栗图腾" }
+        fu.spellCooldown[383013] = { index = 57, name = "清毒图腾" }
+        fu.spellCooldown[108287] = { index = 58, name = "图腾投射" }
+        fu.spellCooldown[114052] = { index = 59, name = "升腾" }
+        fu.spellCooldown[108280] = { index = 60, name = "治疗之潮图腾" }
+
 
 
 

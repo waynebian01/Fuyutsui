@@ -152,8 +152,8 @@ end
 
 -- 各法术的驱散能力映射
 local dispelAbilities = {
-    [1] = { 527, 360823, 4987, 115450, 88423 , 77130},              -- 魔法驱散
-    [2] = { 383016, 51886, 392378, 2782, 475 , 77130},              -- 诅咒驱散
+    [1] = { 527, 360823, 4987, 115450, 88423, 77130 },              -- 魔法驱散
+    [2] = { 383016, 51886, 392378, 2782, 475, 77130 },              -- 诅咒驱散
     [3] = { 390632, 213634, 393024, 213644, 388874, 218164 },       -- 疾病驱散
     [4] = { 392378, 2782, 393024, 213644, 388874, 218164, 365585 }, -- 中毒驱散
     [11] = {}                                                       -- 流血驱散
@@ -268,7 +268,7 @@ local function updatePlayerSpecInfo()
     -- 更新变量
     state.specIndex, state.specID = specIndex, specID
     state.powerType = fu.powerType or nil -- 更新能量类型
-    group_blocks = group_blocks           -- 更新队伍块
+    group_blocks = fu.group_blocks        -- 更新队伍块
     blocks = fu.blocks                    -- 更新色块
     updateSpellKnown()
     -- 更新专精色块
@@ -378,9 +378,9 @@ local function updatePlayerPower(powerType)
         local power = UnitPower("player", 9)
         creat(blocks["神圣能量"], power / 255)
     end
-    if powerType == "SOUL_SHARDS" and blocks and blocks.soulShards then
+    if powerType == "SOUL_SHARDS" and blocks and blocks["灵魂碎片"] then
         local power = UnitPower("player", 7)
-        creat(blocks.soulShards, power / 255)
+        creat(blocks["灵魂碎片"], power / 255)
     end
 end
 
@@ -1136,7 +1136,7 @@ end
 local function updateGroupType()
     local index = 0
     if UnitInRaid("player") then
-        index = UnitInRaid("player")
+        index = UnitInRaid("player") or 0
     elseif UnitInParty("player") then
         index = 46
     end
@@ -1203,14 +1203,18 @@ end
 
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 function frame:PLAYER_ENTERING_WORLD()
+    fu.ClearAllFuyutsuiBars()
+    C_Timer.After(1, function()
+        updatePlayerSpecInfo()
+        updateGroup()
+    end)
     updatePlayerState()
     updateSpellKnown()
-    C_Timer.After(1, function() updateGroup() end)
 end
 
 frame:RegisterEvent("ZONE_CHANGED")
 function frame:ZONE_CHANGED()
-    local mapID = C_Map.GetBestMapForUnit("player")
+    local mapID = C_Map.GetBestMapForUnit("player") or 0
     local mapInfo = C_Map.GetMapInfo(mapID)
 end
 
@@ -1295,7 +1299,6 @@ end
 frame:RegisterUnitEvent("UNIT_SPELLCAST_START", "player")
 frame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", "player")
 function frame:UNIT_SPELLCAST_START(unitTarget, castGUID, spellID, castBarID)
-    -- print("开始施法时间:", GetTime())
     state.casting = true
     updateUnitIncomingHealsCurve(spellID)
     updatePlayerCasting(spellID)
@@ -1336,9 +1339,18 @@ function frame:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID, castBarID
         updateAuraBySuccess(spellID, castBarID)
         updateFailedSpellBySuccess(spellID)
         -- print(spellID)
-        if spellID == 384255 or spellID == 200749 then
+        if spellID == 384255 then
+            fu.ClearAllFuyutsuiBars()
             print("切换天赋")
-            C_Timer.After(1, function() updateSpellKnown() end)
+            C_Timer.After(1, function()
+                updatePlayerSpecInfo()
+            end)
+        elseif spellID == 200749 then
+            fu.ClearAllFuyutsuiBars()
+            print("切换专精")
+            C_Timer.After(1, function()
+                updatePlayerSpecInfo()
+            end)
         end
         if spellID == 55090 or spellID == 433895 then
             updateLesserGhoul = true
