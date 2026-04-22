@@ -32,7 +32,9 @@ def get_game_top_left(window_title):
     hwnd = ctypes.windll.user32.FindWindowW(None, window_title)
     if not hwnd:
         return None
-
+    # 窗口最小化时跳过扫描，避免 mss.grab() 在 DWM 重构帧缓冲时卡死
+    if ctypes.windll.user32.IsIconic(hwnd):
+        return None
     point = wintypes.POINT(0, 0)
     ctypes.windll.user32.ClientToScreen(hwnd, ctypes.byref(point))
 

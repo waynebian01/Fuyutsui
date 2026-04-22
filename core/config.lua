@@ -796,6 +796,7 @@ fu.updateAuras = {
         [1222865] = { { name = "冰川尖刺！" } },
         -- 圣骑士
         [223819] = { { name = "神圣意志" } },
+        [408458] = { { name = "神圣意志" } },
         [54149] = { { name = "圣光灌注", step = 2 } },
         [414273] = { { name = "神性之手", step = 2 } },
         [432496] = { { name = "神圣壁垒" } },
@@ -854,6 +855,7 @@ fu.updateAuras = {
     -- 屏幕提示事件, 检测参数: 法术ID
     byActivationOverlay = {
         [223819] = { name = "神圣意志", auraID = 223819 },
+        [408458] = { name = "神圣意志", auraID = 408458 },
         [114255] = { name = "圣光涌动", auraID = 114255 },
         [54149] = { name = "圣光灌注", auraID = 54149 },
     },
@@ -1145,7 +1147,7 @@ fu.rangeSpecID = {
     -- Paladin
     [65] = 30,   -- 神圣
     [66] = 15,   -- 防护
-    [70] = 25,   -- 惩戒
+    [70] = 10,   -- 惩戒
     [1451] = 25, -- Initial
     -- Priest
     [256] = 46,  -- 戒律
@@ -1346,3 +1348,44 @@ fu.roleMap = {
     ["NONE"] = 0,
 }
 
+function SetTestSecret(set)
+    SetCVar("secretChallengeModeRestrictionsForced", set)
+    SetCVar("secretCombatRestrictionsForced", set)
+    SetCVar("secretEncounterRestrictionsForced", set)
+    SetCVar("secretMapRestrictionsForced", set)
+    SetCVar("secretPvPMatchRestrictionsForced", set)
+    SetCVar("secretAuraDataRestrictionsForced", set)
+    SetCVar("scriptErrors", set);
+    SetCVar("doNotFlashLowHealthWarning", set);
+end
+
+-- /script SetTestSecret(0)
+SetTestSecret(1)
+
+-- 遍历队伍成员, 来自WeakAuras的代码
+---@param reversed boolean 是否逆序
+---@param forceParty boolean 是否强制使用队伍
+---@return function 迭代器
+function fu.IterateGroupMembers(reversed, forceParty)
+    local unit = (not forceParty and IsInRaid()) and 'raid' or 'party'
+    local numGroupMembers = unit == 'party' and GetNumSubgroupMembers() or GetNumGroupMembers()
+    local i = reversed and numGroupMembers or (unit == 'party' and 0 or 1)
+    return function()
+        local ret
+        if i == 0 and unit == 'party' then
+            ret = 'player'
+        elseif i <= numGroupMembers and i > 0 then
+            ret = unit .. i
+        end
+        i = i + (reversed and -1 or 1)
+        return ret
+    end
+end
+
+function fu.creatColorCurve(point, b)
+    local curve = C_CurveUtil.CreateColorCurve()
+    curve:SetType(Enum.LuaCurveType.Linear)
+    curve:AddPoint(0, CreateColor(0, 0, 0, 1))
+    curve:AddPoint(point, CreateColor(0, 0, b / 255, 1))
+    return curve
+end

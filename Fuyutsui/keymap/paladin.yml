@@ -779,8 +779,8 @@
   技能: 公正之剑
   热键: CTRL-SHIFT-F11
 196:
-  unit: 0
-  技能: 
+  unit: 1
+  技能: 圣洁鸣钟
   热键: CTRL-SHIFT-F12
 197:
   unit: 0
@@ -838,3 +838,7 @@
   unit: 0
   技能: 荣耀圣令
   热键: ALT-CTRL-SHIFT-NUMPAD6
+211:
+  unit: 0
+  技能: 美德道标
+  热键: ALT-CTRL-SHIFT-NUMPAD7
