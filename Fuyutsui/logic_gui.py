@@ -65,6 +65,78 @@ _toggle_key_str = "XBUTTON2"
 _toggle_vk = get_vk(_toggle_key_str)
 _binding_key_mode = False
 
+# 鼠标侧键钩子：避免 GetAsyncKeyState 轮询 XBUTTON 导致光标闪烁
+_MOUSE_XBUTTON_VKS = {0x05, 0x06}  # VK_XBUTTON1, VK_XBUTTON2
+_xbutton_pressed = False   # 钩子维护的当前按下状态
+_xbutton_hook = None       # 钩子句柄
+
+WH_MOUSE_LL = 14
+WM_XBUTTONDOWN = 0x020B
+WM_XBUTTONUP   = 0x020C
+XBUTTON1_FLAG  = 0x0001
+XBUTTON2_FLAG  = 0x0002
+
+_LowLevelMouseProc = ctypes.WINFUNCTYPE(
+    ctypes.c_long, ctypes.c_int, ctypes.c_ulong, ctypes.POINTER(ctypes.c_ulong)
+)
+
+def _make_mouse_hook_proc():
+    class MSLLHOOKSTRUCT(ctypes.Structure):
+        _fields_ = [
+            ("pt_x",      ctypes.c_long),
+            ("pt_y",      ctypes.c_long),
+            ("mouseData", ctypes.c_ulong),
+            ("flags",     ctypes.c_ulong),
+            ("time",      ctypes.c_ulong),
+            ("dwExtraInfo", ctypes.POINTER(ctypes.c_ulong)),
+        ]
+
+    def _proc(nCode, wParam, lParam):
+        global _xbutton_pressed
+        if nCode >= 0 and wParam in (WM_XBUTTONDOWN, WM_XBUTTONUP):
+            info = ctypes.cast(lParam, ctypes.POINTER(MSLLHOOKSTRUCT))[0]
+            hi_word = (info.mouseData >> 16) & 0xFFFF
+            vk_now = _toggle_vk
+            if vk_now in _MOUSE_XBUTTON_VKS:
+                want_xb2 = (vk_now == 0x06)
+                is_xb2 = (hi_word == XBUTTON2_FLAG)
+                if want_xb2 == is_xb2:
+                    _xbutton_pressed = (wParam == WM_XBUTTONDOWN)
+        return ctypes.windll.user32.CallNextHookEx(None, nCode, wParam, lParam)
+    return _LowLevelMouseProc(_proc)
+
+_mouse_hook_proc_ref = None  # 防止被 GC
+
+def _install_mouse_hook():
+    global _xbutton_hook, _mouse_hook_proc_ref
+    if _xbutton_hook is not None:
+        return
+    _mouse_hook_proc_ref = _make_mouse_hook_proc()
+    _xbutton_hook = ctypes.windll.user32.SetWindowsHookExW(
+        WH_MOUSE_LL, _mouse_hook_proc_ref, None, 0
+    )
+
+def _uninstall_mouse_hook():
+    global _xbutton_hook, _xbutton_pressed
+    if _xbutton_hook is not None:
+        ctypes.windll.user32.UnhookWindowsHookEx(_xbutton_hook)
+        _xbutton_hook = None
+    _xbutton_pressed = False
+
+def _start_mouse_hook_thread():
+    """在独立线程中安装钩子并持续抽取消息（低级钩子必须在有消息循环的线程中运行）。"""
+    def _hook_thread():
+        _install_mouse_hook()
+        msg = ctypes.wintypes.MSG()
+        while True:
+            ret = ctypes.windll.user32.GetMessageW(ctypes.byref(msg), None, 0, 0)
+            if ret == 0 or ret == -1:
+                break
+            ctypes.windll.user32.TranslateMessage(ctypes.byref(msg))
+            ctypes.windll.user32.DispatchMessageW(ctypes.byref(msg))
+    t = threading.Thread(target=_hook_thread, daemon=True)
+    t.start()
+
 # 发送按键模式：switch=开关(持续) / click=单击(一次) / hold=按住(按住持续)
 _send_mode = "switch"
 _click_pending = False
@@ -78,6 +150,7 @@ _spec_name = None
 _spec_id = None
 _current_step = ""  # 当前步骤，每次逻辑循环都会更新
 _unit_info = {}  # 单位信息，供 GUI 显示
+_scan_ms = 0.0   # 上一次 get_info() 的扫描耗时（毫秒）
 
 _CONFIG_CACHE = None
 _DEFAULT_STATUS_KEYS = ["生命值", "能量值", "有效性", "战斗", "移动", "施法", "引导"]
@@ -183,7 +256,7 @@ def get_class_spec_view_data(class_id, spec_id):
 
 def _run_priest_loop():
     """后台运行的全职业主循环（根据职业/专精自动适配）"""
-    global _logic_enabled, _state_dict, _class_name, _class_id, _spec_name, _spec_id, _current_step, _unit_info, _send_mode, _click_pending
+    global _logic_enabled, _state_dict, _class_name, _class_id, _spec_name, _spec_id, _current_step, _unit_info, _send_mode, _click_pending, _scan_ms
     prev_pressed = False
     prev_vk = _toggle_vk
     last_logic_time = 0.0
@@ -204,10 +277,14 @@ def _run_priest_loop():
             prev_pressed = False
             prev_vk = vk_now
 
-        key_state = ctypes.windll.user32.GetAsyncKeyState(vk_now)
-        current_pressed = (key_state & 0x8000) != 0
-        # Also use low-order transition bit to reduce missed fast taps between polls.
-        rising_raw = (current_pressed and not prev_pressed) or ((key_state & 0x0001) != 0)
+        # 鼠标侧键用钩子状态，避免 GetAsyncKeyState 轮询 XBUTTON 导致光标闪烁
+        if vk_now in _MOUSE_XBUTTON_VKS:
+            current_pressed = _xbutton_pressed
+            rising_raw = current_pressed and not prev_pressed
+        else:
+            key_state = ctypes.windll.user32.GetAsyncKeyState(vk_now)
+            current_pressed = (key_state & 0x8000) != 0
+            rising_raw = (current_pressed and not prev_pressed) or ((key_state & 0x0001) != 0)
         now = time.time()
         # Mouse side buttons can jitter; debounce avoids rapid false toggles/flicker.
         rising = rising_raw and (now - last_toggle_time >= TOGGLE_DEBOUNCE_SEC)
@@ -250,7 +327,9 @@ def _run_priest_loop():
 
         if now - last_logic_time >= LOGIC_INTERVAL:
             last_logic_time = now
+            _t0 = time.perf_counter()
             state_dict = get_info()
+            _scan_ms = (time.perf_counter() - _t0) * 1000
             class_name, spec_name = None, None
             class_id, spec_id = None, None
             if state_dict:
@@ -357,6 +436,7 @@ def _disable_ime_for_hwnd(hwnd: int):
 
 
 def create_gui():
+    _start_mouse_hook_thread()
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
 
@@ -793,6 +873,8 @@ def create_gui():
     status_header = ctk.CTkFrame(status_frame, fg_color="transparent")
     status_header.pack(fill="x", padx=12, pady=(10, 2))
     ctk.CTkLabel(status_header, text="实时状态", font=("Microsoft YaHei", 13, "bold"), text_color=FG_LIGHT).pack(side="left")
+    scan_ms_label = ctk.CTkLabel(status_header, text="扫描: - ms", font=("Microsoft YaHei", 11), text_color=FG_DIM)
+    scan_ms_label.pack(side="right")
 
     status_grid = ctk.CTkFrame(status_frame, fg_color="transparent")
     status_grid.pack(fill="x", padx=12, pady=4)
@@ -901,6 +983,7 @@ def create_gui():
             status_vars[k].configure(text=txt, text_color=GREEN if v is True else (RED if v is False else FG_LIGHT))
 
         action_label.configure(text=f"当前步骤: {_current_step}")
+        scan_ms_label.configure(text=f"扫描: {_scan_ms:.1f} ms")
 
         root.after(GUI_UPDATE_MS, update_display)
 

@@ -22,10 +22,23 @@ CONFIG_PATH = os.path.join(_SCRIPT_DIR, "config.yml")
 
 PIXELS_PER_ROW = 256  # 扫描 256 个数据点
 
+# mss 的 DC 是线程局部的，用 threading.local 让每个线程持有自己的单例
+import threading
+_tls = threading.local()
+
+def _get_sct():
+    if not hasattr(_tls, "sct"):
+        _tls.sct = mss.mss()
+    return _tls.sct
+
 def load_config():
-    """加载 config.yml"""
-    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+    """加载 config.yml（缓存，避免每帧重复解析 YAML）"""
+    if load_config._cache is None:
+        with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+            load_config._cache = yaml.safe_load(f)
+    return load_config._cache
+
+load_config._cache = None
 
 def get_game_top_left(window_title):
     """获取游戏客户区（不含标题栏和边框）左上角坐标及宽度"""
@@ -67,16 +80,11 @@ def _is_rgb_green_marker(b, g, r):
 
 def scan_screen_data(window_title="魔兽世界"):
     """
-    合并两个屏幕扫描函数：一次截图同时扫描顶部长条和左边界标记。
+    两次窄截图分别扫描顶部长条和左边界标记，大幅减少截图数据量。
     返回 (row_data, bar_data) 元组：
     - row_data: 顶部长条数据 {1: val1, 2: val2, ...}
     - bar_data: 左边界标记数据 {1: val1, 2: val2, ...}
     若扫描失败返回 (None, None)
-    
-    优化：
-    1. 只扫描必要的区域（顶部 1 行 + 左边界）
-    2. 使用字节数组直接访问，避免重复计算偏移
-    3. 提前终止扫描，减少不必要的像素检查
     """
     hwnd = ctypes.windll.user32.FindWindowW(None, window_title)
     if not hwnd:
@@ -93,128 +101,126 @@ def scan_screen_data(window_title="魔兽世界"):
         return None, None
 
     base_x, base_y = point.x, point.y
+    sct = _get_sct()
 
-    with mss.mss() as sct:
-        monitor = {"top": base_y, "left": base_x, "width": width, "height": height}
-        img = sct.grab(monitor)
-        raw_data = img.raw
+    # ========== 扫描顶部长条：截取第一行（width × 1）==========
+    row_data = {}
+    top_img = sct.grab({"top": base_y, "left": base_x, "width": width, "height": 1})
+    top_raw = top_img.raw
+    top_bytes = len(top_raw)
+    start_x = -1
+
+    for x in range(min(PIXELS_PER_ROW, width)):
+        offset = x * 4
+        if offset + 2 >= top_bytes:
+            break
+        b, g, r = top_raw[offset], top_raw[offset + 1], top_raw[offset + 2]
+        if _is_rgb_green_marker(b, g, r):
+            start_x = x
+            break
+
+    if start_x != -1:
+        for x in range(start_x, width):
+            offset = x * 4
+            if offset + 2 >= top_bytes:
+                break
+            b, g, r = top_raw[offset], top_raw[offset + 1], top_raw[offset + 2]
+            if r == 0 and 1 <= g <= PIXELS_PER_ROW:
+                row_data[g] = b
+                if g == PIXELS_PER_ROW:
+                    break
+            elif g > PIXELS_PER_ROW:
+                break
+
+    # ========== 扫描左边界标记：截取第一列（1 × height）==========
+    bar_data = {}
+    left_img = sct.grab({"top": base_y, "left": base_x, "width": 1, "height": height})
+    left_raw = left_img.raw
+    left_bytes = len(left_raw)
+    marker_y = None
+
+    # 单列截图每行只有 4 字节（BGRA），逐行找第一个红色标记
+    for y in range(height):
+        offset = y * 4
+        if offset + 2 >= left_bytes:
+            break
+        b, g, r = left_raw[offset], left_raw[offset + 1], left_raw[offset + 2]
+        if _is_rgb_red_marker(b, g, r):
+            marker_y = y
+            break
+
+    if marker_y is not None:
+        # 找到标记行后，需要截取该行完整数据来解析 bar 值
+        marker_row_img = sct.grab({"top": base_y + marker_y, "left": base_x, "width": width, "height": 1})
+        raw_data = marker_row_img.raw
         total_bytes = len(raw_data)
-        width_bytes = width * 4
 
-        # ========== 扫描顶部长条 (y=0) ==========
-        row_data = {}
-        start_x = -1
-        
-        # 优化：直接在第一行扫描，找到起点后立即开始收集数据
-        for x in range(min(PIXELS_PER_ROW, width)):
+        def consume_value_from(from_x, already_saw_white=False):
+            sx = from_x
+            need_white = not already_saw_white
+            while sx < width:
+                offset = sx * 4
+                if offset + 2 >= total_bytes:
+                    break
+                b2, g2, r2 = raw_data[offset], raw_data[offset + 1], raw_data[offset + 2]
+                if _is_rgb_red_marker(b2, g2, r2):
+                    return 0, sx
+                if need_white:
+                    if _is_rgb_white(b2, g2, r2):
+                        need_white = False
+                    sx += 1
+                    continue
+                if _is_rgb_white(b2, g2, r2):
+                    sx += 1
+                    continue
+                return int(g2), sx + 1
+            return 0, width
+
+        def _dict_value_from_raw_g(raw_g):
+            return max(0, int(raw_g) - 1)
+
+        seg_idx = 0
+        x = 0
+        pending_1_0_0 = False
+
+        while x < width:
             offset = x * 4
             if offset + 2 >= total_bytes:
                 break
             b, g, r = raw_data[offset], raw_data[offset + 1], raw_data[offset + 2]
-            if _is_rgb_green_marker(b, g, r):
-                start_x = x
-                break
 
-        if start_x != -1:
-            # 从起点开始扫描，直到找到所有数据或到达行尾
-            for x in range(start_x, width):
-                offset = x * 4
-                if offset + 2 >= total_bytes:
-                    break
-                b, g, r = raw_data[offset], raw_data[offset + 1], raw_data[offset + 2]
-                if r == 0 and 1 <= g <= PIXELS_PER_ROW:
-                    row_data[g] = b
-                    if g == PIXELS_PER_ROW:  # 提前终止：已收集所有数据
-                        break
-                elif g > PIXELS_PER_ROW:  # 超出范围，停止扫描
-                    break
+            if pending_1_0_0 and _is_rgb_red_green_marker(b, g, r):
+                pending_1_0_0 = False
+                seg_idx += 1
+                val, next_x = consume_value_from(x + 1, already_saw_white=False)
+                bar_data[seg_idx] = _dict_value_from_raw_g(val)
+                x = next_x
+                continue
 
-        # ========== 扫描左边界标记 (x=0) ==========
-        bar_data = {}
-        marker_y = None
-        
-        # 优化：只扫描左边界（x=0），找到第一个红色标记
-        for y in range(height):
-            offset = y * width_bytes  # 每行的起始偏移
-            if offset + 2 >= total_bytes:
-                break
-            b, g, r = raw_data[offset], raw_data[offset + 1], raw_data[offset + 2]
             if _is_rgb_red_marker(b, g, r):
-                marker_y = y
-                break
+                pending_1_0_0 = True
+                x += 1
+                continue
 
-        if marker_y is not None:
-            marker_row_offset = marker_y * width_bytes
-            
-            def consume_value_from(from_x, already_saw_white=False):
-                """从 from_x 起取该键的数值（优化版本）"""
-                sx = from_x
-                need_white = not already_saw_white
-                while sx < width:
-                    offset = marker_row_offset + sx * 4
-                    if offset + 2 >= total_bytes:
-                        break
-                    b2, g2, r2 = raw_data[offset], raw_data[offset + 1], raw_data[offset + 2]
-                    if _is_rgb_red_marker(b2, g2, r2):
-                        return 0, sx
-                    if need_white:
-                        if _is_rgb_white(b2, g2, r2):
-                            need_white = False
-                        sx += 1
-                        continue
-                    if _is_rgb_white(b2, g2, r2):
-                        sx += 1
-                        continue
-                    return int(g2), sx + 1
-                return (0, width) if need_white else (0, width)
+            if _is_rgb_white(b, g, r):
+                prev_white = False
+                if x > 0:
+                    prev_offset = (x - 1) * 4
+                    if prev_offset + 2 < total_bytes:
+                        pb, pg, pr = raw_data[prev_offset], raw_data[prev_offset + 1], raw_data[prev_offset + 2]
+                        prev_white = _is_rgb_white(pb, pg, pr)
 
-            def _dict_value_from_raw_g(raw_g):
-                """原始 G>0 时存 G-1，否则 0"""
-                return max(0, int(raw_g) - 1)
-
-            seg_idx = 0
-            x = 0
-            pending_1_0_0 = False
-            
-            while x < width:
-                offset = marker_row_offset + x * 4
-                if offset + 2 >= total_bytes:
-                    break
-                b, g, r = raw_data[offset], raw_data[offset + 1], raw_data[offset + 2]
-
-                if pending_1_0_0 and _is_rgb_red_green_marker(b, g, r):
+                if not prev_white:
                     pending_1_0_0 = False
                     seg_idx += 1
-                    val, next_x = consume_value_from(x + 1, already_saw_white=False)
+                    val, next_x = consume_value_from(x + 1, already_saw_white=True)
                     bar_data[seg_idx] = _dict_value_from_raw_g(val)
                     x = next_x
                     continue
 
-                if _is_rgb_red_marker(b, g, r):
-                    pending_1_0_0 = True
-                    x += 1
-                    continue
+            x += 1
 
-                if _is_rgb_white(b, g, r):
-                    # 检查前一个像素是否为白色
-                    prev_white = False
-                    if x > 0:
-                        prev_offset = marker_row_offset + (x - 1) * 4
-                        if prev_offset + 2 < total_bytes:
-                            pb, pg, pr = raw_data[prev_offset], raw_data[prev_offset + 1], raw_data[prev_offset + 2]
-                            prev_white = _is_rgb_white(pb, pg, pr)
-                    
-                    if not prev_white:
-                        pending_1_0_0 = False
-                        seg_idx += 1
-                        val, next_x = consume_value_from(x + 1, already_saw_white=True)
-                        bar_data[seg_idx] = _dict_value_from_raw_g(val)
-                        x = next_x
-                        continue
-
-                x += 1
-
-        return (row_data if row_data else None, bar_data if bar_data else {})
+    return (row_data if row_data else None, bar_data if bar_data else {})
 
 
 def scan_top_bar(window_title="魔兽世界"):
@@ -365,7 +371,7 @@ def get_info(window_title="魔兽世界"):
     """
     主入口：扫描顶部长条，加载配置，根据职业专精扩展字典，返回完整状态字典。
     """
-    row_data = scan_top_bar(window_title)
+    row_data, bar_data = scan_screen_data(window_title)
     if not row_data:
         return None
 
@@ -374,7 +380,6 @@ def get_info(window_title="魔兽世界"):
     spec_id = row_data.get(3)
 
     state_config = _get_spec_config(config, class_id, spec_id)
-    bar_data = scan_row_data_red_white_markers(window_title)
     if bar_data is None:
         bar_data = {}
     return build_state_dict(config, row_data, state_config, class_id, spec_id, bar_data=bar_data)
