@@ -146,3 +146,7 @@
   unit: 0
   技能: 符文打击
   热键: ALT-NUMPAD3
+38:
+  unit: 0
+  技能: 死亡之握
+  热键: ALT-NUMPAD4

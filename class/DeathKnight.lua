@@ -10,6 +10,7 @@ fu.heroSpell = {
 }
 
 fu.spellCooldown = {
+    [49576]  = { index = 40, name = "死亡之握" },
     [51052]  = { index = 41, name = "反魔法领域" },
     [221562] = { index = 42, name = "窒息" },
     [207167] = { index = 43, name = "致盲冰雨" },
@@ -102,6 +103,7 @@ end
 
 function fu.CreateClassMacro()
     local dynamicSpells = {}
+    local specialSpells = { [38] = "/castsequence reset=3 死亡之握,0", }
     local staticSpells = {
         [1] = "亡者复生",
         [2] = "亡者大军",
@@ -141,5 +143,5 @@ function fu.CreateClassMacro()
         [36] = "符文武器增效",
         [37] = "符文打击",
     }
-    fu.CreateMacro(dynamicSpells, staticSpells, _)
+    fu.CreateMacro(dynamicSpells, staticSpells, specialSpells)
 end

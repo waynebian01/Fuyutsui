@@ -281,6 +281,7 @@ state:
     敌人人数: {step: 23, type: "int" }
 
     spells:
+      死亡之握: {step: 40, type: "int" }
       反魔法领域: {step: 41, type: "int" }
       窒息: {step: 42, type: "int" }
       致盲冰雨: {step: 43, type: "int" }
@@ -296,6 +297,7 @@ state:
     敌人人数: {step: 23, type: "int" }
     黑暗援助: {step: 24, type: "int" }
     spells:
+      死亡之握: {step: 40, type: "int" }
       反魔法领域: {step: 41, type: "int" }
       窒息: {step: 42, type: "int" }
       致盲冰雨: {step: 43, type: "int" }
@@ -312,6 +314,7 @@ state:
     脓疮毒镰: {step: 31, type: "int" }
 
     spells:
+      死亡之握: {step: 40, type: "int" }
       反魔法领域: {step: 41, type: "int" }
       窒息: {step: 42, type: "int" }
       致盲冰雨: {step: 43, type: "int" }
