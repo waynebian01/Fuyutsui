@@ -1,148 +1,37 @@
-1:
-  unit: 0
-  技能: 复仇回避
-  热键: CTRL-NUMPAD1
-2:
-  unit: 0
-  技能: 投掷利刃
-  热键: CTRL-NUMPAD2
-3:
-  unit: 0
-  技能: 悲苦咒符
-  热键: CTRL-NUMPAD3
-4:
-  unit: 0
-  技能: 禁锢
-  热键: CTRL-NUMPAD4
-5:
-  unit: 0
-  技能: 献祭光环
-  热键: CTRL-NUMPAD5
-6:
-  unit: 0
-  技能: 混乱新星
-  热键: CTRL-NUMPAD6
-7:
-  unit: 0
-  技能: 恶魔变形
-  热键: CTRL-NUMPAD7
-8:
-  unit: 0
-  技能: 邪能之刃
-  热键: CTRL-NUMPAD8
-9:
-  unit: 0
-  技能: 刃舞
-  热键: CTRL-NUMPAD9
-10:
-  unit: 0
-  技能: 混乱打击
-  热键: CTRL-NUMPAD0
-11:
-  unit: 0
-  技能: 疾影
-  热键: CTRL-NUMPADDECIMAL
-12:
-  unit: 0
-  技能: 恶魔追击
-  热键: CTRL-NUMPADPLUS
-13:
-  unit: 0
-  技能: 眼棱
-  热键: CTRL-NUMPADMINUS
-14:
-  unit: 0
-  技能: 邪能冲撞
-  热键: CTRL-NUMPADMULTIPLY
-15:
-  unit: 0
-  技能: 精华破碎
-  热键: CTRL-NUMPADDIVIDE
-16:
-  unit: 0
-  技能: 恶魔变形
-  热键: CTRL-F1
-17:
-  unit: 0
-  技能: 地狱火撞击
-  热键: CTRL-F2
-18:
-  unit: 0
-  技能: 恶魔尖刺
-  热键: CTRL-F3
-19:
-  unit: 0
-  技能: 烈火烙印
-  热键: CTRL-F5
-20:
-  unit: 0
-  技能: 幽魂炸弹
-  热键: CTRL-F6
-21:
-  unit: 0
-  技能: 灵魂切削
-  热键: CTRL-F7
-22:
-  unit: 0
-  技能: 烈焰咒符
-  热键: CTRL-F8
-23:
-  unit: 0
-  技能: 怨念咒符
-  热键: CTRL-F9
-24:
-  unit: 0
-  技能: 灵魂裂劈
-  热键: CTRL-F10
-25:
-  unit: 0
-  技能: 破裂
-  热键: CTRL-F11
-26:
-  unit: 0
-  技能: 邪能毁灭
-  热键: CTRL-F12
-27:
-  unit: 0
-  技能: 沉默咒符
-  热键: CTRL-,
-28:
-  unit: 0
-  技能: 虚空新星
-  热键: CTRL-.
-29:
-  unit: 0
-  技能: 虚空变形
-  热键: CTRL-/
-30:
-  unit: 0
-  技能: 虚空之刃
-  热键: CTRL-;
-31:
-  unit: 0
-  技能: 变换
-  热键: CTRL-'
-32:
-  unit: 0
-  技能: 收割
-  热键: CTRL-[
-33:
-  unit: 0
-  技能: 吞噬
-  热键: CTRL-]
-34:
-  unit: 0
-  技能: 虚空射线
-  热键: CTRL-=
-35:
-  unit: 0
-  技能: 恶魔追击
-  热键: ALT-NUMPAD1
-36:
-  unit: 0
-  技能: 饥渴斩击
-  热键: ALT-NUMPAD2
-37:
-  unit: 0
-  技能: 黑暗
-  热键: ALT-NUMPAD3
+1: {unit: 0, 技能: "复仇回避", 热键: "CTRL-NUMPAD1"}
+2: {unit: 0, 技能: "投掷利刃", 热键: "CTRL-NUMPAD2"}
+3: {unit: 0, 技能: "悲苦咒符", 热键: "CTRL-NUMPAD3"}
+4: {unit: 0, 技能: "禁锢", 热键: "CTRL-NUMPAD4"}
+5: {unit: 0, 技能: "献祭光环", 热键: "CTRL-NUMPAD5"}
+6: {unit: 0, 技能: "混乱新星", 热键: "CTRL-NUMPAD6"}
+7: {unit: 0, 技能: "恶魔变形", 热键: "CTRL-NUMPAD7"}
+8: {unit: 0, 技能: "邪能之刃", 热键: "CTRL-NUMPAD8"}
+9: {unit: 0, 技能: "刃舞", 热键: "CTRL-NUMPAD9"}
+10: {unit: 0, 技能: "混乱打击", 热键: "CTRL-NUMPAD0"}
+11: {unit: 0, 技能: "疾影", 热键: "CTRL-NUMPADDECIMAL"}
+12: {unit: 0, 技能: "恶魔追击", 热键: "CTRL-NUMPADPLUS"}
+13: {unit: 0, 技能: "眼棱", 热键: "CTRL-NUMPADMINUS"}
+14: {unit: 0, 技能: "邪能冲撞", 热键: "CTRL-NUMPADMULTIPLY"}
+15: {unit: 0, 技能: "精华破碎", 热键: "CTRL-NUMPADDIVIDE"}
+16: {unit: 0, 技能: "恶魔变形", 热键: "CTRL-F1"}
+17: {unit: 0, 技能: "地狱火撞击", 热键: "CTRL-F2"}
+18: {unit: 0, 技能: "恶魔尖刺", 热键: "CTRL-F3"}
+19: {unit: 0, 技能: "烈火烙印", 热键: "CTRL-F5"}
+20: {unit: 0, 技能: "幽魂炸弹", 热键: "CTRL-F6"}
+21: {unit: 0, 技能: "灵魂切削", 热键: "CTRL-F7"}
+22: {unit: 0, 技能: "烈焰咒符", 热键: "CTRL-F8"}
+23: {unit: 0, 技能: "怨念咒符", 热键: "CTRL-F9"}
+24: {unit: 0, 技能: "灵魂裂劈", 热键: "CTRL-F10"}
+25: {unit: 0, 技能: "破裂", 热键: "CTRL-F11"}
+26: {unit: 0, 技能: "邪能毁灭", 热键: "CTRL-F12"}
+27: {unit: 0, 技能: "沉默咒符", 热键: "CTRL-"}
+28: {unit: 0, 技能: "虚空新星", 热键: "CTRL-."}
+29: {unit: 0, 技能: "虚空变形", 热键: "CTRL-/"}
+30: {unit: 0, 技能: "虚空之刃", 热键: "CTRL-;"}
+31: {unit: 0, 技能: "变换", 热键: "CTRL-'"}
+32: {unit: 0, 技能: "收割", 热键: "CTRL-["}
+33: {unit: 0, 技能: "吞噬", 热键: "CTRL-]"}
+34: {unit: 0, 技能: "虚空射线", 热键: "CTRL-="}
+35: {unit: 0, 技能: "恶魔追击", 热键: "ALT-NUMPAD1"}
+36: {unit: 0, 技能: "饥渴斩击", 热键: "ALT-NUMPAD2"}
+37: {unit: 0, 技能: "黑暗", 热键: "ALT-NUMPAD3"}

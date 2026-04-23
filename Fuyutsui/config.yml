@@ -1,1819 +1,696 @@
-锚点:
-  step: 1
-  type: "bool"
-职业:
-  step: 2
-  type: "int"
-专精:
-  step: 3
-  type: "int"
+锚点: {step: 1, type: "bool" }
+职业: {step: 2, type: "int" }
+专精: {step: 3, type: "int" }
 
 state:
-  有效性:
-    step: 4
-    type: "bool"
-  战斗:
-    step: 5
-    type: "bool"
-  移动:
-    step: 6
-    type: "bool"
-  施法:
-    step: 7
-    type: "int"
-  引导:
-    step: 8
-    type: "int"
-  生命值:
-    step: 9
-    type: "int"
-  能量值:
-    step: 10
-    type: "int"
-  一键辅助:
-    step: 11
-    type: "int"
-  法术失败:
-    step: 12
-    type: "int"
-  目标类型:
-    step: 13
-    type: "int"
-  队伍类型:
-    step: 14
-    type: "int"
-  队伍人数:
-    step: 15
-    type: "int"
-  首领战:
-    step: 16
-    type: "int"
-  难度:
-    step: 17
-    type: "int"
-  英雄天赋:
-    step: 18
-    type: "int"
-    
-1:
+  有效性: {step: 4, type: "bool" }
+  战斗: {step: 5, type: "bool" }
+  移动: {step: 6, type: "bool" }
+  施法: {step: 7, type: "int" }
+  引导: {step: 8, type: "int" }
+  生命值: {step: 9, type: "int" }
+  能量值: {step: 10, type: "int" }
+  一键辅助: {step: 11, type: "int" }
+  法术失败: {step: 12, type: "int" }
+  目标类型: {step: 13, type: "int" }
+  队伍类型: {step: 14, type: "int" }
+  队伍人数: {step: 15, type: "int" }
+  首领战: {step: 16, type: "int" }
+  难度: {step: 17, type: "int" }
+  英雄天赋: {step: 18, type: "int" }
+
+1: # 战士
   keymap: "warrior.yml"
   1:
-    目标生命值:
-      step: 21
-      type: "int"
-    敌人人数:
-      step: 22
-      type: "int"
+    目标生命值: {step: 21, type: "int" }
+    敌人人数: {step: 22, type: "int" }
     spells:
-      胜利在望:
-        step: 31
-        type: "int"
-      勇士之矛:
-        step: 32
-        type: "int"
-      英勇飞跃:
-        step: 33
-        type: "int"
-      集结呐喊:
-        step: 34
-        type: "int"
-      震荡波:
-        step: 35
-        type: "int"
-      风暴之锤:
-        step: 36
-        type: "int"
-      破裂投掷:
-        step: 37
-        type: "int"
-      碎裂投掷:
-        step: 38
-        type: "int"
-      破胆怒吼:
-        step: 39
-        type: "int"
+      胜利在望: {step: 31, type: "int" }
+      勇士之矛: {step: 32, type: "int" }
+      英勇飞跃: {step: 33, type: "int" }
+      集结呐喊: {step: 34, type: "int" }
+      震荡波: {step: 35, type: "int" }
+      风暴之锤: {step: 36, type: "int" }
+      破裂投掷: {step: 37, type: "int" }
+      碎裂投掷: {step: 38, type: "int" }
+      破胆怒吼: {step: 39, type: "int" }
   2:
-    目标生命值:
-      step: 21
-      type: "int"
-    敌人人数:
-      step: 22
-      type: "int"
+    目标生命值: {step: 21, type: "int" }
+    敌人人数: {step: 22, type: "int" }
     spells:
-      胜利在望:
-        step: 31
-        type: "int"
-      勇士之矛:
-        step: 32
-        type: "int"
-      英勇飞跃:
-        step: 33
-        type: "int"
-      集结呐喊:
-        step: 34
-        type: "int"
-      震荡波:
-        step: 35
-        type: "int"
-      风暴之锤:
-        step: 36
-        type: "int"
-      破裂投掷:
-        step: 37
-        type: "int"
-      碎裂投掷:
-        step: 38
-        type: "int"
-      破胆怒吼:
-        step: 39
-        type: "int"
-      鲁莽:
-        step: 40
-        type: "int"
+      胜利在望: {step: 31, type: "int" }
+      勇士之矛: {step: 32, type: "int" }
+      英勇飞跃: {step: 33, type: "int" }
+      集结呐喊: {step: 34, type: "int" }
+      震荡波: {step: 35, type: "int" }
+      风暴之锤: {step: 36, type: "int" }
+      破裂投掷: {step: 37, type: "int" }
+      碎裂投掷: {step: 38, type: "int" }
+      破胆怒吼: {step: 39, type: "int" }
+      鲁莽: {step: 40, type: "int" }
 
   3:
-    目标生命值:
-      step: 21
-      type: "int"
-    敌人人数:
-      step: 22
-      type: "int"
-    盾牌格挡:
-      step: 25
-      type: "int"
+    目标生命值: {step: 21, type: "int" }
+    敌人人数: {step: 22, type: "int" }
+    盾牌格挡: {step: 25, type: "int" }
     spells:
-      胜利在望:
-        step: 31
-        type: "int"
-      勇士之矛:
-        step: 32
-        type: "int"
-      英勇飞跃:
-        step: 33
-        type: "int"
-      集结呐喊:
-        step: 34
-        type: "int"
-      震荡波:
-        step: 35
-        type: "int"
-      风暴之锤:
-        step: 36
-        type: "int"
-      破裂投掷:
-        step: 37
-        type: "int"
-      碎裂投掷:
-        step: 38
-        type: "int"
-      破胆怒吼:
-        step: 39
-        type: "int"
-      盾牌格挡:
-        step: 40
-        type: "int"
-      格挡充能:
-        step: 41
-        type: "int"
-      盾牌冲锋:
-        step: 42
-        type: "int"
-      天神下凡:
-        step: 43
-        type: "int"
-      挫志怒吼:
-        step: 44
-        type: "int"
+      胜利在望: {step: 31, type: "int" }
+      勇士之矛: {step: 32, type: "int" }
+      英勇飞跃: {step: 33, type: "int" }
+      集结呐喊: {step: 34, type: "int" }
+      震荡波: {step: 35, type: "int" }
+      风暴之锤: {step: 36, type: "int" }
+      破裂投掷: {step: 37, type: "int" }
+      碎裂投掷: {step: 38, type: "int" }
+      破胆怒吼: {step: 39, type: "int" }
+      盾牌格挡: {step: 40, type: "int" }
+      格挡充能: {step: 41, type: "int" }
+      盾牌冲锋: {step: 42, type: "int" }
+      天神下凡: {step: 43, type: "int" }
+      挫志怒吼: {step: 44, type: "int" }
 
-2:
+2: # 圣骑士
   keymap: "paladin.yml"
   1:
-    神圣能量:
-      step: 21
-      type: "int"
-    施法技能:
-      step: 22
-      type: "int"
-    施法目标:
-      step: 23
-      type: "int"
-    目标距离:
-      step: 24
-      type: "int"
-    神圣意志:
-      step: 25
-      type: "int"
-    圣光灌注:
-      step: 26
-      type: "int"
-    灌注层数:
-      step: 27
-      type: "int"
-    神性层数:
-      step: 28
-      type: "int"
+    神圣能量: {step: 21, type: "int" }
+    施法技能: {step: 22, type: "int" }
+    施法目标: {step: 23, type: "int" }
+    目标距离: {step: 24, type: "int" }
+    神圣意志: {step: 25, type: "int" }
+    圣光灌注: {step: 26, type: "int" }
+    灌注层数: {step: 27, type: "int" }
+    神性层数: {step: 28, type: "int" }
 
     spells:
-      盲目之光:
-        step: 31
-        type: "int"
-      制裁之锤:
-        step: 32
-        type: "int"
-      圣盾术:
-        step: 33
-        type: "int"
-      牺牲祝福:
-        step: 34
-        type: "int"
-      自由祝福:
-        step: 35
-        type: "int"
-      保护祝福:
-        step: 36
-        type: "int"
-      圣疗术:
-        step: 37
-        type: "int"
-      神圣震击:
-        step: 38
-        type: "int"
-      震击充能:
-        step: 39
-        type: "int"
-      清洁术:
-        step: 40
-        type: "int"
-      审判:
-        step: 41
-        type: "int"
-      圣洁鸣钟:
-        step: 42
-        type: "int"
-      神圣棱镜:
-        step: 43
-        type: "int"
-      光环掌握:
-        step: 44
-        type: "int"
-      美德道标:
-        step: 45
-        type: "int"
+      盲目之光: {step: 31, type: "int" }
+      制裁之锤: {step: 32, type: "int" }
+      圣盾术: {step: 33, type: "int" }
+      牺牲祝福: {step: 34, type: "int" }
+      自由祝福: {step: 35, type: "int" }
+      保护祝福: {step: 36, type: "int" }
+      圣疗术: {step: 37, type: "int" }
+      神圣震击: {step: 38, type: "int" }
+      震击充能: {step: 39, type: "int" }
+      清洁术: {step: 40, type: "int" }
+      审判: {step: 41, type: "int" }
+      圣洁鸣钟: {step: 42, type: "int" }
+      神圣棱镜: {step: 43, type: "int" }
+      光环掌握: {step: 44, type: "int" }
+      美德道标: {step: 45, type: "int" }
     group:
       start: 70
       num: 6
-      生命值:
-        step: 1
-        type: "int"
-      职责:
-        step: 2
-        type: "int"
-      驱散:
-        step: 3
-        type: "int"
-      永恒之火:
-        step: 4
-        type: "int"
-      救世道标:
-        step: 5
-        type: "int"
-      圣光道标:
-        step: 6
-        type: "int"
+      生命值: {step: 1, type: "int" }
+      职责: {step: 2, type: "int" }
+      驱散: {step: 3, type: "int" }
+      永恒之火: {step: 4, type: "int" }
+      救世道标: {step: 5, type: "int" }
+      圣光道标: {step: 6, type: "int" }
   2:
-    神圣能量:
-      step: 21
-      type: "int"
-    神圣意志:
-      step: 22
-      type: "int"
-    神圣壁垒:
-      step: 23
-      type: "int"
-    圣洁武器:
-      step: 24
-      type: "int"
-    闪耀之光:
-      step: 25
-      type: "int"
-    闪光层数:
-      step: 26
-      type: "int"
-    军备类型:
-      step: 27
-      type: "int"
-    奉献:
-      step: 28
-      type: "int"
-    复仇之怒:
-      step: 29
-      type: "int"
-    圣光之锤:
-      step: 30
-      type: "int"
+    神圣能量: {step: 21, type: "int" }
+    神圣意志: {step: 22, type: "int" }
+    神圣壁垒: {step: 23, type: "int" }
+    圣洁武器: {step: 24, type: "int" }
+    闪耀之光: {step: 25, type: "int" }
+    闪光层数: {step: 26, type: "int" }
+    军备类型: {step: 27, type: "int" }
+    奉献: {step: 28, type: "int" }
+    复仇之怒: {step: 29, type: "int" }
+    圣光之锤: {step: 30, type: "int" }
     spells:
-      盲目之光:
-        step: 31
-        type: "int"
-      制裁之锤:
-        step: 32
-        type: "int"
-      圣盾术:
-        step: 33
-        type: "int"
-      牺牲祝福:
-        step: 34
-        type: "int"
-      自由祝福:
-        step: 35
-        type: "int"
-      保护祝福:
-        step: 36
-        type: "int"
-      圣疗术:
-        step: 37
-        type: "int"
-      神圣壁垒:
-        step: 38
-        type: "int"
-      壁垒充能:
-        step: 39
-        type: "int"
-      清毒术:
-        step: 40
-        type: "int"
-      审判:
-        step: 41
-        type: "int"
-      圣洁鸣钟:
-        step: 42
-        type: "int"
-      复仇者之盾:
-        step: 43
-        type: "int"
-      奉献:
-        step: 44
-        type: "int"
-      正义盾击:
-        step: 45
-        type: "int"
-      祝福之锤:
-        step: 46
-        type: "int"
+      盲目之光: {step: 31, type: "int" }
+      制裁之锤: {step: 32, type: "int" }
+      圣盾术: {step: 33, type: "int" }
+      牺牲祝福: {step: 34, type: "int" }
+      自由祝福: {step: 35, type: "int" }
+      保护祝福: {step: 36, type: "int" }
+      圣疗术: {step: 37, type: "int" }
+      神圣壁垒: {step: 38, type: "int" }
+      壁垒充能: {step: 39, type: "int" }
+      清毒术: {step: 40, type: "int" }
+      审判: {step: 41, type: "int" }
+      圣洁鸣钟: {step: 42, type: "int" }
+      复仇者之盾: {step: 43, type: "int" }
+      奉献: {step: 44, type: "int" }
+      正义盾击: {step: 45, type: "int" }
+      祝福之锤: {step: 46, type: "int" }
     group:
       start: 70
       num: 3
-      生命值:
-        step: 1
-        type: "int"
-      职责:
-        step: 2
-        type: "int"
-      驱散:
-        step: 3
-        type: "int"
+      生命值: {step: 1, type: "int" }
+      职责: {step: 2, type: "int" }
+      驱散: {step: 3, type: "int" }
   3:
-    神圣能量:
-      step: 21
-      type: "int"
-    神圣意志:
-      step: 22
-      type: "int"
-    复仇之怒:
-      step: 23
-      type: "int"
-    处决宣判:
-      step: 24
-      type: "int"
-    圣光之锤:
-      step: 25
-      type: "int"
-    爆发开关:
-      step: 26
-      type: "int"
-    AOE开关:
-      step: 27
-      type: "int"
-    输出模式:
-      step: 28
-      type: "int"
+    神圣能量: {step: 21, type: "int" }
+    神圣意志: {step: 22, type: "int" }
+    复仇之怒: {step: 23, type: "int" }
+    处决宣判: {step: 24, type: "int" }
+    圣光之锤: {step: 25, type: "int" }
+    爆发开关: {step: 26, type: "int" }
+    AOE开关: {step: 27, type: "int" }
+    输出模式: {step: 28, type: "int" }
     spells:
-      盲目之光:
-        step: 31
-        type: "int"
-      制裁之锤:
-        step: 32
-        type: "int"
-      圣盾术:
-        step: 33
-        type: "int"
-      牺牲祝福:
-        step: 34
-        type: "int"
-      自由祝福:
-        step: 35
-        type: "int"
-      保护祝福:
-        step: 36
-        type: "int"
-      圣疗术:
-        step: 37
-        type: "int"
-      清毒术:
-        step: 38
-        type: "int"
-      审判:
-        step: 39
-        type: "int"
-      审判充能:
-        step: 40
-        type: "int"
-      圣洁鸣钟:
-        step: 41
-        type: "int"
-      公正之剑:
-        step: 42
-        type: "int"
-      处决宣判:
-        step: 43
-        type: "int"
-      灰烬觉醒:
-        step: 44
-        type: "int"
+      盲目之光: {step: 31, type: "int" }
+      制裁之锤: {step: 32, type: "int" }
+      圣盾术: {step: 33, type: "int" }
+      牺牲祝福: {step: 34, type: "int" }
+      自由祝福: {step: 35, type: "int" }
+      保护祝福: {step: 36, type: "int" }
+      圣疗术: {step: 37, type: "int" }
+      清毒术: {step: 38, type: "int" }
+      审判: {step: 39, type: "int" }
+      审判充能: {step: 40, type: "int" }
+      圣洁鸣钟: {step: 41, type: "int" }
+      公正之剑: {step: 42, type: "int" }
+      处决宣判: {step: 43, type: "int" }
+      灰烬觉醒: {step: 44, type: "int" }
     group:
       start: 70
       num: 3
-      生命值:
-        step: 1
-        type: "int"
-      职责:
-        step: 2
-        type: "int"
-      驱散:
-        step: 3
-        type: "int"
+      生命值: {step: 1, type: "int" }
+      职责: {step: 2, type: "int" }
+      驱散: {step: 3, type: "int" }
 
-3:
+3: # 猎人
   keymap: "hunter.yml"
   1:
-    
-    spells:
-      倒刺射击:
-        step: 31
-        type: "int"
-      杀戮命令:
-        step: 32
-        type: "int"
-      眼镜蛇射击:
-        step: 33
-        type: "int"
-      狂野怒火:
-        step: 34
-        type: "int"
-      荒野呼唤:
-        step: 35
-        type: "int"
-      夺命黑鸦:
-        step: 36
-        type: "int"
-      弹幕射击:
-        step: 37
-        type: "int"
 
-5:
+    spells:
+      倒刺射击: {step: 31, type: "int" }
+      杀戮命令: {step: 32, type: "int" }
+      眼镜蛇射击: {step: 33, type: "int" }
+      狂野怒火: {step: 34, type: "int" }
+      荒野呼唤: {step: 35, type: "int" }
+      夺命黑鸦: {step: 36, type: "int" }
+      弹幕射击: {step: 37, type: "int" }
+
+5: # 牧师
   keymap: "priest.yml"
   1:
-    施法技能:
-      step: 22
-      type: "int"
-    施法目标:
-      step: 23
-      type: "int"
-    虚空之盾:
-      step: 24
-      type: "int"
-    圣光涌动:
-      step: 25
-      type: "int"
-    涌动层数:
-      step: 26
-      type: "int"
-    熵能裂隙:
-      step: 27
-      type: "int"
-    暗影愈合:
-      step: 28
-      type: "int"
-    暗影层数:
-      step: 29
-      type: "int"
-    福音层数:
-      step: 30
-      type: "int"
-    目标生命值:
-      step: 46
-      type: "int"
+    施法技能: {step: 22, type: "int" }
+    施法目标: {step: 23, type: "int" }
+    虚空之盾: {step: 24, type: "int" }
+    圣光涌动: {step: 25, type: "int" }
+    涌动层数: {step: 26, type: "int" }
+    熵能裂隙: {step: 27, type: "int" }
+    暗影愈合: {step: 28, type: "int" }
+    暗影层数: {step: 29, type: "int" }
+    福音层数: {step: 30, type: "int" }
+    目标生命值: {step: 46, type: "int" }
     spells:
-      心灵尖啸:
-        step: 31
-        type: "int"
-      群体驱散:
-        step: 32
-        type: "int"
-      纯净术:
-        step: 33
-        type: "int"
-      绝望祷言:
-        step: 34
-        type: "int"
-      奥术洪流:
-        step: 35
-        type: "int"
-      苦修:
-        step: 36
-        type: "int"
-      苦修充能:
-        step: 37
-        type: "int"
-      真言术：耀:
-        step: 38
-        type: "int"  
-      耀充能:
-        step: 39
-        type: "int"  
-      真言术：盾:
-        step: 40
-        type: "int"
-      真言术：障:
-        step: 41
-        type: "int"
-      终极苦修:
-        step: 42
-        type: "int"
-      福音:
-        step: 43
-        type: "int"
-      心灵震爆:
-        step: 44
-        type: "int"
-      暗言术：灭:
-        step: 45
-        type: "int"
+      心灵尖啸: {step: 31, type: "int" }
+      群体驱散: {step: 32, type: "int" }
+      纯净术: {step: 33, type: "int" }
+      绝望祷言: {step: 34, type: "int" }
+      奥术洪流: {step: 35, type: "int" }
+      苦修: {step: 36, type: "int" }
+      苦修充能: {step: 37, type: "int" }
+      真言术：耀: {step: 38, type: "int" }
+      耀充能: {step: 39, type: "int" }
+      真言术：盾: {step: 40, type: "int" }
+      真言术：障: {step: 41, type: "int" }
+      终极苦修: {step: 42, type: "int" }
+      福音: {step: 43, type: "int" }
+      心灵震爆: {step: 44, type: "int" }
+      暗言术：灭: {step: 45, type: "int" }
 
     group:
       start: 70
       num: 5
-      生命值:
-        step: 1
-        type: "int"
-      职责:
-        step: 2
-        type: "int"
-      驱散:
-        step: 3
-        type: "int"
-      救赎:
-        type: "int"
-        step: 4
-      真言术：盾:
-        type: "int"
-        step: 5
+      生命值: {step: 1, type: "int" }
+      职责: {step: 2, type: "int" }
+      驱散: {step: 3, type: "int" }
+      救赎: {step: 4, type: "int" }
+      真言术：盾: {step: 5, type: "int" }
   2:
-    施法技能:
-      step: 22
-      type: "int"
-    施法目标:
-      step: 23
-      type: "int"
+    施法技能: {step: 22, type: "int" }
+    施法目标: {step: 23, type: "int" }
 
-    织光者:
-      step: 25
-      type: "int"
-    织光层数:
-      step: 26
-      type: "int"
-    圣光涌动:
-      step: 27
-      type: "int"
-    祈福:
-      step: 28
-      type: "int"
-    
+    织光者: {step: 25, type: "int" }
+    织光层数: {step: 26, type: "int" }
+    圣光涌动: {step: 27, type: "int" }
+    祈福: {step: 28, type: "int" }
+
     spells:
-      心灵尖啸:
-        step: 31
-        type: "int"
-      群体驱散:
-        step: 32
-        type: "int"
-      纯净术:
-        step: 33
-        type: "int"
-      绝望祷言:
-        step: 34
-        type: "int"
-      奥术洪流:
-        step: 35
-        type: "int"
-      
-      愈合祷言:
-        step: 36
-        type: "int"
-      愈合充能:
-        step: 37
-        type: "int"
-      圣言术：静:
-        step: 38
-        type: "int"
-      静充能:
-        step: 39
-        type: "int"
-      圣言术：罚:
-        step: 40
-        type: "int"
-      神圣化身:
-        step: 41
-        type: "int"
-      神圣之火:
-        step: 42
-        type: "int"
-      光晕:
-        step: 43
-        type: "int"
-      神圣赞美诗:
-        step: 44
-        type: "int"
+      心灵尖啸: {step: 31, type: "int" }
+      群体驱散: {step: 32, type: "int" }
+      纯净术: {step: 33, type: "int" }
+      绝望祷言: {step: 34, type: "int" }
+      奥术洪流: {step: 35, type: "int" }
+
+      愈合祷言: {step: 36, type: "int" }
+      愈合充能: {step: 37, type: "int" }
+      圣言术：静: {step: 38, type: "int" }
+      静充能: {step: 39, type: "int" }
+      圣言术：罚: {step: 40, type: "int" }
+      神圣化身: {step: 41, type: "int" }
+      神圣之火: {step: 42, type: "int" }
+      光晕: {step: 43, type: "int" }
+      神圣赞美诗: {step: 44, type: "int" }
 
     group:
       start: 70
       num: 5
-      生命值:
-        step: 1
-        type: "int"
-      职责:
-        step: 2
-        type: "int"
-      驱散:
-        step: 3
-        type: "int"
-      愈合祷言:
-        step: 4
-        type: "int"
-      恢复:
-        step: 5
-        type: "int"
+      生命值: {step: 1, type: "int" }
+      职责: {step: 2, type: "int" }
+      驱散: {step: 3, type: "int" }
+      愈合祷言: {step: 4, type: "int" }
+      恢复: {step: 5, type: "int" }
   3:
     spells:
-      心灵尖啸:
-        step: 31
-        type: "int"
-      群体驱散:
-        step: 32
-        type: "int"
-      纯净术:
-        step: 33
-        type: "int"
-      绝望祷言:
-        step: 34
-        type: "int"
-      奥术洪流:
-        step: 35
-        type: "int"
-        
-      心灵震爆:
-        step: 36
-        type: "int"
-      暗言术：灭:
-        step: 37
-        type: "int"
-      虚空洪流:
-        step: 38
-        type: "int"
-      虚空形态:
-        step: 39
-        type: "int"
-      触须猛击:
-        step: 40
-        type: "int"
-      吸血鬼的拥抱:
-        step: 41
-        type: "int"
-      光晕:
-        step: 42
-        type: "int"
-      虚空齐射:
-        step: 43
-        type: "int"
+      心灵尖啸: {step: 31, type: "int" }
+      群体驱散: {step: 32, type: "int" }
+      纯净术: {step: 33, type: "int" }
+      绝望祷言: {step: 34, type: "int" }
+      奥术洪流: {step: 35, type: "int" }
 
-6:
+      心灵震爆: {step: 36, type: "int" }
+      暗言术：灭: {step: 37, type: "int" }
+      虚空洪流: {step: 38, type: "int" }
+      虚空形态: {step: 39, type: "int" }
+      触须猛击: {step: 40, type: "int" }
+      吸血鬼的拥抱: {step: 41, type: "int" }
+      光晕: {step: 42, type: "int" }
+      虚空齐射: {step: 43, type: "int" }
+
+6: # 死亡骑士
   keymap: "deathknight.yml"
   1:
-    符文:
-      step: 21
-      type: "int"
-    目标生命值:
-      step: 22
-      type: "int"
-    敌人人数:
-      step: 23
-      type: "int"
-    
+    符文: {step: 21, type: "int" }
+    目标生命值: {step: 22, type: "int" }
+    敌人人数: {step: 23, type: "int" }
+
     spells:
-      反魔法领域:
-        step: 41
-        type: "int"
-      窒息:
-        step: 42
-        type: "int"
-      致盲冰雨:
-        step: 43
-        type: "int"
-      亡者复生:
-        step: 44
-        type: "int"
-      吸血鬼之血:
-        step: 45
-        type: "int"
-      冰封之韧:
-        step: 46
-        type: "int"
-      巫妖之躯:
-        step: 47
-        type: "int"
-      血魔之握:
-        step: 48
-        type: "int"
-      憎恶附肢:
-        step: 49
-        type: "int"
+      死亡之握: {step: 40, type: "int" }
+      反魔法领域: {step: 41, type: "int" }
+      窒息: {step: 42, type: "int" }
+      致盲冰雨: {step: 43, type: "int" }
+      亡者复生: {step: 44, type: "int" }
+      吸血鬼之血: {step: 45, type: "int" }
+      冰封之韧: {step: 46, type: "int" }
+      巫妖之躯: {step: 47, type: "int" }
+      血魔之握: {step: 48, type: "int" }
+      憎恶附肢: {step: 49, type: "int" }
   2:
-    符文:
-      step: 21
-      type: "int"
-    目标生命值:
-      step: 22
-      type: "int"
-    敌人人数:
-      step: 23
-      type: "int"
-    黑暗援助:
-      step: 24
-      type: "int"
+    符文: {step: 21, type: "int" }
+    目标生命值: {step: 22, type: "int" }
+    敌人人数: {step: 23, type: "int" }
+    黑暗援助: {step: 24, type: "int" }
     spells:
-      反魔法领域:
-        step: 41
-        type: "int"
-      窒息:
-        step: 42
-        type: "int"
-      致盲冰雨:
-        step: 43
-        type: "int"
+      死亡之握: {step: 40, type: "int" }
+      反魔法领域: {step: 41, type: "int" }
+      窒息: {step: 42, type: "int" }
+      致盲冰雨: {step: 43, type: "int" }
   3:
-    符文:
-      step: 21
-      type: "int"
-    目标生命值:
-      step: 22
-      type: "int"
-    敌人人数:
-      step: 23
-      type: "int"
-    
-    次级食尸鬼:
-      step: bar
-      bar: 1
-      type: "int"
-    食尸鬼层数:
-      step: 26
-      type: "int"
-    末日突降:
-      step: 27
-      type: "int"
-    末日突降层数:
-      step: 28
-      type: "int"
-    黑暗援助:
-      step: 29
-      type: "int"
-    禁断知识:
-      step: 30
-      type: "int"
-    脓疮毒镰:
-      step: 31
-      type: "int"
+    符文: {step: 21, type: "int" }
+    目标生命值: {step: 22, type: "int" }
+    敌人人数: {step: 23, type: "int" }
+    次级食尸鬼: {step: bar, bar: 1, type: "int"}
+    食尸鬼层数: {step: 26, type: "int" }
+    末日突降: {step: 27, type: "int" }
+    末日突降层数: {step: 28, type: "int" }
+    黑暗援助: {step: 29, type: "int" }
+    禁断知识: {step: 30, type: "int" }
+    脓疮毒镰: {step: 31, type: "int" }
 
     spells:
-      反魔法领域:
-        step: 41
-        type: "int"
-      窒息:
-        step: 42
-        type: "int"
-      致盲冰雨:
-        step: 43
-        type: "int"
-      亡者复生:
-        step: 44
-        type: "int"
-      亡者大军:
-        step: 45
-        type: "int"
-      腐化:
-        step: 46
-        type: "int"
-      腐化充能:
-        step: 47
-        type: "int"
-      黑暗突变:
-        step: 48
-        type: "int"
-      灵魂收割:
-        step: 49
-        type: "int"
+      死亡之握: {step: 40, type: "int" }
+      反魔法领域: {step: 41, type: "int" }
+      窒息: {step: 42, type: "int" }
+      致盲冰雨: {step: 43, type: "int" }
+      亡者复生: {step: 44, type: "int" }
+      亡者大军: {step: 45, type: "int" }
+      腐化: {step: 46, type: "int" }
+      腐化充能: {step: 47, type: "int" }
+      黑暗突变: {step: 48, type: "int" }
+      灵魂收割: {step: 49, type: "int" }
 
-7:
+7: # 萨满祭司
   keymap: "shaman.yml"
   1:
-    目标生命值:
-      step: 21
-      type: "int"
-    敌人人数:
-      step: 22
-      type: "int"
+    目标生命值: {step: 21, type: "int" }
+    敌人人数: {step: 22, type: "int" }
     spells:
-      天怒:
-        step: 31
-        type: "int"
-      闪电之盾:
-        step: 32
-        type: "int"
-      闪电箭:
-        step: 33
-        type: "int"
-      闪电链:
-        step: 34
-        type: "int"
-      治疗链:
-        step: 35
-        type: "int"
-      大地之盾:
-        step: 36
-        type: "int"
-      风剪:
-        step: 37
-        type: "int"
-      土元素:
-        step: 38
-        type: "int"
-      电能图腾:
-        step: 39
-        type: "int"
-      先祖迅捷:
-        step: 40
-        type: "int"
-      元素冲击:
-        step: 41
-        type: "int"
-      地震术:
-        step: 42
-        type: "int"
-      大地震击:
-        step: 43
-        type: "int"
-      流电炽焰:
-        step: 44
-        type: "int"
-      火舌武器:
-        step: 45
-        type: "int"
-      熔岩爆裂:
-        step: 46
-        type: "int"
-      风暴守护者:
-        step: 47
-        type: "int"
-      狂风怒号:
-        step: 48
-        type: "int"
+      天怒: {step: 31, type: "int" }
+      闪电之盾: {step: 32, type: "int" }
+      闪电箭: {step: 33, type: "int" }
+      闪电链: {step: 34, type: "int" }
+      治疗链: {step: 35, type: "int" }
+      大地之盾: {step: 36, type: "int" }
+      风剪: {step: 37, type: "int" }
+      土元素: {step: 38, type: "int" }
+      电能图腾: {step: 39, type: "int" }
+      先祖迅捷: {step: 40, type: "int" }
+      元素冲击: {step: 41, type: "int" }
+      地震术: {step: 42, type: "int" }
+      大地震击: {step: 43, type: "int" }
+      流电炽焰: {step: 44, type: "int" }
+      火舌武器: {step: 45, type: "int" }
+      熔岩爆裂: {step: 46, type: "int" }
+      风暴守护者: {step: 47, type: "int" }
+      狂风怒号: {step: 48, type: "int" }
   2:
-    目标生命值:
-      step: 21
-      type: "int"
-    敌人人数:
-      step: 22
-      type: "int"
+    目标生命值: {step: 21, type: "int" }
+    敌人人数: {step: 22, type: "int" }
     spells:
-      天怒:
-        step: 31
-        type: "int"
-      闪电之盾:
-        step: 32
-        type: "int"
-      闪电箭:
-        step: 33
-        type: "int"
-      闪电链:
-        step: 34
-        type: "int"
-      治疗链:
-        step: 35
-        type: "int"
-      大地之盾:
-        step: 36
-        type: "int"
-      风剪:
-        step: 37
-        type: "int"
-      土元素:
-        step: 38
-        type: "int"
-      电能图腾:
-        step: 39
-        type: "int"
-      毁灭闪电:
-        step: 40
-        type: "int"
-      流电炽焰:
-        step: 41
-        type: "int"
-      涌动图腾:
-        step: 42
-        type: "int"
-      火舌武器:
-        step: 43
-        type: "int"
-      熔岩猛击:
-        step: 44
-        type: "int"
-      裂地术:
-        step: 45
-        type: "int"
-      始源风暴:
-        step: 46
-        type: "int"
-      风怒武器:
-        step: 48
-        type: "int"
-      风暴打击:
-        step: 49
-        type: "int"
-      风暴打击充能:
-        step: 50
-        type: "int"
-      狂风怒号:
-        step: 51
-        type: "int"
-      风切:
-        step: 52
-        type: "int"
+      天怒: {step: 31, type: "int" }
+      闪电之盾: {step: 32, type: "int" }
+      闪电箭: {step: 33, type: "int" }
+      闪电链: {step: 34, type: "int" }
+      治疗链: {step: 35, type: "int" }
+      大地之盾: {step: 36, type: "int" }
+      风剪: {step: 37, type: "int" }
+      土元素: {step: 38, type: "int" }
+      电能图腾: {step: 39, type: "int" }
+      毁灭闪电: {step: 40, type: "int" }
+      流电炽焰: {step: 41, type: "int" }
+      涌动图腾: {step: 42, type: "int" }
+      火舌武器: {step: 43, type: "int" }
+      熔岩猛击: {step: 44, type: "int" }
+      裂地术: {step: 45, type: "int" }
+      始源风暴: {step: 46, type: "int" }
+      风怒武器: {step: 48, type: "int" }
+      风暴打击: {step: 49, type: "int" }
+      风暴打击充能: {step: 50, type: "int" }
+      狂风怒号: {step: 51, type: "int" }
+      风切: {step: 52, type: "int" }
   3:
-    施法技能:
-      step: 22
-      type: "int"
-    施法目标:
-      step: 23
-      type: "int"
-    飞旋之土:
-      step: 24
-      type: "int"
-    潮汐奔涌:
-      step: 25
-      type: "int"
-    风暴涌流图腾层数:
-      step: 26
-      type: "int"
-    大地生命武器:
-      step: 27
-      type: "int"
-    生命释放:
-      step: 28
-      type: "int"
+    施法技能: {step: 22, type: "int" }
+    施法目标: {step: 23, type: "int" }
+    飞旋之土: {step: 24, type: "int" }
+    潮汐奔涌: {step: 25, type: "int" }
+    风暴涌流图腾层数: {step: 26, type: "int" }
+    大地生命武器: {step: 27, type: "int" }
+    生命释放: {step: 28, type: "int" }
     spells:
-      天怒:
-        step: 31
-        type: "int"
-      闪电之盾:
-        step: 32
-        type: "int"
-      闪电箭:
-        step: 33
-        type: "int"
-      闪电链:
-        step: 34
-        type: "int"
-      治疗链:
-        step: 35
-        type: "int"
-      大地之盾:
-        step: 36
-        type: "int"
-      风剪:
-        step: 37
-        type: "int"
-      土元素:
-        step: 38
-        type: "int"
-      电能图腾:
-        step: 39
-        type: "int"
-      唤潮者的护卫:
-        step: 40
-        type: "int"
-      大地生命武器:
-        step: 41
-        type: "int"
-      激流充能:
-        step: 61
-        type: "int"
-      水之护盾:
-        step: 42
-        type: "int"
-      烈焰震击:
-        step: 43
-        type: "int"
-      熔岩爆裂:
-        step: 44
-        type: "int"
-      治疗波:
-        step: 45
-        type: "int"
-      激流:
-        step: 46
-        type: "int"
-      治疗之泉图腾充能:
-        step: 62
-        type: "int"
-      净化灵魂:
-        step: 47
-        type: "int"
-      治疗之泉图腾:
-        step: 48
-        type: "int"
-      生命释放:
-        step: 49
-        type: "int"
-      先祖迅捷:
-        step: 50
-        type: "int"
-      自然迅捷:
-        step: 51
-        type: "int"
-      涌动图腾:
-        step: 52
-        type: "int"
-      阵风:
-        step: 53
-        type: "int"
-      灵魂链接图腾:
-        step: 54
-        type: "int"
-      土元素:
-        step: 55
-        type: "int"
-      战栗图腾:
-        step: 56
-        type: "int"
-      清毒图腾:
-        step: 57
-        type: "int"
-      图腾投射:
-        step: 58
-        type: "int"
-      升腾:
-        step: 59
-        type: "int"
-      治疗之潮图腾:
-        step: 60
-        type: "int"
+      天怒: {step: 31, type: "int" }
+      闪电之盾: {step: 32, type: "int" }
+      闪电箭: {step: 33, type: "int" }
+      闪电链: {step: 34, type: "int" }
+      治疗链: {step: 35, type: "int" }
+      大地之盾: {step: 36, type: "int" }
+      风剪: {step: 37, type: "int" }
+      土元素: {step: 38, type: "int" }
+      电能图腾: {step: 39, type: "int" }
+      唤潮者的护卫: {step: 40, type: "int" }
+      大地生命武器: {step: 41, type: "int" }
+      激流充能: {step: 61, type: "int" }
+      水之护盾: {step: 42, type: "int" }
+      烈焰震击: {step: 43, type: "int" }
+      熔岩爆裂: {step: 44, type: "int" }
+      治疗波: {step: 45, type: "int" }
+      激流: {step: 46, type: "int" }
+      治疗之泉图腾充能: {step: 62, type: "int" }
+      净化灵魂: {step: 47, type: "int" }
+      治疗之泉图腾: {step: 48, type: "int" }
+      生命释放: {step: 49, type: "int" }
+      先祖迅捷: {step: 50, type: "int" }
+      自然迅捷: {step: 51, type: "int" }
+      涌动图腾: {step: 52, type: "int" }
+      阵风: {step: 53, type: "int" }
+      灵魂链接图腾: {step: 54, type: "int" }
+      土元素: {step: 55, type: "int" }
+      战栗图腾: {step: 56, type: "int" }
+      清毒图腾: {step: 57, type: "int" }
+      图腾投射: {step: 58, type: "int" }
+      升腾: {step: 59, type: "int" }
+      治疗之潮图腾: {step: 60, type: "int" }
     group:
       start: 70
       num: 6
-      生命值:
-        step: 1
-        type: "int"
-      职责:
-        step: 2
-        type: "int"
-      驱散:
-        step: 3
-        type: "int"
-      激流:
-        step: 4
-        type: "int"
-      大地之盾:
-        step: 5
-        type: "int"
-      大地生命武器:
-        step: 6
-        type: "int" 
+      生命值: {step: 1, type: "int" }
+      职责: {step: 2, type: "int" }
+      驱散: {step: 3, type: "int" }
+      激流: {step: 4, type: "int" }
+      大地之盾: {step: 5, type: "int" }
+      大地生命武器: {step: 6, type: "int" }
 
-8:
+8: # 法师
   keymap: "mage.yml"
   3:
-    施法技能:
-      step: 22
-      type: "int" 
-    敌人人数:
-      step: 23
-      type: "int"
-
-    真能真空:
-      step: 31
-      type: "int"
-    冰川尖刺:
-      step: 32
-      type: "int"
-    冰冷智慧:
-      step: 33
-      type: "int"
-    冰冻之雨:
-      step: 34
-      type: "int"
-    寒冰指:
-      step: 35
-      type: "int"
-    寒冰指层数:
-      step: 36
-      type: "int"
+    施法技能: {step: 22, type: "int" }
+    敌人人数: {step: 23, type: "int" }
+    真能真空: {step: 31, type: "int" }
+    冰川尖刺: {step: 32, type: "int" }
+    冰冷智慧: {step: 33, type: "int" }
+    冰冻之雨: {step: 34, type: "int" }
+    寒冰指: {step: 35, type: "int" }
+    寒冰指层数: {step: 36, type: "int" }
 
     spells:
-      解除诅咒:
-        step: 41
-        type: "int"
-      强化隐形术:
-        step: 42
-        type: "int"
-      冰霜新星:
-        step: 43
-        type: "int"
-      法术反制:
-        step: 44
-        type: "int"
-      龙息术:
-        step: 45
-        type: "int"
-      暴风雪T:
-        step: 46
-        type: "int"
-      暴风雪C:
-        step: 47
-        type: "int"
-      寒冰宝珠:
-        step: 48
-        type: "int"
-      冰霜射线:
-        step: 49
-        type: "int"
-      寒冰护体:
-        step: 50
-        type: "int"
-      冰风暴:
-        step: 51
-        type: "int"
-      冰风暴充能:
-        step: 52
-        type: "int"
+      解除诅咒: {step: 41, type: "int" }
+      强化隐形术: {step: 42, type: "int" }
+      冰霜新星: {step: 43, type: "int" }
+      法术反制: {step: 44, type: "int" }
+      龙息术: {step: 45, type: "int" }
+      暴风雪T: {step: 46, type: "int" }
+      暴风雪C: {step: 47, type: "int" }
+      寒冰宝珠: {step: 48, type: "int" }
+      冰霜射线: {step: 49, type: "int" }
+      寒冰护体: {step: 50, type: "int" }
+      冰风暴: {step: 51, type: "int" }
+      冰风暴充能: {step: 52, type: "int" }
 
-9:
+9: # 术士
   keymap: "warlock.yml"
   2:
-    小鬼数量:
-      step: bar
-      bar: 1
-      type: "int"
-    灵魂碎片:
-      step: 23
-      type: "int"
-    施法技能:
-      step: 24
-      type: "int"
-    法术封锁:
-      step: 25
-      type: "int"
-    
-    spells:
-      恐惧:
-        step: 31
-        type: "int"
-      死亡缠绕:
-        step: 32
-        type: "int"
-      灵魂石:
-        step: 33
-        type: "int"
-      暗影之怒:
-        step: 34
-        type: "int"
-      邪能统御:
-        step: 35
-        type: "int"
-      黑暗契约:
-        step: 36
-        type: "int"
-      内爆:
-        step: 37
-        type: "int"
-      召唤恶魔暴君:
-        step: 38
-        type: "int"
-      魔典：邪能破坏者:
-        step: 39
-        type: "int"
-      古尔丹之手:
-        step: 40
-        type: "int"
-      召唤末日守卫:
-        step: 41
-        type: "int"
-      召唤恐惧猎犬:
-        step: 42
-        type: "int"
-      恶魔之箭:
-        step: 43
-        type: "int"
-      魔典：小鬼领主:
-        step: 44
-        type: "int"
-      虚弱灾厄:
-        step: 45
-        type: "int"
-      语言灾厄:
-        step: 46
-        type: "int"
-      法术封锁:
-        step: 47
-        type: "int"
+    小鬼数量: {step: bar, bar: 1, type: "int"}
+    灵魂碎片: {step: 23, type: "int" }
+    施法技能: {step: 24, type: "int" }
+    法术封锁: {step: 25, type: "int" }
 
-10:
+    spells:
+      恐惧: {step: 31, type: "int" }
+      死亡缠绕: {step: 32, type: "int" }
+      灵魂石: {step: 33, type: "int" }
+      暗影之怒: {step: 34, type: "int" }
+      邪能统御: {step: 35, type: "int" }
+      黑暗契约: {step: 36, type: "int" }
+      内爆: {step: 37, type: "int" }
+      召唤恶魔暴君: {step: 38, type: "int" }
+      魔典：邪能破坏者: {step: 39, type: "int" }
+      古尔丹之手: {step: 40, type: "int" }
+      召唤末日守卫: {step: 41, type: "int" }
+      召唤恐惧猎犬: {step: 42, type: "int" }
+      恶魔之箭: {step: 43, type: "int" }
+      魔典：小鬼领主: {step: 44, type: "int" }
+      虚弱灾厄: {step: 45, type: "int" }
+      语言灾厄: {step: 46, type: "int" }
+      法术封锁: {step: 47, type: "int" }
+
+10: # 武僧
   keymap: "monk.yml"
   1:
-    酒池:
-      step: 21
-      type: "int"
-    目标生命值:
-      step: 22
-      type: "int"
-    敌人人数:
-      step: 23
-      type: "int"
+    酒池: {step: 21, type: "int" }
+    目标生命值: {step: 22, type: "int" }
+    敌人人数: {step: 23, type: "int" }
 
-    疗伤珠:
-      step: bar
-      bar: 1
-      type: "int"
-    活力苏醒:
-      step: 26
-      type: "int"
-    清空地窖:
-      step: 27
-      type: "int"
+    疗伤珠: {step: bar, bar: 1, type: "int"}
+    活力苏醒: {step: 26, type: "int" }
+    清空地窖: {step: 27, type: "int" }
 
     spells:
-      醉酿投:
-        step: 31
-        type: "int"
-      醉酿充能:
-        step: 32
-        type: "int"
-      活血酒:
-        step: 33
-        type: "int"
-      活血充能:
-        step: 34
-        type: "int"
-      天神酒:
-        step: 35
-        type: "int"
-      天神充能:
-        step: 36
-        type: "int"
-      天神灌注:
-        step: 37
-        type: "int"
-      灌注充能:
-        step: 38
-        type: "int"
-      轮回之触:
-        step: 39
-        type: "int"
-      扫堂腿:
-        step: 40
-        type: "int"
-      移花接木:
-        step: 41
-        type: "int"
-      魂体双分:
-        step: 42
-        type: "int"
-      魂体双分：转移:
-        step: 43
-        type: "int"
-      切喉手:
-        step: 44
-        type: "int"
-      火焰之息:
-        step: 45
-        type: "int"
-      真气爆裂:
-        step: 46
-        type: "int"
-      爆炸酒桶:
-        step: 47
-        type: "int"
-      赤精之歌:
-        step: 48
-        type: "int"
-      玄牛酒:
-        step: 49
-        type: "int"
-      平心之环:
-        step: 50
-        type: "int"
-      分筋错骨:
-        step: 51
-        type: "int"
-      玄牛下凡:
-        step: 52
-        type: "int"
+      醉酿投: {step: 31, type: "int" }
+      醉酿充能: {step: 32, type: "int" }
+      活血酒: {step: 33, type: "int" }
+      活血充能: {step: 34, type: "int" }
+      天神酒: {step: 35, type: "int" }
+      天神充能: {step: 36, type: "int" }
+      天神灌注: {step: 37, type: "int" }
+      灌注充能: {step: 38, type: "int" }
+      轮回之触: {step: 39, type: "int" }
+      扫堂腿: {step: 40, type: "int" }
+      移花接木: {step: 41, type: "int" }
+      魂体双分: {step: 42, type: "int" }
+      魂体双分：转移: {step: 43, type: "int" }
+      切喉手: {step: 44, type: "int" }
+      火焰之息: {step: 45, type: "int" }
+      真气爆裂: {step: 46, type: "int" }
+      爆炸酒桶: {step: 47, type: "int" }
+      赤精之歌: {step: 48, type: "int" }
+      玄牛酒: {step: 49, type: "int" }
+      平心之环: {step: 50, type: "int" }
+      分筋错骨: {step: 51, type: "int" }
+      玄牛下凡: {step: 52, type: "int" }
   2:
-    敌人人数:
-      step: 21
-      type: "int"
-    施法技能:
-      step: 22
-      type: "int"
-    施法目标:
-      step: 23
-      type: "int"
+    敌人人数: {step: 21, type: "int" }
+    施法技能: {step: 22, type: "int" }
+    施法目标: {step: 23, type: "int" }
+    法力茶层数: {step: bar, bar: 1, type: "int"}
+    生生不息1: {step: 25, type: "int" }
+    生生不息2: {step: 26, type: "int" }
+    神龙层数: {step: bar, bar: 2, type: "int"}
+    灵泉: {step: 28, type: "int" }
+    玄牛之力: {step: 29, type: "int" }
+    青龙之心: {step: 30, type: "int" }
     
-    法力茶层数:
-      step: bar
-      bar: 1
-      type: "int"
-    生生不息1:
-      step: 25
-      type: "int"
-    生生不息2:
-      step: 26
-      type: "int"
-    神龙层数:
-      step: bar
-      bar: 2
-      type: "int"
-    灵泉:
-      step: 28
-      type: "int"
-    玄牛之力:
-      step: 29
-      type: "int"
-    青龙之心:
-      step: 30
-      type: "int"
     spells:
-      雷光茶:
-        step: 31
-        type: "int"
-      雷光充能:
-        step: 32
-        type: "int"
-      复苏之雾:
-        step: 33
-        type: "int"
-      复苏充能:
-        step: 34
-        type: "int"
-      还魂术:
-        step: 35
-        type: "int"
-      作茧缚命:
-        step: 36
-        type: "int"
-      清创生血:
-        step: 37
-        type: "int"
-      天神御身:
-        step: 38
-        type: "int"
-      轮回之触:
-        step: 39
-        type: "int"
-      扫堂腿:
-        step: 40
-        type: "int"
-      宁神茶:
-        step: 41
-        type: "int"
-      魂体双分:
-        step: 42
-        type: "int"
-      魂体双分：转移:
-        step: 43
-        type: "int"
-      旭日东升踢:
-        step: 44
-        type: "int"
-      幻灭踢:
-        step: 45
-        type: "int"
-      平心之环:
-        step: 46
-        type: "int"
-      分筋错骨:
-        step: 47
-        type: "int"
+      雷光茶: {step: 31, type: "int" }
+      雷光充能: {step: 32, type: "int" }
+      复苏之雾: {step: 33, type: "int" }
+      复苏充能: {step: 34, type: "int" }
+      还魂术: {step: 35, type: "int" }
+      作茧缚命: {step: 36, type: "int" }
+      清创生血: {step: 37, type: "int" }
+      天神御身: {step: 38, type: "int" }
+      轮回之触: {step: 39, type: "int" }
+      扫堂腿: {step: 40, type: "int" }
+      宁神茶: {step: 41, type: "int" }
+      魂体双分: {step: 42, type: "int" }
+      魂体双分：转移: {step: 43, type: "int" }
+      旭日东升踢: {step: 44, type: "int" }
+      幻灭踢: {step: 45, type: "int" }
+      平心之环: {step: 46, type: "int" }
+      分筋错骨: {step: 47, type: "int" }
 
     group:
       start: 70
       num: 5
-      生命值:
-        step: 1
-        type: "int"
-      职责:
-        step: 2
-        type: "int"
-      驱散:
-        step: 3
-        type: "int"
-      复苏之雾:
-        step: 4
-        type: "int"
-      氤氲之雾:
-        step: 5
-        type: "int"
+      生命值: {step: 1, type: "int" }
+      职责: {step: 2, type: "int" }
+      驱散: {step: 3, type: "int" }
+      复苏之雾: {step: 4, type: "int" }
+      氤氲之雾: {step: 5, type: "int" }
   3:
-    目标生命值:
-      step: 21
-      type: "int"
-    敌人人数:
-      step: 22
-      type: "int"
+    目标生命值: {step: 21, type: "int" }
+    敌人人数: {step: 22, type: "int" }
     spells:
-      轮回之触:
-        step: 31
-        type: "int"
-      扫堂腿:
-        step: 32
-        type: "int"
-      移花接木:
-        step: 33
-        type: "int"
-      魂体双分:
-        step: 34
-        type: "int"
-      魂体双分：转移:
-        step: 35
-        type: "int"
-      切喉手:
-        step: 36
-        type: "int"
-      赤精之歌:
-        step: 37
-        type: "int"
-      平心之环:
-        step: 38
-        type: "int"
-      分筋错骨:
-        step: 39
-        type: "int"
+      轮回之触: {step: 31, type: "int" }
+      扫堂腿: {step: 32, type: "int" }
+      移花接木: {step: 33, type: "int" }
+      魂体双分: {step: 34, type: "int" }
+      魂体双分：转移: {step: 35, type: "int" }
+      切喉手: {step: 36, type: "int" }
+      赤精之歌: {step: 37, type: "int" }
+      平心之环: {step: 38, type: "int" }
+      分筋错骨: {step: 39, type: "int" }
 
-11:
+11: # 德鲁伊
   keymap: "druid.yml"
   3:
-    目标生命值:
-      step: 21
-      type: "int"
-    敌人人数:
-      step: 22
-      type: "int"
-    姿态:
-      step: 23
-      type: "int"
+    目标生命值: {step: 21, type: "int" }
+    敌人人数: {step: 22, type: "int" }
+    姿态: {step: 23, type: "int" }
 
-    梦境:
-      step: 24
-      type: "int"
-    梦境层数:
-      step: 25
-      type: "int"
-    铁鬃:
-      step: 26
-      type: "int"
-    狂暴回复:
-      step: 27
-      type: "int"
-    
+    梦境: {step: 24, type: "int" }
+    梦境层数: {step: 25, type: "int" }
+    铁鬃: {step: 26, type: "int" }
+    狂暴回复: {step: 27, type: "int" }
+
     spells:
-      树皮术:
-        step: 31
-        type: "int"
-      台风:
-        step: 32
-        type: "int"
-      夺魂咆哮:
-        step: 33
-        type: "int"
-      激活:
-        step: 34
-        type: "int"
-      乌索尔旋风:
-        step: 35
-        type: "int"
-      狂暴回复:
-        step: 36
-        type: "int"
-      狂暴充能:
-        step: 37
-        type: "int"
-      生存本能:
-        step: 38
-        type: "int"
-      化身:
-        step: 39
-        type: "int"
-      野性之心:
-        step: 40
-        type: "int"
-      
+      树皮术: {step: 31, type: "int" }
+      台风: {step: 32, type: "int" }
+      夺魂咆哮: {step: 33, type: "int" }
+      激活: {step: 34, type: "int" }
+      乌索尔旋风: {step: 35, type: "int" }
+      狂暴回复: {step: 36, type: "int" }
+      狂暴充能: {step: 37, type: "int" }
+      生存本能: {step: 38, type: "int" }
+      化身: {step: 39, type: "int" }
+      野性之心: {step: 40, type: "int" }
+
   4:
-    姿态:
-      step: 21
-      type: "int"
-    目标距离:
-      step: 22
-      type: "int"
-    连击点:
-      step: 23
-      type: "int"
-    施法技能:
-      step: 24
-      type: "int"
-    
-    节能施法:
-      step: 29
-      type: "int"
-    丛林之魂: 
-      step: 30
-      type: "int"
+    姿态: {step: 21, type: "int" }
+    目标距离: {step: 22, type: "int" }
+    连击点: {step: 23, type: "int" }
+    施法技能: {step: 24, type: "int" }
+
+    节能施法: {step: 29, type: "int" }
+    丛林之魂: {step: 30, type: "int" }
 
     spells:
-      树皮术:
-        step: 31
-        type: "int"
-      台风:
-        step: 32
-        type: "int"
-      夺魂咆哮:
-        step: 33
-        type: "int"
-      激活:
-        step: 34
-        type: "int"
-      乌索尔旋风:
-        step: 35
-        type: "int"
-      迅捷治愈:
-        step: 36
-        type: "int"
-      迅捷充能:
-        step: 37
-        type: "int"
-      野性成长:
-        step: 38
-        type: "int"
-      万灵之召:
-        step: 39
-        type: "int"
-      自然之愈:
-        step: 40
-        type: "int"
-      铁木树皮:
-        step: 41
-        type: "int"
-      自然迅捷:
-        step: 42
-        type: "int"
-      野性之心:
-        step: 43
-        type: "int"
+      树皮术: {step: 31, type: "int" }
+      台风: {step: 32, type: "int" }
+      夺魂咆哮: {step: 33, type: "int" }
+      激活: {step: 34, type: "int" }
+      乌索尔旋风: {step: 35, type: "int" }
+      迅捷治愈: {step: 36, type: "int" }
+      迅捷充能: {step: 37, type: "int" }
+      野性成长: {step: 38, type: "int" }
+      万灵之召: {step: 39, type: "int" }
+      自然之愈: {step: 40, type: "int" }
+      铁木树皮: {step: 41, type: "int" }
+      自然迅捷: {step: 42, type: "int" }
+      野性之心: {step: 43, type: "int" }
 
     group:
       start: 45
       num: 7
-      生命值:
-        step: 1
-        type: "int"
-      职责:
-        step: 2
-        type: "int"
-      驱散:
-        step: 3
-        type: "int"
-      生命绽放:
-        type: "int"
-        step: 4
-      迅捷治愈:
-        type: "int"
-        step: 5
-      愈合:
-        type: "int"
-        step: 6
-      回春术:
-        type: "int"
-        step: 7
+      生命值: {step: 1, type: "int" }
+      职责: {step: 2, type: "int" }
+      驱散: {step: 3, type: "int" }
+      生命绽放: {step: 4, type: "int" }
+      迅捷治愈: {step: 5, type: "int" }
+      愈合: {step: 6, type: "int" }
+      回春术: {step: 7, type: "int" }
 
-12:
+12: # 恶魔猎手
   keymap: "demonhunter.yml"
   1:
-    敌人人数:
-      step: 21
-      type: "int"
+    敌人人数: {step: 21, type: "int" }
     spells:
-      黑暗:
-        step: 40
-        type: "int"
-      复仇回避:
-        step: 41
-        type: "int"
-      投掷利刃:
-        step: 42
-        type: "int"
-      投掷利刃充能:
-        step: 43
-        type: "int"
-      悲苦咒符:
-        step: 44
-        type: "int"
-      禁锢:
-        step: 45
-        type: "int"
-      献祭光环:
-        step: 46
-        type: "int"
-      混乱新星:
-        step: 47
-        type: "int"
-      恶魔变形:
-        step: 48
-        type: "int"
-      邪能之刃:
-        step: 49
-        type: "int"
-      刃舞:
-        step: 50
-        type: "int"
-      混乱打击:
-        step: 51
-        type: "int"
-      疾影:
-        step: 52
-        type: "int"
-      恶魔追击:
-        step: 53
-        type: "int"
-      眼棱:
-        step: 54
-        type: "int"
-      邪能冲撞:
-        step: 55
-        type: "int"
-      精华破碎:
-        step: 56
-        type: "int"
+      黑暗: {step: 40, type: "int" }
+      复仇回避: {step: 41, type: "int" }
+      投掷利刃: {step: 42, type: "int" }
+      投掷利刃充能: {step: 43, type: "int" }
+      悲苦咒符: {step: 44, type: "int" }
+      禁锢: {step: 45, type: "int" }
+      献祭光环: {step: 46, type: "int" }
+      混乱新星: {step: 47, type: "int" }
+      恶魔变形: {step: 48, type: "int" }
+      邪能之刃: {step: 49, type: "int" }
+      刃舞: {step: 50, type: "int" }
+      混乱打击: {step: 51, type: "int" }
+      疾影: {step: 52, type: "int" }
+      恶魔追击: {step: 53, type: "int" }
+      眼棱: {step: 54, type: "int" }
+      邪能冲撞: {step: 55, type: "int" }
+      精华破碎: {step: 56, type: "int" }
   2:
-    敌人人数:
-      step: 21
-      type: "int"
+    敌人人数: {step: 21, type: "int" }
     spells:
-      黑暗:
-        step: 40
-        type: "int"
-      复仇回避:
-        step: 41
-        type: "int"
-      投掷利刃:
-        step: 42
-        type: "int"
-      投掷利刃充能:
-        step: 43
-        type: "int"
-      悲苦咒符:
-        step: 44
-        type: "int"
-      禁锢:
-        step: 45
-        type: "int"
-      献祭光环:
-        step: 46
-        type: "int"
-      混乱新星:
-        step: 47
-        type: "int"
-      恶魔变形:
-        step: 48
-        type: "int"
-      邪能之刃:
-        step: 49
-        type: "int"
-      地狱火撞击:
-        step: 50
-        type: "int"
-      地狱火撞击充能:
-        step: 51
-        type: "int"
-      恶魔尖刺:
-        step: 52
-        type: "int"
-      烈火烙印:
-        step: 53
-        type: "int"
-      烈火烙印充能:
-        step: 54
-        type: "int"
-      幽魂炸弹:
-        step: 55
-        type: "int"
-      灵魂切削:
-        step: 56
-        type: "int"
-      烈焰咒符:
-        step: 57
-        type: "int"
-      怨念咒符:
-        step: 58
-        type: "int"
-      灵魂裂劈:
-        step: 59
-        type: "int"
-      破裂:
-        step: 60
-        type: "int"
-      破裂充能:
-        step: 61
-        type: "int"
-      邪能毁灭:
-        step: 62
-        type: "int"
-      沉默咒符:
-        step: 63
-        type: "int"
+      黑暗: {step: 40, type: "int" }
+      复仇回避: {step: 41, type: "int" }
+      投掷利刃: {step: 42, type: "int" }
+      投掷利刃充能: {step: 43, type: "int" }
+      悲苦咒符: {step: 44, type: "int" }
+      禁锢: {step: 45, type: "int" }
+      献祭光环: {step: 46, type: "int" }
+      混乱新星: {step: 47, type: "int" }
+      恶魔变形: {step: 48, type: "int" }
+      邪能之刃: {step: 49, type: "int" }
+      地狱火撞击: {step: 50, type: "int" }
+      地狱火撞击充能: {step: 51, type: "int" }
+      恶魔尖刺: {step: 52, type: "int" }
+      烈火烙印: {step: 53, type: "int" }
+      烈火烙印充能: {step: 54, type: "int" }
+      幽魂炸弹: {step: 55, type: "int" }
+      灵魂切削: {step: 56, type: "int" }
+      烈焰咒符: {step: 57, type: "int" }
+      怨念咒符: {step: 58, type: "int" }
+      灵魂裂劈: {step: 59, type: "int" }
+      破裂: {step: 60, type: "int" }
+      破裂充能: {step: 61, type: "int" }
+      邪能毁灭: {step: 62, type: "int" }
+      沉默咒符: {step: 63, type: "int" }
   3:
-    敌人人数:
-      step: 21
-      type: "int"
+    敌人人数: {step: 21, type: "int" }
     spells:
-      黑暗:
-        step: 40
-        type: "int"
-      复仇回避:
-        step: 41
-        type: "int"
-      投掷利刃:
-        step: 42
-        type: "int"
-      投掷利刃充能:
-        step: 43
-        type: "int"
-      悲苦咒符:
-        step: 44
-        type: "int"
-      禁锢:
-        step: 45
-        type: "int"
-      献祭光环:
-        step: 46
-        type: "int"
-      虚空新星:
-        step: 47
-        type: "int"
-      虚空变形:
-        step: 48
-        type: "int"
-      虚空之刃:
-        step: 49
-        type: "int"
-      变换:
-        step: 50
-        type: "int"
-      变换充能:
-        step: 51
-        type: "int"
-      收割:
-        step: 52
-        type: "int"
-      吞噬:
-        step: 53
-        type: "int"
-      疾影:
-        step: 54
-        type: "int"
-      虚空射线:
-        step: 55
-        type: "int"
-      恶魔追击:
-        step: 56
-        type: "int"
-      饥渴斩击:
-        step: 57
-        type: "int"
-      
+      黑暗: {step: 40, type: "int" }
+      复仇回避: {step: 41, type: "int" }
+      投掷利刃: {step: 42, type: "int" }
+      投掷利刃充能: {step: 43, type: "int" }
+      悲苦咒符: {step: 44, type: "int" }
+      禁锢: {step: 45, type: "int" }
+      献祭光环: {step: 46, type: "int" }
+      虚空新星: {step: 47, type: "int" }
+      虚空变形: {step: 48, type: "int" }
+      虚空之刃: {step: 49, type: "int" }
+      变换: {step: 50, type: "int" }
+      变换充能: {step: 51, type: "int" }
+      收割: {step: 52, type: "int" }
+      吞噬: {step: 53, type: "int" }
+      疾影: {step: 54, type: "int" }
+      虚空射线: {step: 55, type: "int" }
+      恶魔追击: {step: 56, type: "int" }
+      饥渴斩击: {step: 57, type: "int" }

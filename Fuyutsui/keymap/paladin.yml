@@ -1,844 +1,211 @@
-1:
-  unit: 1
-  技能: 神圣震击
-  热键: CTRL-NUMPAD1
-2:
-  unit: 2
-  技能: 神圣震击
-  热键: CTRL-NUMPAD2
-3:
-  unit: 3
-  技能: 神圣震击
-  热键: CTRL-NUMPAD3
-4:
-  unit: 4
-  技能: 神圣震击
-  热键: CTRL-NUMPAD4
-5:
-  unit: 5
-  技能: 神圣震击
-  热键: CTRL-NUMPAD5
-6:
-  unit: 6
-  技能: 神圣震击
-  热键: CTRL-NUMPAD6
-7:
-  unit: 7
-  技能: 神圣震击
-  热键: CTRL-NUMPAD7
-8:
-  unit: 8
-  技能: 神圣震击
-  热键: CTRL-NUMPAD8
-9:
-  unit: 9
-  技能: 神圣震击
-  热键: CTRL-NUMPAD9
-10:
-  unit: 10
-  技能: 神圣震击
-  热键: CTRL-NUMPAD0
-11:
-  unit: 11
-  技能: 神圣震击
-  热键: CTRL-NUMPADDECIMAL
-12:
-  unit: 12
-  技能: 神圣震击
-  热键: CTRL-NUMPADPLUS
-13:
-  unit: 13
-  技能: 神圣震击
-  热键: CTRL-NUMPADMINUS
-14:
-  unit: 14
-  技能: 神圣震击
-  热键: CTRL-NUMPADMULTIPLY
-15:
-  unit: 15
-  技能: 神圣震击
-  热键: CTRL-NUMPADDIVIDE
-16:
-  unit: 16
-  技能: 神圣震击
-  热键: CTRL-F1
-17:
-  unit: 17
-  技能: 神圣震击
-  热键: CTRL-F2
-18:
-  unit: 18
-  技能: 神圣震击
-  热键: CTRL-F3
-19:
-  unit: 19
-  技能: 神圣震击
-  热键: CTRL-F5
-20:
-  unit: 20
-  技能: 神圣震击
-  热键: CTRL-F6
-21:
-  unit: 21
-  技能: 神圣震击
-  热键: CTRL-F7
-22:
-  unit: 22
-  技能: 神圣震击
-  热键: CTRL-F8
-23:
-  unit: 23
-  技能: 神圣震击
-  热键: CTRL-F9
-24:
-  unit: 24
-  技能: 神圣震击
-  热键: CTRL-F10
-25:
-  unit: 25
-  技能: 神圣震击
-  热键: CTRL-F11
-26:
-  unit: 26
-  技能: 神圣震击
-  热键: CTRL-F12
-27:
-  unit: 27
-  技能: 神圣震击
-  热键: CTRL-,
-28:
-  unit: 28
-  技能: 神圣震击
-  热键: CTRL-.
-29:
-  unit: 29
-  技能: 神圣震击
-  热键: CTRL-/
-30:
-  unit: 30
-  技能: 神圣震击
-  热键: CTRL-;
-31:
-  unit: 1
-  技能: 圣光闪现
-  热键: CTRL-'
-32:
-  unit: 2
-  技能: 圣光闪现
-  热键: CTRL-[
-33:
-  unit: 3
-  技能: 圣光闪现
-  热键: CTRL-]
-34:
-  unit: 4
-  技能: 圣光闪现
-  热键: CTRL-=
-35:
-  unit: 5
-  技能: 圣光闪现
-  热键: ALT-NUMPAD1
-36:
-  unit: 6
-  技能: 圣光闪现
-  热键: ALT-NUMPAD2
-37:
-  unit: 7
-  技能: 圣光闪现
-  热键: ALT-NUMPAD3
-38:
-  unit: 8
-  技能: 圣光闪现
-  热键: ALT-NUMPAD4
-39:
-  unit: 9
-  技能: 圣光闪现
-  热键: ALT-NUMPAD5
-40:
-  unit: 10
-  技能: 圣光闪现
-  热键: ALT-NUMPAD6
-41:
-  unit: 11
-  技能: 圣光闪现
-  热键: ALT-NUMPAD7
-42:
-  unit: 12
-  技能: 圣光闪现
-  热键: ALT-NUMPAD8
-43:
-  unit: 13
-  技能: 圣光闪现
-  热键: ALT-NUMPAD9
-44:
-  unit: 14
-  技能: 圣光闪现
-  热键: ALT-NUMPAD0
-45:
-  unit: 15
-  技能: 圣光闪现
-  热键: ALT-NUMPADDECIMAL
-46:
-  unit: 16
-  技能: 圣光闪现
-  热键: ALT-NUMPADPLUS
-47:
-  unit: 17
-  技能: 圣光闪现
-  热键: ALT-NUMPADMINUS
-48:
-  unit: 18
-  技能: 圣光闪现
-  热键: ALT-NUMPADMULTIPLY
-49:
-  unit: 19
-  技能: 圣光闪现
-  热键: ALT-NUMPADDIVIDE
-50:
-  unit: 20
-  技能: 圣光闪现
-  热键: ALT-F1
-51:
-  unit: 21
-  技能: 圣光闪现
-  热键: ALT-F2
-52:
-  unit: 22
-  技能: 圣光闪现
-  热键: ALT-F3
-53:
-  unit: 23
-  技能: 圣光闪现
-  热键: ALT-F5
-54:
-  unit: 24
-  技能: 圣光闪现
-  热键: ALT-F6
-55:
-  unit: 25
-  技能: 圣光闪现
-  热键: ALT-F7
-56:
-  unit: 26
-  技能: 圣光闪现
-  热键: ALT-F8
-57:
-  unit: 27
-  技能: 圣光闪现
-  热键: ALT-F9
-58:
-  unit: 28
-  技能: 圣光闪现
-  热键: ALT-F10
-59:
-  unit: 29
-  技能: 圣光闪现
-  热键: ALT-F11
-60:
-  unit: 30
-  技能: 圣光闪现
-  热键: ALT-F12
-61:
-  unit: 1
-  技能: 圣光术
-  热键: ALT-,
-62:
-  unit: 2
-  技能: 圣光术
-  热键: ALT-.
-63:
-  unit: 3
-  技能: 圣光术
-  热键: ALT-/
-64:
-  unit: 4
-  技能: 圣光术
-  热键: ALT-;
-65:
-  unit: 5
-  技能: 圣光术
-  热键: ALT-'
-66:
-  unit: 6
-  技能: 圣光术
-  热键: ALT-[
-67:
-  unit: 7
-  技能: 圣光术
-  热键: ALT-]
-68:
-  unit: 8
-  技能: 圣光术
-  热键: ALT-=
-69:
-  unit: 9
-  技能: 圣光术
-  热键: SHIFT-NUMPAD1
-70:
-  unit: 10
-  技能: 圣光术
-  热键: SHIFT-NUMPAD2
-71:
-  unit: 11
-  技能: 圣光术
-  热键: SHIFT-NUMPAD3
-72:
-  unit: 12
-  技能: 圣光术
-  热键: SHIFT-NUMPAD4
-73:
-  unit: 13
-  技能: 圣光术
-  热键: SHIFT-NUMPAD5
-74:
-  unit: 14
-  技能: 圣光术
-  热键: SHIFT-NUMPAD6
-75:
-  unit: 15
-  技能: 圣光术
-  热键: SHIFT-NUMPAD7
-76:
-  unit: 16
-  技能: 圣光术
-  热键: SHIFT-NUMPAD8
-77:
-  unit: 17
-  技能: 圣光术
-  热键: SHIFT-NUMPAD9
-78:
-  unit: 18
-  技能: 圣光术
-  热键: SHIFT-NUMPAD0
-79:
-  unit: 19
-  技能: 圣光术
-  热键: SHIFT-NUMPADDECIMAL
-80:
-  unit: 20
-  技能: 圣光术
-  热键: SHIFT-NUMPADPLUS
-81:
-  unit: 21
-  技能: 圣光术
-  热键: SHIFT-NUMPADMINUS
-82:
-  unit: 22
-  技能: 圣光术
-  热键: SHIFT-NUMPADMULTIPLY
-83:
-  unit: 23
-  技能: 圣光术
-  热键: SHIFT-NUMPADDIVIDE
-84:
-  unit: 24
-  技能: 圣光术
-  热键: SHIFT-F1
-85:
-  unit: 25
-  技能: 圣光术
-  热键: SHIFT-F2
-86:
-  unit: 26
-  技能: 圣光术
-  热键: SHIFT-F3
-87:
-  unit: 27
-  技能: 圣光术
-  热键: SHIFT-F5
-88:
-  unit: 28
-  技能: 圣光术
-  热键: SHIFT-F6
-89:
-  unit: 29
-  技能: 圣光术
-  热键: SHIFT-F7
-90:
-  unit: 30
-  技能: 圣光术
-  热键: SHIFT-F8
-91:
-  unit: 1
-  技能: 荣耀圣令
-  热键: SHIFT-F9
-92:
-  unit: 2
-  技能: 荣耀圣令
-  热键: SHIFT-F10
-93:
-  unit: 3
-  技能: 荣耀圣令
-  热键: SHIFT-F11
-94:
-  unit: 4
-  技能: 荣耀圣令
-  热键: SHIFT-F12
-95:
-  unit: 5
-  技能: 荣耀圣令
-  热键: SHIFT-,
-96:
-  unit: 6
-  技能: 荣耀圣令
-  热键: SHIFT-.
-97:
-  unit: 7
-  技能: 荣耀圣令
-  热键: SHIFT-/
-98:
-  unit: 8
-  技能: 荣耀圣令
-  热键: SHIFT-;
-99:
-  unit: 9
-  技能: 荣耀圣令
-  热键: SHIFT-'
-100:
-  unit: 10
-  技能: 荣耀圣令
-  热键: SHIFT-[
-101:
-  unit: 11
-  技能: 荣耀圣令
-  热键: SHIFT-]
-102:
-  unit: 12
-  技能: 荣耀圣令
-  热键: SHIFT-=
-103:
-  unit: 13
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPAD1
-104:
-  unit: 14
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPAD2
-105:
-  unit: 15
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPAD3
-106:
-  unit: 16
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPAD4
-107:
-  unit: 17
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPAD5
-108:
-  unit: 18
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPAD6
-109:
-  unit: 19
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPAD7
-110:
-  unit: 20
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPAD8
-111:
-  unit: 21
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPAD9
-112:
-  unit: 22
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPAD0
-113:
-  unit: 23
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPADDECIMAL
-114:
-  unit: 24
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPADPLUS
-115:
-  unit: 25
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPADMINUS
-116:
-  unit: 26
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPADMULTIPLY
-117:
-  unit: 27
-  技能: 荣耀圣令
-  热键: ALT-CTRL-NUMPADDIVIDE
-118:
-  unit: 28
-  技能: 荣耀圣令
-  热键: ALT-CTRL-F1
-119:
-  unit: 29
-  技能: 荣耀圣令
-  热键: ALT-CTRL-F2
-120:
-  unit: 30
-  技能: 荣耀圣令
-  热键: ALT-CTRL-F3
-121:
-  unit: 1
-  技能: 清毒术
-  热键: ALT-CTRL-F5
-122:
-  unit: 2
-  技能: 清毒术
-  热键: ALT-CTRL-F6
-123:
-  unit: 3
-  技能: 清毒术
-  热键: ALT-CTRL-F7
-124:
-  unit: 4
-  技能: 清毒术
-  热键: ALT-CTRL-F8
-125:
-  unit: 5
-  技能: 清毒术
-  热键: ALT-CTRL-F9
-126:
-  unit: 6
-  技能: 清毒术
-  热键: ALT-CTRL-F10
-127:
-  unit: 7
-  技能: 清毒术
-  热键: ALT-CTRL-F11
-128:
-  unit: 8
-  技能: 清毒术
-  热键: ALT-CTRL-F12
-129:
-  unit: 9
-  技能: 清毒术
-  热键: ALT-CTRL-,
-130:
-  unit: 10
-  技能: 清毒术
-  热键: ALT-CTRL-.
-131:
-  unit: 11
-  技能: 清毒术
-  热键: ALT-CTRL-/
-132:
-  unit: 12
-  技能: 清毒术
-  热键: ALT-CTRL-;
-133:
-  unit: 13
-  技能: 清毒术
-  热键: ALT-CTRL-'
-134:
-  unit: 14
-  技能: 清毒术
-  热键: ALT-CTRL-[
-135:
-  unit: 15
-  技能: 清毒术
-  热键: ALT-CTRL-]
-136:
-  unit: 16
-  技能: 清毒术
-  热键: ALT-CTRL-=
-137:
-  unit: 17
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPAD1
-138:
-  unit: 18
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPAD2
-139:
-  unit: 19
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPAD3
-140:
-  unit: 20
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPAD4
-141:
-  unit: 21
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPAD5
-142:
-  unit: 22
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPAD6
-143:
-  unit: 23
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPAD7
-144:
-  unit: 24
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPAD8
-145:
-  unit: 25
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPAD9
-146:
-  unit: 26
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPAD0
-147:
-  unit: 27
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPADDECIMAL
-148:
-  unit: 28
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPADPLUS
-149:
-  unit: 29
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPADMINUS
-150:
-  unit: 30
-  技能: 清毒术
-  热键: ALT-SHIFT-NUMPADMULTIPLY
-151:
-  unit: 1
-  技能: 圣疗术
-  热键: ALT-SHIFT-NUMPADDIVIDE
-152:
-  unit: 2
-  技能: 圣疗术
-  热键: ALT-SHIFT-F1
-153:
-  unit: 3
-  技能: 圣疗术
-  热键: ALT-SHIFT-F2
-154:
-  unit: 4
-  技能: 圣疗术
-  热键: ALT-SHIFT-F3
-155:
-  unit: 5
-  技能: 圣疗术
-  热键: ALT-SHIFT-F5
-156:
-  unit: 6
-  技能: 圣疗术
-  热键: ALT-SHIFT-F6
-157:
-  unit: 7
-  技能: 圣疗术
-  热键: ALT-SHIFT-F7
-158:
-  unit: 8
-  技能: 圣疗术
-  热键: ALT-SHIFT-F8
-159:
-  unit: 9
-  技能: 圣疗术
-  热键: ALT-SHIFT-F9
-160:
-  unit: 10
-  技能: 圣疗术
-  热键: ALT-SHIFT-F10
-161:
-  unit: 11
-  技能: 圣疗术
-  热键: ALT-SHIFT-F11
-162:
-  unit: 12
-  技能: 圣疗术
-  热键: ALT-SHIFT-F12
-163:
-  unit: 13
-  技能: 圣疗术
-  热键: ALT-SHIFT-,
-164:
-  unit: 14
-  技能: 圣疗术
-  热键: ALT-SHIFT-.
-165:
-  unit: 15
-  技能: 圣疗术
-  热键: ALT-SHIFT-/
-166:
-  unit: 16
-  技能: 圣疗术
-  热键: ALT-SHIFT-;
-167:
-  unit: 17
-  技能: 圣疗术
-  热键: ALT-SHIFT-'
-168:
-  unit: 18
-  技能: 圣疗术
-  热键: ALT-SHIFT-[
-169:
-  unit: 19
-  技能: 圣疗术
-  热键: ALT-SHIFT-]
-170:
-  unit: 20
-  技能: 圣疗术
-  热键: ALT-SHIFT-=
-171:
-  unit: 21
-  技能: 圣疗术
-  热键: CTRL-SHIFT-NUMPAD1
-172:
-  unit: 22
-  技能: 圣疗术
-  热键: CTRL-SHIFT-NUMPAD2
-173:
-  unit: 23
-  技能: 圣疗术
-  热键: CTRL-SHIFT-NUMPAD3
-174:
-  unit: 24
-  技能: 圣疗术
-  热键: CTRL-SHIFT-NUMPAD4
-175:
-  unit: 25
-  技能: 圣疗术
-  热键: CTRL-SHIFT-NUMPAD5
-176:
-  unit: 26
-  技能: 圣疗术
-  热键: CTRL-SHIFT-NUMPAD6
-177:
-  unit: 27
-  技能: 圣疗术
-  热键: CTRL-SHIFT-NUMPAD7
-178:
-  unit: 28
-  技能: 圣疗术
-  热键: CTRL-SHIFT-NUMPAD8
-179:
-  unit: 29
-  技能: 圣疗术
-  热键: CTRL-SHIFT-NUMPAD9
-180:
-  unit: 30
-  技能: 圣疗术
-  热键: CTRL-SHIFT-NUMPAD0
-181:
-  unit: 0
-  技能: 牺牲祝福
-  热键: CTRL-SHIFT-NUMPADDECIMAL
-182:
-  unit: 0
-  技能: 代祷
-  热键: CTRL-SHIFT-NUMPADPLUS
-183:
-  unit: 0
-  技能: 圣盾术
-  热键: CTRL-SHIFT-NUMPADMINUS
-184:
-  unit: 0
-  技能: 盲目之光
-  热键: CTRL-SHIFT-NUMPADMULTIPLY
-185:
-  unit: 0
-  技能: 保护祝福
-  热键: CTRL-SHIFT-NUMPADDIVIDE
-186:
-  unit: 0
-  技能: 审判
-  热键: CTRL-SHIFT-F1
-187:
-  unit: 0
-  技能: 制裁之锤
-  热键: CTRL-SHIFT-F2
-188:
-  unit: 0
-  技能: 光环掌握
-  热键: CTRL-SHIFT-F3
-189:
-  unit: 0
-  技能: 圣洁鸣钟
-  热键: CTRL-SHIFT-F5
-190:
-  unit: 0
-  技能: 正义盾击
-  热键: CTRL-SHIFT-F6
-191:
-  unit: 0
-  技能: 黎明之光
-  热键: CTRL-SHIFT-F7
-192:
-  unit: 0
-  技能: 自由祝福
-  热键: CTRL-SHIFT-F8
-193:
-  unit: 0
-  技能: 神圣棱镜
-  热键: CTRL-SHIFT-F9
-194:
-  unit: 0
-  技能: 神圣震击
-  热键: CTRL-SHIFT-F10
-195:
-  unit: 0
-  技能: 公正之剑
-  热键: CTRL-SHIFT-F11
-196:
-  unit: 1
-  技能: 圣洁鸣钟
-  热键: CTRL-SHIFT-F12
-197:
-  unit: 0
-  技能: 处决宣判
-  热键: CTRL-SHIFT-,
-198:
-  unit: 0
-  技能: 最终审判
-  热键: CTRL-SHIFT-.
-199:
-  unit: 0
-  技能: 复仇之怒
-  热键: CTRL-SHIFT-/
-200:
-  unit: 0
-  技能: 灰烬觉醒
-  热键: CTRL-SHIFT-;
-201:
-  unit: 0
-  技能: 复仇者之盾
-  热键: CTRL-SHIFT-'
-202:
-  unit: 0
-  技能: 责难
-  热键: CTRL-SHIFT-[
-203:
-  unit: 0
-  技能: 远古列王守卫
-  热键: CTRL-SHIFT-]
-204:
-  unit: 0
-  技能: 祝福之锤
-  热键: CTRL-SHIFT-=
-205:
-  unit: 0
-  技能: 炽热防御者
-  热键: ALT-CTRL-SHIFT-NUMPAD1
-206:
-  unit: 0
-  技能: 破咒祝福
-  热键: ALT-CTRL-SHIFT-NUMPAD2
-207:
-  unit: 0
-  技能: 神圣风暴
-  热键: ALT-CTRL-SHIFT-NUMPAD3
-208:
-  unit: 0
-  技能: 奉献
-  热键: ALT-CTRL-SHIFT-NUMPAD4
-209:
-  unit: 0
-  技能: 神圣壁垒
-  热键: ALT-CTRL-SHIFT-NUMPAD5
-210:
-  unit: 0
-  技能: 荣耀圣令
-  热键: ALT-CTRL-SHIFT-NUMPAD6
-211:
-  unit: 0
-  技能: 美德道标
-  热键: ALT-CTRL-SHIFT-NUMPAD7
+1: {unit: 1, 技能: "神圣震击", 热键: "CTRL-NUMPAD1"}
+2: {unit: 2, 技能: "神圣震击", 热键: "CTRL-NUMPAD2"}
+3: {unit: 3, 技能: "神圣震击", 热键: "CTRL-NUMPAD3"}
+4: {unit: 4, 技能: "神圣震击", 热键: "CTRL-NUMPAD4"}
+5: {unit: 5, 技能: "神圣震击", 热键: "CTRL-NUMPAD5"}
+6: {unit: 6, 技能: "神圣震击", 热键: "CTRL-NUMPAD6"}
+7: {unit: 7, 技能: "神圣震击", 热键: "CTRL-NUMPAD7"}
+8: {unit: 8, 技能: "神圣震击", 热键: "CTRL-NUMPAD8"}
+9: {unit: 9, 技能: "神圣震击", 热键: "CTRL-NUMPAD9"}
+10: {unit: 10, 技能: "神圣震击", 热键: "CTRL-NUMPAD0"}
+11: {unit: 11, 技能: "神圣震击", 热键: "CTRL-NUMPADDECIMAL"}
+12: {unit: 12, 技能: "神圣震击", 热键: "CTRL-NUMPADPLUS"}
+13: {unit: 13, 技能: "神圣震击", 热键: "CTRL-NUMPADMINUS"}
+14: {unit: 14, 技能: "神圣震击", 热键: "CTRL-NUMPADMULTIPLY"}
+15: {unit: 15, 技能: "神圣震击", 热键: "CTRL-NUMPADDIVIDE"}
+16: {unit: 16, 技能: "神圣震击", 热键: "CTRL-F1"}
+17: {unit: 17, 技能: "神圣震击", 热键: "CTRL-F2"}
+18: {unit: 18, 技能: "神圣震击", 热键: "CTRL-F3"}
+19: {unit: 19, 技能: "神圣震击", 热键: "CTRL-F5"}
+20: {unit: 20, 技能: "神圣震击", 热键: "CTRL-F6"}
+21: {unit: 21, 技能: "神圣震击", 热键: "CTRL-F7"}
+22: {unit: 22, 技能: "神圣震击", 热键: "CTRL-F8"}
+23: {unit: 23, 技能: "神圣震击", 热键: "CTRL-F9"}
+24: {unit: 24, 技能: "神圣震击", 热键: "CTRL-F10"}
+25: {unit: 25, 技能: "神圣震击", 热键: "CTRL-F11"}
+26: {unit: 26, 技能: "神圣震击", 热键: "CTRL-F12"}
+27: {unit: 27, 技能: "神圣震击", 热键: "CTRL-"}
+28: {unit: 28, 技能: "神圣震击", 热键: "CTRL-."}
+29: {unit: 29, 技能: "神圣震击", 热键: "CTRL-/"}
+30: {unit: 30, 技能: "神圣震击", 热键: "CTRL-;"}
+31: {unit: 1, 技能: "圣光闪现", 热键: "CTRL-'"}
+32: {unit: 2, 技能: "圣光闪现", 热键: "CTRL-["}
+33: {unit: 3, 技能: "圣光闪现", 热键: "CTRL-]"}
+34: {unit: 4, 技能: "圣光闪现", 热键: "CTRL-="}
+35: {unit: 5, 技能: "圣光闪现", 热键: "ALT-NUMPAD1"}
+36: {unit: 6, 技能: "圣光闪现", 热键: "ALT-NUMPAD2"}
+37: {unit: 7, 技能: "圣光闪现", 热键: "ALT-NUMPAD3"}
+38: {unit: 8, 技能: "圣光闪现", 热键: "ALT-NUMPAD4"}
+39: {unit: 9, 技能: "圣光闪现", 热键: "ALT-NUMPAD5"}
+40: {unit: 10, 技能: "圣光闪现", 热键: "ALT-NUMPAD6"}
+41: {unit: 11, 技能: "圣光闪现", 热键: "ALT-NUMPAD7"}
+42: {unit: 12, 技能: "圣光闪现", 热键: "ALT-NUMPAD8"}
+43: {unit: 13, 技能: "圣光闪现", 热键: "ALT-NUMPAD9"}
+44: {unit: 14, 技能: "圣光闪现", 热键: "ALT-NUMPAD0"}
+45: {unit: 15, 技能: "圣光闪现", 热键: "ALT-NUMPADDECIMAL"}
+46: {unit: 16, 技能: "圣光闪现", 热键: "ALT-NUMPADPLUS"}
+47: {unit: 17, 技能: "圣光闪现", 热键: "ALT-NUMPADMINUS"}
+48: {unit: 18, 技能: "圣光闪现", 热键: "ALT-NUMPADMULTIPLY"}
+49: {unit: 19, 技能: "圣光闪现", 热键: "ALT-NUMPADDIVIDE"}
+50: {unit: 20, 技能: "圣光闪现", 热键: "ALT-F1"}
+51: {unit: 21, 技能: "圣光闪现", 热键: "ALT-F2"}
+52: {unit: 22, 技能: "圣光闪现", 热键: "ALT-F3"}
+53: {unit: 23, 技能: "圣光闪现", 热键: "ALT-F5"}
+54: {unit: 24, 技能: "圣光闪现", 热键: "ALT-F6"}
+55: {unit: 25, 技能: "圣光闪现", 热键: "ALT-F7"}
+56: {unit: 26, 技能: "圣光闪现", 热键: "ALT-F8"}
+57: {unit: 27, 技能: "圣光闪现", 热键: "ALT-F9"}
+58: {unit: 28, 技能: "圣光闪现", 热键: "ALT-F10"}
+59: {unit: 29, 技能: "圣光闪现", 热键: "ALT-F11"}
+60: {unit: 30, 技能: "圣光闪现", 热键: "ALT-F12"}
+61: {unit: 1, 技能: "圣光术", 热键: "ALT-"}
+62: {unit: 2, 技能: "圣光术", 热键: "ALT-."}
+63: {unit: 3, 技能: "圣光术", 热键: "ALT-/"}
+64: {unit: 4, 技能: "圣光术", 热键: "ALT-;"}
+65: {unit: 5, 技能: "圣光术", 热键: "ALT-'"}
+66: {unit: 6, 技能: "圣光术", 热键: "ALT-["}
+67: {unit: 7, 技能: "圣光术", 热键: "ALT-]"}
+68: {unit: 8, 技能: "圣光术", 热键: "ALT-="}
+69: {unit: 9, 技能: "圣光术", 热键: "SHIFT-NUMPAD1"}
+70: {unit: 10, 技能: "圣光术", 热键: "SHIFT-NUMPAD2"}
+71: {unit: 11, 技能: "圣光术", 热键: "SHIFT-NUMPAD3"}
+72: {unit: 12, 技能: "圣光术", 热键: "SHIFT-NUMPAD4"}
+73: {unit: 13, 技能: "圣光术", 热键: "SHIFT-NUMPAD5"}
+74: {unit: 14, 技能: "圣光术", 热键: "SHIFT-NUMPAD6"}
+75: {unit: 15, 技能: "圣光术", 热键: "SHIFT-NUMPAD7"}
+76: {unit: 16, 技能: "圣光术", 热键: "SHIFT-NUMPAD8"}
+77: {unit: 17, 技能: "圣光术", 热键: "SHIFT-NUMPAD9"}
+78: {unit: 18, 技能: "圣光术", 热键: "SHIFT-NUMPAD0"}
+79: {unit: 19, 技能: "圣光术", 热键: "SHIFT-NUMPADDECIMAL"}
+80: {unit: 20, 技能: "圣光术", 热键: "SHIFT-NUMPADPLUS"}
+81: {unit: 21, 技能: "圣光术", 热键: "SHIFT-NUMPADMINUS"}
+82: {unit: 22, 技能: "圣光术", 热键: "SHIFT-NUMPADMULTIPLY"}
+83: {unit: 23, 技能: "圣光术", 热键: "SHIFT-NUMPADDIVIDE"}
+84: {unit: 24, 技能: "圣光术", 热键: "SHIFT-F1"}
+85: {unit: 25, 技能: "圣光术", 热键: "SHIFT-F2"}
+86: {unit: 26, 技能: "圣光术", 热键: "SHIFT-F3"}
+87: {unit: 27, 技能: "圣光术", 热键: "SHIFT-F5"}
+88: {unit: 28, 技能: "圣光术", 热键: "SHIFT-F6"}
+89: {unit: 29, 技能: "圣光术", 热键: "SHIFT-F7"}
+90: {unit: 30, 技能: "圣光术", 热键: "SHIFT-F8"}
+91: {unit: 1, 技能: "荣耀圣令", 热键: "SHIFT-F9"}
+92: {unit: 2, 技能: "荣耀圣令", 热键: "SHIFT-F10"}
+93: {unit: 3, 技能: "荣耀圣令", 热键: "SHIFT-F11"}
+94: {unit: 4, 技能: "荣耀圣令", 热键: "SHIFT-F12"}
+95: {unit: 5, 技能: "荣耀圣令", 热键: "SHIFT-"}
+96: {unit: 6, 技能: "荣耀圣令", 热键: "SHIFT-."}
+97: {unit: 7, 技能: "荣耀圣令", 热键: "SHIFT-/"}
+98: {unit: 8, 技能: "荣耀圣令", 热键: "SHIFT-;"}
+99: {unit: 9, 技能: "荣耀圣令", 热键: "SHIFT-'"}
+100: {unit: 10, 技能: "荣耀圣令", 热键: "SHIFT-["}
+101: {unit: 11, 技能: "荣耀圣令", 热键: "SHIFT-]"}
+102: {unit: 12, 技能: "荣耀圣令", 热键: "SHIFT-="}
+103: {unit: 13, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPAD1"}
+104: {unit: 14, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPAD2"}
+105: {unit: 15, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPAD3"}
+106: {unit: 16, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPAD4"}
+107: {unit: 17, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPAD5"}
+108: {unit: 18, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPAD6"}
+109: {unit: 19, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPAD7"}
+110: {unit: 20, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPAD8"}
+111: {unit: 21, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPAD9"}
+112: {unit: 22, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPAD0"}
+113: {unit: 23, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPADDECIMAL"}
+114: {unit: 24, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPADPLUS"}
+115: {unit: 25, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPADMINUS"}
+116: {unit: 26, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPADMULTIPLY"}
+117: {unit: 27, 技能: "荣耀圣令", 热键: "ALT-CTRL-NUMPADDIVIDE"}
+118: {unit: 28, 技能: "荣耀圣令", 热键: "ALT-CTRL-F1"}
+119: {unit: 29, 技能: "荣耀圣令", 热键: "ALT-CTRL-F2"}
+120: {unit: 30, 技能: "荣耀圣令", 热键: "ALT-CTRL-F3"}
+121: {unit: 1, 技能: "清毒术", 热键: "ALT-CTRL-F5"}
+122: {unit: 2, 技能: "清毒术", 热键: "ALT-CTRL-F6"}
+123: {unit: 3, 技能: "清毒术", 热键: "ALT-CTRL-F7"}
+124: {unit: 4, 技能: "清毒术", 热键: "ALT-CTRL-F8"}
+125: {unit: 5, 技能: "清毒术", 热键: "ALT-CTRL-F9"}
+126: {unit: 6, 技能: "清毒术", 热键: "ALT-CTRL-F10"}
+127: {unit: 7, 技能: "清毒术", 热键: "ALT-CTRL-F11"}
+128: {unit: 8, 技能: "清毒术", 热键: "ALT-CTRL-F12"}
+129: {unit: 9, 技能: "清毒术", 热键: "ALT-CTRL-"}
+130: {unit: 10, 技能: "清毒术", 热键: "ALT-CTRL-."}
+131: {unit: 11, 技能: "清毒术", 热键: "ALT-CTRL-/"}
+132: {unit: 12, 技能: "清毒术", 热键: "ALT-CTRL-;"}
+133: {unit: 13, 技能: "清毒术", 热键: "ALT-CTRL-'"}
+134: {unit: 14, 技能: "清毒术", 热键: "ALT-CTRL-["}
+135: {unit: 15, 技能: "清毒术", 热键: "ALT-CTRL-]"}
+136: {unit: 16, 技能: "清毒术", 热键: "ALT-CTRL-="}
+137: {unit: 17, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPAD1"}
+138: {unit: 18, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPAD2"}
+139: {unit: 19, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPAD3"}
+140: {unit: 20, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPAD4"}
+141: {unit: 21, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPAD5"}
+142: {unit: 22, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPAD6"}
+143: {unit: 23, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPAD7"}
+144: {unit: 24, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPAD8"}
+145: {unit: 25, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPAD9"}
+146: {unit: 26, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPAD0"}
+147: {unit: 27, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPADDECIMAL"}
+148: {unit: 28, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPADPLUS"}
+149: {unit: 29, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPADMINUS"}
+150: {unit: 30, 技能: "清毒术", 热键: "ALT-SHIFT-NUMPADMULTIPLY"}
+151: {unit: 1, 技能: "圣疗术", 热键: "ALT-SHIFT-NUMPADDIVIDE"}
+152: {unit: 2, 技能: "圣疗术", 热键: "ALT-SHIFT-F1"}
+153: {unit: 3, 技能: "圣疗术", 热键: "ALT-SHIFT-F2"}
+154: {unit: 4, 技能: "圣疗术", 热键: "ALT-SHIFT-F3"}
+155: {unit: 5, 技能: "圣疗术", 热键: "ALT-SHIFT-F5"}
+156: {unit: 6, 技能: "圣疗术", 热键: "ALT-SHIFT-F6"}
+157: {unit: 7, 技能: "圣疗术", 热键: "ALT-SHIFT-F7"}
+158: {unit: 8, 技能: "圣疗术", 热键: "ALT-SHIFT-F8"}
+159: {unit: 9, 技能: "圣疗术", 热键: "ALT-SHIFT-F9"}
+160: {unit: 10, 技能: "圣疗术", 热键: "ALT-SHIFT-F10"}
+161: {unit: 11, 技能: "圣疗术", 热键: "ALT-SHIFT-F11"}
+162: {unit: 12, 技能: "圣疗术", 热键: "ALT-SHIFT-F12"}
+163: {unit: 13, 技能: "圣疗术", 热键: "ALT-SHIFT-"}
+164: {unit: 14, 技能: "圣疗术", 热键: "ALT-SHIFT-."}
+165: {unit: 15, 技能: "圣疗术", 热键: "ALT-SHIFT-/"}
+166: {unit: 16, 技能: "圣疗术", 热键: "ALT-SHIFT-;"}
+167: {unit: 17, 技能: "圣疗术", 热键: "ALT-SHIFT-'"}
+168: {unit: 18, 技能: "圣疗术", 热键: "ALT-SHIFT-["}
+169: {unit: 19, 技能: "圣疗术", 热键: "ALT-SHIFT-]"}
+170: {unit: 20, 技能: "圣疗术", 热键: "ALT-SHIFT-="}
+171: {unit: 21, 技能: "圣疗术", 热键: "CTRL-SHIFT-NUMPAD1"}
+172: {unit: 22, 技能: "圣疗术", 热键: "CTRL-SHIFT-NUMPAD2"}
+173: {unit: 23, 技能: "圣疗术", 热键: "CTRL-SHIFT-NUMPAD3"}
+174: {unit: 24, 技能: "圣疗术", 热键: "CTRL-SHIFT-NUMPAD4"}
+175: {unit: 25, 技能: "圣疗术", 热键: "CTRL-SHIFT-NUMPAD5"}
+176: {unit: 26, 技能: "圣疗术", 热键: "CTRL-SHIFT-NUMPAD6"}
+177: {unit: 27, 技能: "圣疗术", 热键: "CTRL-SHIFT-NUMPAD7"}
+178: {unit: 28, 技能: "圣疗术", 热键: "CTRL-SHIFT-NUMPAD8"}
+179: {unit: 29, 技能: "圣疗术", 热键: "CTRL-SHIFT-NUMPAD9"}
+180: {unit: 30, 技能: "圣疗术", 热键: "CTRL-SHIFT-NUMPAD0"}
+181: {unit: 0, 技能: "牺牲祝福", 热键: "CTRL-SHIFT-NUMPADDECIMAL"}
+182: {unit: 0, 技能: "代祷", 热键: "CTRL-SHIFT-NUMPADPLUS"}
+183: {unit: 0, 技能: "圣盾术", 热键: "CTRL-SHIFT-NUMPADMINUS"}
+184: {unit: 0, 技能: "盲目之光", 热键: "CTRL-SHIFT-NUMPADMULTIPLY"}
+185: {unit: 0, 技能: "保护祝福", 热键: "CTRL-SHIFT-NUMPADDIVIDE"}
+186: {unit: 0, 技能: "审判", 热键: "CTRL-SHIFT-F1"}
+187: {unit: 0, 技能: "制裁之锤", 热键: "CTRL-SHIFT-F2"}
+188: {unit: 0, 技能: "光环掌握", 热键: "CTRL-SHIFT-F3"}
+189: {unit: 0, 技能: "圣洁鸣钟", 热键: "CTRL-SHIFT-F5"}
+190: {unit: 0, 技能: "正义盾击", 热键: "CTRL-SHIFT-F6"}
+191: {unit: 0, 技能: "黎明之光", 热键: "CTRL-SHIFT-F7"}
+192: {unit: 0, 技能: "自由祝福", 热键: "CTRL-SHIFT-F8"}
+193: {unit: 0, 技能: "神圣棱镜", 热键: "CTRL-SHIFT-F9"}
+194: {unit: 0, 技能: "神圣震击", 热键: "CTRL-SHIFT-F10"}
+195: {unit: 0, 技能: "公正之剑", 热键: "CTRL-SHIFT-F11"}
+196: {unit: 1, 技能: "圣洁鸣钟", 热键: "CTRL-SHIFT-F12"}
+197: {unit: 0, 技能: "处决宣判", 热键: "CTRL-SHIFT-"}
+198: {unit: 0, 技能: "最终审判", 热键: "CTRL-SHIFT-."}
+199: {unit: 0, 技能: "复仇之怒", 热键: "CTRL-SHIFT-/"}
+200: {unit: 0, 技能: "灰烬觉醒", 热键: "CTRL-SHIFT-;"}
+201: {unit: 0, 技能: "复仇者之盾", 热键: "CTRL-SHIFT-'"}
+202: {unit: 0, 技能: "责难", 热键: "CTRL-SHIFT-["}
+203: {unit: 0, 技能: "远古列王守卫", 热键: "CTRL-SHIFT-]"}
+204: {unit: 0, 技能: "祝福之锤", 热键: "CTRL-SHIFT-="}
+205: {unit: 0, 技能: "炽热防御者", 热键: "ALT-CTRL-SHIFT-NUMPAD1"}
+206: {unit: 0, 技能: "破咒祝福", 热键: "ALT-CTRL-SHIFT-NUMPAD2"}
+207: {unit: 0, 技能: "神圣风暴", 热键: "ALT-CTRL-SHIFT-NUMPAD3"}
+208: {unit: 0, 技能: "奉献", 热键: "ALT-CTRL-SHIFT-NUMPAD4"}
+209: {unit: 0, 技能: "神圣壁垒", 热键: "ALT-CTRL-SHIFT-NUMPAD5"}
+210: {unit: 0, 技能: "荣耀圣令", 热键: "ALT-CTRL-SHIFT-NUMPAD6"}
+211: {unit: 0, 技能: "美德道标", 热键: "ALT-CTRL-SHIFT-NUMPAD7"}
