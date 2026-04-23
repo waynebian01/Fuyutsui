@@ -258,12 +258,4 @@ def run_shaman_logic(state_dict, spec_name):
                 current_step = f"施放 治疗波 on {lowest_u}, 释放治疗波"
                 action_hotkey = get_hotkey(int(lowest_u), "治疗波")
 
-        elif  法术失败 == 0 and action_hotkey is None and 战斗 and 1 <= 目标类型 <= 3 and 自然迅捷 != 255 :
-            tup = action_map.get(一键辅助)
-            if tup:
-                current_step = f"施放 {tup[0]}"
-                action_hotkey = get_hotkey(0, tup[1])
-            else:
-                current_step = "战斗中-无匹配技能"
-
     return action_hotkey, current_step, unit_info

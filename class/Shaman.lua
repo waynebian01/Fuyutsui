@@ -96,6 +96,11 @@ function fu.updateSpecInfo()
                     auraRef = fu.auras["生命释放"],
                     showKey = "remaining",
                 },
+                ["升腾"] = {
+                    index = 29,
+                    auraRef = fu.auras["升腾"],
+                    showKey = "remaining",
+                },
             },
         }
 
