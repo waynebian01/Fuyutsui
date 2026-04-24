@@ -125,7 +125,7 @@ def run_shaman_logic(state_dict, spec_name):
         升腾buff = state_dict.get("升腾", 0)
         
          # 奶萨技能cd
-        自然迅捷 = state_dict.get("自然迅捷", 0)
+        自然迅捷 = spells.get("自然迅捷", -1)
         熔岩爆裂 = spells.get("熔岩爆裂", -1)
         爆裂充能 = spells.get("爆裂充能", -1)
         激流 = spells.get("激流", -1)
