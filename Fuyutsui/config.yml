@@ -408,12 +408,12 @@ state:
       阵风: {step: 40, type: "int" }
       幽魂步: {step: 41, type: "int" }
 
-      熔岩爆裂: {step: 44, type: "int" }
-      爆裂充能: {step: 45, type: "int" }
+      熔岩爆裂: {step: 42, type: "int" }
+      爆裂充能: {step: 43, type: "int" }
       激流: {step: 44, type: "int" }
       激流充能: {step: 45, type: "int" }
-      治疗图腾: {step: 46, type: "int" }
-      治疗图腾充能: {step: 47, type: "int" }
+      治疗之泉图腾: {step: 46, type: "int" }
+      治疗之泉图腾充能: {step: 47, type: "int" }
 
       烈焰震击: {step: 48, type: "int" }
       净化灵魂: {step: 49, type: "int" }
