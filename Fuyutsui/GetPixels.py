@@ -174,6 +174,9 @@ def scan_screen_data(window_title="魔兽世界"):
                     sx += 1
                     continue
                 return int(g2), sx + 1
+            # 如果找不到白色像素，直接返回 0
+            if need_white:
+                return 0, width
             return 0, width
 
         def _dict_value_from_raw_g(raw_g):

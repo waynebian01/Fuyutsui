@@ -31,24 +31,26 @@ def _get_failed_spell(state_dict):
 
 def run_warlock_logic(state_dict, spec_name):
     spells = state_dict.get("spells") or {}
-    战斗 = state_dict.get("战斗")
-    移动 = state_dict.get("移动")
-    施法 = state_dict.get("施法")
-    引导 = state_dict.get("引导")
-    生命值 = state_dict.get("生命值")
-    能量值 = state_dict.get("能量值")
-    一键辅助 = state_dict.get("一键辅助")
+
+    战斗 = state_dict.get("战斗", 0)
+    移动 = state_dict.get("移动", 0)
+    施法 = state_dict.get("施法", 0)
+    引导 = state_dict.get("引导", 0)
+    蓄力 = state_dict.get("蓄力", 0)
+    蓄力层数 = state_dict.get("蓄力层数", 0)
+    生命值 = state_dict.get("生命值", 0)
+    能量值 = state_dict.get("能量值", 0)
+    一键辅助 = state_dict.get("一键辅助", 0)
     法术失败 = state_dict.get("法术失败", 0)
     目标类型 = state_dict.get("目标类型", 0)
-    队伍类型 = int(state_dict.get("队伍类型", 0) or 0)
-    队伍人数 = int(state_dict.get("队伍人数", 0) or 0)
-    首领战 = int(state_dict.get("首领战", 0) or 0)
-    难度 = int(state_dict.get("难度", 0) or 0)
-    英雄天赋 = int(state_dict.get("英雄天赋", 0) or 0)
+    队伍类型 = state_dict.get("队伍类型", 0)
+    队伍人数 = state_dict.get("队伍人数", 0)
+    首领战 = state_dict.get("首领战", 0)
+    难度 = state_dict.get("难度", 0)
+    英雄天赋 = state_dict.get("英雄天赋", 0)
 
     失败法术 = _get_failed_spell(state_dict)
     tup = action_map.get(一键辅助)
-
     action_hotkey = None
     current_step = "无匹配技能"
     unit_info = {}
@@ -60,7 +62,7 @@ def run_warlock_logic(state_dict, spec_name):
         小鬼数量 = state_dict.get("小鬼数量", 0)
         灵魂碎片 = state_dict.get("灵魂碎片", 0)
         施法技能 = state_dict.get("施法技能", 0)
-        法术封锁 = state_dict.get("法术封锁", 0)
+        吞噬魔法 = state_dict.get("吞噬魔法", 0)
 
         魔典邪能破坏者 = spells.get("魔典：邪能破坏者", -1)
         内爆 = spells.get("内爆", -1)
@@ -72,7 +74,7 @@ def run_warlock_logic(state_dict, spec_name):
             current_step = f"施放 {失败法术}"
             action_hotkey = get_hotkey(0, 失败法术)
         elif 战斗 and 1 <= 目标类型 <= 3:
-            if 魔典邪能破坏者 == 0 and 法术封锁 == 1:
+            if 魔典邪能破坏者 == 0 and 吞噬魔法 == 1:
                 current_step = "施放 魔典：邪能破坏者"
                 action_hotkey = get_hotkey(0, "魔典：邪能破坏者")
             elif 小鬼数量 >= 6 and 内爆 == 0:

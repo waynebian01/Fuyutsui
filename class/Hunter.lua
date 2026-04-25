@@ -9,8 +9,15 @@ fu.heroSpell = {
 }
 
 fu.spellCooldown = {
-    [109304] = { index = 41, name = "意气风发" },
-    [19577]  = { index = 42, name = "胁迫" },
+    [53480]  = { index = 30, name = "牺牲咆哮" },
+    [109304] = { index = 31, name = "意气风发" },
+    [19577]  = { index = 32, name = "胁迫" },
+    [5116]   = { index = 33, name = "震荡射击" },
+    [19801]  = { index = 34, name = "宁神射击" },
+    [187698] = { index = 35, name = "焦油陷进" },
+    [1513]   = { index = 36, name = "恐吓野兽" },
+    [109248] = { index = 37, name = "束缚射击" },
+    [195645] = { index = 38, name = "摔绊" },
 }
 
 function fu.updateSpecInfo()
@@ -18,42 +25,36 @@ function fu.updateSpecInfo()
     fu.powerType = nil
     fu.blocks = nil
     fu.group_blocks = nil
-
-    -- 專精 1：野獸控制 (Beast Mastery)
     if specIndex == 1 then
-        fu.HarmfulSpellId        = 193455 -- 眼鏡蛇射擊
-        fu.blocks                = {
+        fu.blocks = {
 
         }
-        fu.spellCooldown[34026]  = { index = 43, name = "杀戮命令", charge = 32 }
-        fu.spellCooldown[217200] = { index = 44, name = "倒刺射击", charge = 34 }
-        fu.spellCooldown[147362] = { index = 45, name = "反制射击" }
-        fu.spellCooldown[19574]  = { index = 46, name = "狂野怒火" }
-    elseif specIndex == 2 then
-        fu.HarmfulSpellId        = 19434 -- 瞄準射擊
-        fu.blocks                = {
-
-        }
-
+        fu.spellCooldown[34026] = { index = 39, name = "杀戮命令", charge = 40 }
+        fu.spellCooldown[217200] = { index = 41, name = "倒刺射击", charge = 42 }
         fu.spellCooldown[147362] = { index = 43, name = "反制射击" }
-        fu.spellCooldown[19434]  = { index = 44, name = "瞄准射击", charge = 30 }
-        fu.spellCooldown[257044] = { index = 45, name = "急速射击" }
-        fu.spellCooldown[288613] = { index = 46, name = "百发百中" }
-    elseif specIndex == 3 then
-        fu.HarmfulSpellId        = 1261193 -- 爆裂火铳
-        fu.blocks                = {
+        fu.spellCooldown[19574] = { index = 44, name = "狂野怒火" }
+        fu.spellCooldown[1264359] = { index = 45, name = "狂野鞭笞" }
+    elseif specIndex == 2 then
+        fu.blocks = {
 
         }
-        fu.spellCooldown[1261193] = { index = 43, name = "爆裂火铳" }
-        fu.spellCooldown[1250646] = { index = 44, name = "狩魂一击" }
-        fu.spellCooldown[190925] = { index = 45, name = "鱼叉猛刺" }
-        fu.spellCooldown[186270] = { index = 46, name = "猛禽一击" }
-        fu.spellCooldown[259495] = { index = 47, name = "野火炸弹" }
-        fu.spellCooldown[53480] = { index = 48, name = "牺牲咆哮" }
+
+        fu.spellCooldown[147362] = { index = 39, name = "反制射击" }
+        fu.spellCooldown[19434] = { index = 40, name = "瞄准射击", charge = 41 }
+        fu.spellCooldown[257044] = { index = 42, name = "急速射击" }
+        fu.spellCooldown[288613] = { index = 43, name = "百发百中" }
+    elseif specIndex == 3 then
+        fu.blocks = {
+
+        }
+        fu.spellCooldown[1261193] = { index = 39, name = "爆裂火铳" }
+        fu.spellCooldown[1250646] = { index = 40, name = "狩魂一击" }
+        fu.spellCooldown[190925] = { index = 41, name = "鱼叉猛刺" }
+        fu.spellCooldown[186270] = { index = 42, name = "猛禽一击" }
+        fu.spellCooldown[259495] = { index = 43, name = "野火炸弹" }
     end
 end
 
--- 創建獵人巨集
 function fu.CreateClassMacro()
     local dynamicSpells = {}
     local specialSpells = {}

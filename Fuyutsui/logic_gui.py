@@ -36,7 +36,7 @@ run_demonhunter_logic = _load_logic_module("demonhunter_logic")
 run_evoker_logic = _load_logic_module("evoker_logic")
 
 TOGGLE_INTERVAL = 0.1
-LOGIC_INTERVAL = 0.15
+LOGIC_INTERVAL = 0.2
 GUI_UPDATE_MS = 200
 TOGGLE_DEBOUNCE_SEC = 0.12
 
@@ -369,6 +369,7 @@ def _run_priest_loop():
                 _unit_info = unit_info_update
 
         # 根据发送模式处理发送逻辑
+        delay_after_send = 0.0
         if mode == "click":
             with _state_lock:
                 pending = _click_pending
@@ -376,13 +377,22 @@ def _run_priest_loop():
                 # 只发送一次：无论是否命中 action_hotkey，都结束本次单击
                 if action_hotkey:
                     send_key_to_wow(action_hotkey)
+                    # 检查是否需要延迟
+                    delay_after_send = unit_info_update.get("_delay", 0.0) if unit_info_update else 0.0
                 with _state_lock:
                     _logic_enabled = False
                     _click_pending = False
         else:
             if action_hotkey:
                 send_key_to_wow(action_hotkey)
-        time.sleep(TOGGLE_INTERVAL)
+                # 检查是否需要延迟
+                delay_after_send = unit_info_update.get("_delay", 0.0) if unit_info_update else 0.0
+        
+        # 如果有延迟需求，则延迟后再继续
+        if delay_after_send > 0:
+            time.sleep(delay_after_send)
+        else:
+            time.sleep(TOGGLE_INTERVAL)
 
 # CustomTkinter 配色：深灰主题，文字高对比度
 BG_DARK = "#1e1e1e"

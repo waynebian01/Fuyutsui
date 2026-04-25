@@ -28,16 +28,19 @@ fixed["战斗"] = 5
 fixed["移动"] = 6
 fixed["施法"] = 7
 fixed["引导"] = 8
-fixed["生命值"] = 9
-fixed["能量值"] = 10
-fixed["一键辅助"] = 11
-fixed["法术失败"] = 12
-fixed["目标类型"] = 13
-fixed["队伍类型"] = 14
-fixed["队伍人数"] = 15
-fixed["首领战"] = 16
-fixed["难度"] = 17
-fixed["英雄天赋"] = 18
+fixed["蓄力"] = 9
+fixed["蓄力层数"] = 10
+fixed["生命值"] = 11
+fixed["能量值"] = 12
+fixed["一键辅助"] = 13
+fixed["法术失败"] = 14
+fixed["目标类型"] = 15
+fixed["队伍类型"] = 16
+fixed["队伍人数"] = 17
+fixed["首领战"] = 18
+fixed["难度"] = 19
+fixed["英雄天赋"] = 20
+
 
 -- ================================================================
 --                          创建颜色曲线
@@ -338,6 +341,34 @@ local function updatePlayerChannelingInfo()
         end
     else
         creat(fixed["引导"], 0)
+    end
+end
+
+-- 更新玩家蓄力状态
+local function updatePlayerEmpowerInfo()
+    if state.empowering then
+        local empowerStages = UnitEmpoweredStageDurations("player")
+        local empowerDuration = UnitEmpoweredChannelDuration("player")
+        if empowerDuration then
+            local empowerDurationColor = empowerDuration:EvaluateRemainingDuration(curve10)
+            ---@diagnostic disable-next-line: param-type-mismatch
+            local _, _, b = empowerDurationColor:GetRGB()
+            creat(fixed["蓄力"], b)
+        end
+        if empowerStages then
+            for k, v in pairs(empowerStages) do
+                local empower = v:EvaluateRemainingDuration(curve10)
+                ---@diagnostic disable-next-line: param-type-mismatch
+                local _, _, b = empower:GetRGB()
+                creat(fixed["蓄力层数"], (k - 1) / 255)
+                if b > 0 then
+                    break
+                end
+            end
+        end
+    else
+        creat(fixed["蓄力"], 0)
+        creat(fixed["蓄力层数"], 0)
     end
 end
 
@@ -1341,6 +1372,23 @@ function frame:UNIT_SPELLCAST_CHANNEL_STOP(unitTarget, castGUID, spellID, castBa
     -- updateTeaCount2(spellID)
 end
 
+-- 蓄力状态
+frame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", "player")
+frame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", "player")
+function frame:UNIT_SPELLCAST_EMPOWER_START(unitTarget, castGUID, spellID, castBarID)
+    state.empowering = true
+    state.empoweringSpellID = spellID
+    updatePlayerCasting(spellID)
+end
+
+function frame:UNIT_SPELLCAST_EMPOWER_STOP(unitTarget, castGUID, spellID, complete, interruptedBy, castBarID)
+    state.empowering = false
+    state.castTargetUnit = nil
+    state.castTargetName = nil
+    state.castTargetIndex = nil
+    updatePlayerCasting(0)
+end
+
 local updateLesserGhoul = false
 frame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 function frame:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID, castBarID)
@@ -1487,10 +1535,6 @@ function frame:SPELL_UPDATE_USES(spellID, baseSpellID)
         fu.updateUsesSpell = nil
         fu.updateUsesBaseSpell = nil
     end)
-    if updateLesserGhoul and not (spellID == 55090 or spellID == 433895) then
-        fu.auras["次级食尸鬼"].count = 0
-        fu.auras["次级食尸鬼"].expirationTime = nil
-    end
 end
 
 frame:RegisterEvent("SPELL_UPDATE_COOLDOWN") -- 法术冷却更新
@@ -1621,6 +1665,7 @@ frame:SetScript("OnUpdate", function(_, elapsed)
     timeElapsed = timeElapsed + elapsed
     updatePlayerCastingInfo()
     updatePlayerChannelingInfo()
+    updatePlayerEmpowerInfo()
     updateGroupInRange()
     if timeElapsed > 0.2 then
         updateSpellCooldown()

@@ -3,14 +3,15 @@ local _, fu = ...
 
 -- 游戏内宏命令
 -- /fu 命令系统
--- /fu cd       — 爆发 开 / 关 切换 (Block 51)
+-- /fu cd       — 爆发 开 / 关 切换
+-- /fu cd on      — 爆发 开启
+-- /fu cd off     — 爆发 关闭
 
--- /fu aoemode   — 默认 / AOE / 单体 切换 (Block 50)
--- /fu aoemode default  — 切换回默认模式
+-- /fu aoemode   — 自动 / 单体 切换
+-- /fu aoemode auro  — 切换回自动模式
 -- /fu aoemode aoe      — 仅开 AOE 模式
--- /fu aoemode single   — 仅开 单体 模式
 
--- /fu dpsmode  — DPS 模式 开 / 关 切换 (Block 52)
+-- /fu dpsmode  — DPS 模式 开 / 关 切换
 -- /fu dpsmode manual     — 输出模式 切换到 手动编写逻辑
 -- /fu dpsmode assistant  — 输出模式 切换到 官方一键辅助
 
@@ -59,14 +60,20 @@ local function Fuyutsui_SlashHandler(msg)
     if command == "cd" then
         cooldowns = (cooldowns == 0) and 1 or 0
         switchCooldown()
+    elseif command == "cd on" then
+        cooldowns = 1
+        switchCooldown()
+    elseif command == "cd off" then
+        cooldowns = 0
+        switchCooldown()
         -- AOE模式
     elseif command == "aoemode" then
         aoeMode = (aoeMode == 0) and 1 or 0
         switchAoeMode()
-    elseif command == "aoemode auto" or command == "aoemode aoe" then
+    elseif command == "aoemode auto" then
         aoeMode = 0
         switchAoeMode()
-    elseif command == "aoemode single" then
+    elseif command == "aoemode aoe" then
         aoeMode = 1
         switchAoeMode()
         -- 输出模式
@@ -82,13 +89,15 @@ local function Fuyutsui_SlashHandler(msg)
     else
         -- 默认显示的帮助信息
         print("|cff00ff00Fuyutsui|r 命令列表:")
-        print("/fu cd                   - 冷却检查")
-        print("/fu aoemode              - 切换模式")
-        print("/fu aoemode auto         - 自动模式 (根据插件推荐)")
-        print("/fu aoemode single       - 单体模式 (强制单体)")
-        print("/fu dpsmode              - 输出模式切换")
-        print("/fu dpsmode manual       - 手动编写逻辑")
-        print("/fu dpsmode assistant    - 官方一键辅助")
+        print("爆发开关: /fu cd")
+        print("|cff00ff00开启|r爆发: /fu cd on")
+        print("|cffff0000关闭|r爆发: /fu cd off")
+        print("切换AOE模式: /fu aoemode              ")
+        print("切换AOE为|cff00ff00自动|r: /fu aoemode auto")
+        print("切换AOE为|cff00ff00单体|r: /fu aoemode single")
+        print("切换输出模式: /fu dpsmode")
+        print("切换输出模式为|cff00ff00手写逻辑|r: /fu dpsmode manual")
+        print("切换输出模式为|cff00ff00一键辅助|r: /fu dpsmode assistant")
     end
 end
 

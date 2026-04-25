@@ -39,6 +39,8 @@ action_map = {
     35: ("鱼叉猛刺", "鱼叉猛刺"),
     36: ("猛禽一击", "猛禽一击"),
     37: ("野火炸弹", "野火炸弹"),
+    38: ("牺牲咆哮", "牺牲咆哮"),
+    46: ("猛禽横扫", "猛禽一击"),
 }
 
 failed_spell_map = {
@@ -57,25 +59,30 @@ def _get_failed_spell(state_dict):
 
 def run_hunter_logic(state_dict, spec_name):
     spells = state_dict.get("spells") or {}
-    生命值 = state_dict.get("生命值")
-    能量值 = state_dict.get("能量值")
-    一键辅助 = state_dict.get("一键辅助")
-    目标类型 = state_dict.get("目标类型", 0)
-    战斗 = state_dict.get("战斗")
-    施法 = state_dict.get("施法")
-    引导 = state_dict.get("引导")
-    移动 = state_dict.get("移动")
-    英雄天赋 = state_dict.get("英雄天赋", 0)
+
+    战斗 = state_dict.get("战斗", 0)
+    移动 = state_dict.get("移动", 0)
+    施法 = state_dict.get("施法", 0)
+    引导 = state_dict.get("引导", 0)
+    蓄力 = state_dict.get("蓄力", 0)
+    蓄力层数 = state_dict.get("蓄力层数", 0)
+    生命值 = state_dict.get("生命值", 0)
+    能量值 = state_dict.get("能量值", 0)
+    一键辅助 = state_dict.get("一键辅助", 0)
     法术失败 = state_dict.get("法术失败", 0)
+    目标类型 = state_dict.get("目标类型", 0)
+    队伍类型 = state_dict.get("队伍类型", 0)
+    队伍人数 = state_dict.get("队伍人数", 0)
     首领战 = state_dict.get("首领战", 0)
     难度 = state_dict.get("难度", 0)
+    英雄天赋 = state_dict.get("英雄天赋", 0)
 
+    失败法术 = _get_failed_spell(state_dict)
     tup = action_map.get(一键辅助)
-
     action_hotkey = None
     current_step = "无匹配技能"
     unit_info = {}
-
+    
     if spec_name == "兽王":
         if 引导 > 0:
             current_step = "在引导,不执行任何操作"

@@ -34,6 +34,7 @@ function fu.updateSpecInfo()
         fu.spellCooldown[49039] = { index = 47, name = "巫妖之躯" }
         fu.spellCooldown[108199] = { index = 48, name = "血魔之握" }
         fu.spellCooldown[1263569] = { index = 49, name = "憎恶附肢" }
+        fu.spellCooldown[1263824] = { index = 50, name = "吞噬" }
     elseif specIndex == 2 then
         fu.blocks = {
             ["符文"] = 21,
@@ -142,6 +143,7 @@ function fu.CreateClassMacro()
         [35] = "湮灭",
         [36] = "符文武器增效",
         [37] = "符文打击",
+        [39] = "吞噬",
     }
     fu.CreateMacro(dynamicSpells, staticSpells, specialSpells)
 end

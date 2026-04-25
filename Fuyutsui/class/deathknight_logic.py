@@ -37,6 +37,7 @@ action_map = {
     36: ("符文打击", "符文打击"),
     37: ("冰霜巨龙之怒", "冰霜巨龙之怒"),
     38: ("冰霜灾祸", "冰霜打击"),
+    40: ("吞噬", "吞噬"),
 }
 
 failed_spell_map = {
@@ -60,61 +61,53 @@ def _get_failed_spell(state_dict):
 
 def run_deathknight_logic(state_dict, spec_name):
     spells = state_dict.get("spells") or {}
-    战斗 = state_dict.get("战斗")
-    移动 = state_dict.get("移动")
-    施法 = state_dict.get("施法")
-    引导 = state_dict.get("引导")
-    生命值 = state_dict.get("生命值")
-    能量值 = state_dict.get("能量值")
-    一键辅助 = state_dict.get("一键辅助")
+
+    战斗 = state_dict.get("战斗", 0)
+    移动 = state_dict.get("移动", 0)
+    施法 = state_dict.get("施法", 0)
+    引导 = state_dict.get("引导", 0)
+    蓄力 = state_dict.get("蓄力", 0)
+    蓄力层数 = state_dict.get("蓄力层数", 0)
+    生命值 = state_dict.get("生命值", 0)
+    能量值 = state_dict.get("能量值", 0)
+    一键辅助 = state_dict.get("一键辅助", 0)
     法术失败 = state_dict.get("法术失败", 0)
-    目标类型 = int(state_dict.get("目标类型", 0) or 0)
-    队伍类型 = int(state_dict.get("队伍类型", 0) or 0)
-    队伍人数 = int(state_dict.get("队伍人数", 0) or 0)
-    首领战 = int(state_dict.get("首领战", 0) or 0)
-    难度 = int(state_dict.get("难度", 0) or 0)
-    英雄天赋 = int(state_dict.get("英雄天赋", 0) or 0)
+    目标类型 = state_dict.get("目标类型", 0)
+    队伍类型 = state_dict.get("队伍类型", 0)
+    队伍人数 = state_dict.get("队伍人数", 0)
+    首领战 = state_dict.get("首领战", 0)
+    难度 = state_dict.get("难度", 0)
+    英雄天赋 = state_dict.get("英雄天赋", 0)
+
+    失败法术 = _get_failed_spell(state_dict)
+    tup = action_map.get(一键辅助)
+    action_hotkey = None
+    current_step = "无匹配技能"
+    unit_info = {}
 
     符文 = state_dict.get("符文", 0)
     目标生命值 = state_dict.get("目标生命值", 0)
     敌人人数 = state_dict.get("敌人人数", 0)
 
-    失败法术 = _get_failed_spell(state_dict)
-
-    action_hotkey = None
-    current_step = "无匹配技能"
-    unit_info = {}
-    
     if 法术失败 != 0 and 失败法术 is not None:
         current_step = f"施放 {失败法术}"
         action_hotkey = get_hotkey(0, 失败法术)
     elif spec_name == "鲜血":
         if 引导 > 0:
             current_step = "在引导,不执行任何操作"
-        elif 战斗 and 1 <= 目标类型 <= 3:
-            tup = action_map.get(一键辅助)
-            if tup:
-                current_step = f"施放 {tup[0]}"
-                action_hotkey = get_hotkey(0, tup[1])
-            else:
-                current_step = "战斗中-无匹配技能"
+        elif 战斗 and 1 <= 目标类型 <= 3 and tup:
+            current_step = f"施放 {tup[0]}"
+            action_hotkey = get_hotkey(0, tup[1])
         else:
-            current_step = "非战斗状态,不执行任何操作"
-
+            current_step = "无匹配技能"
     elif spec_name == "冰霜":
         if 引导 > 0:
             current_step = "在引导,不执行任何操作"
-        elif 战斗 and 1 <= 目标类型 <= 3:
-            
-            tup = action_map.get(一键辅助)
-            if tup:
-                current_step = f"施放 {tup[0]}"
-                action_hotkey = get_hotkey(0, tup[1])
-            else:
-                current_step = "战斗中-无匹配技能"
+        elif 战斗 and 1 <= 目标类型 <= 3 and tup:
+            current_step = f"施放 {tup[0]}"
+            action_hotkey = get_hotkey(0, tup[1])
         else:
-            current_step = "非战斗状态,不执行任何操作"
-
+            current_step = "无匹配技能"
     elif spec_name == "邪恶":
         目标生命值 = state_dict.get("目标生命值", 0)
         次级食尸鬼 = state_dict.get("次级食尸鬼", 0)
@@ -136,8 +129,8 @@ def run_deathknight_logic(state_dict, spec_name):
         if 引导 > 0:
             current_step = "在引导,不执行任何操作"
         elif 一键辅助 == 13:
-                current_step = "施放 亡者复生"
-                action_hotkey = get_hotkey(0, "亡者复生")
+            current_step = "施放 亡者复生"
+            action_hotkey = get_hotkey(0, "亡者复生")
         elif 战斗 and 1 <= 目标类型 <= 3:
             if 亡者大军 > 0 and tup:
                 current_step = f"施放 {tup[0]}"

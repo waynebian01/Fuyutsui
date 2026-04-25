@@ -8,16 +8,18 @@ state:
   移动: {step: 6, type: "bool" }
   施法: {step: 7, type: "int" }
   引导: {step: 8, type: "int" }
-  生命值: {step: 9, type: "int" }
-  能量值: {step: 10, type: "int" }
-  一键辅助: {step: 11, type: "int" }
-  法术失败: {step: 12, type: "int" }
-  目标类型: {step: 13, type: "int" }
-  队伍类型: {step: 14, type: "int" }
-  队伍人数: {step: 15, type: "int" }
-  首领战: {step: 16, type: "int" }
-  难度: {step: 17, type: "int" }
-  英雄天赋: {step: 18, type: "int" }
+  蓄力: {step: 9, type: "int" }
+  蓄力层数: {step: 10, type: "int" }
+  生命值: {step: 11, type: "int" }
+  能量值: {step: 12, type: "int" }
+  一键辅助: {step: 13, type: "int" }
+  法术失败: {step: 14, type: "int" }
+  目标类型: {step: 15, type: "int" }
+  队伍类型: {step: 16, type: "int" }
+  队伍人数: {step: 17, type: "int" }
+  首领战: {step: 18, type: "int" }
+  难度: {step: 19, type: "int" }
+  英雄天赋: {step: 20, type: "int" }
 
 1: # 战士
   keymap: "warrior.yml"
@@ -174,15 +176,133 @@ state:
 3: # 猎人
   keymap: "hunter.yml"
   1:
-
     spells:
-      倒刺射击: {step: 31, type: "int" }
-      杀戮命令: {step: 32, type: "int" }
-      眼镜蛇射击: {step: 33, type: "int" }
-      狂野怒火: {step: 34, type: "int" }
-      荒野呼唤: {step: 35, type: "int" }
-      夺命黑鸦: {step: 36, type: "int" }
-      弹幕射击: {step: 37, type: "int" }
+      牺牲咆哮: {step: 39, type: "int" }
+      意气风发: {step: 31, type: "int" }
+      胁迫: {step: 32, type: "int" }
+      震荡射击: {step: 33, type: "int" }
+      宁神射击: {step: 34, type: "int" }
+      焦油陷进: {step: 35, type: "int" }
+      恐吓野兽: {step: 36, type: "int" }
+      束缚射击: {step: 37, type: "int" }
+      摔绊: {step: 38, type: "int" }
+
+      杀戮命令: {step: 39, type: "int" }
+      杀戮充能: {step: 40, type: "int" }
+      倒刺射击: {step: 41, type: "int" }
+      倒刺充能: {step: 42, type: "int" }
+      反制射击: {step: 43, type: "int" }
+      狂野怒火: {step: 44, type: "int" }
+      狂野鞭笞: {step: 45, type: "int" }
+  2:
+    spells:
+      牺牲咆哮: {step: 39, type: "int" }
+      意气风发: {step: 31, type: "int" }
+      胁迫: {step: 32, type: "int" }
+      震荡射击: {step: 33, type: "int" }
+      宁神射击: {step: 34, type: "int" }
+      焦油陷进: {step: 35, type: "int" }
+      恐吓野兽: {step: 36, type: "int" }
+      束缚射击: {step: 37, type: "int" }
+      摔绊: {step: 38, type: "int" }
+
+      反制射击: {step: 39, type: "int" }
+      瞄准射击: {step: 40, type: "int" }
+      瞄准充能: {step: 41, type: "int" }
+      急速射击: {step: 42, type: "int" }
+      百发百中: {step: 43, type: "int" }
+  3:
+    spells:
+      牺牲咆哮: {step: 39, type: "int" }
+      意气风发: {step: 31, type: "int" }
+      胁迫: {step: 32, type: "int" }
+      震荡射击: {step: 33, type: "int" }
+      宁神射击: {step: 34, type: "int" }
+      焦油陷进: {step: 35, type: "int" }
+      恐吓野兽: {step: 36, type: "int" }
+      束缚射击: {step: 37, type: "int" }
+      摔绊: {step: 38, type: "int" }
+
+      爆裂火铳: {step: 39, type: "int" }
+      狩魂一击: {step: 40, type: "int" }
+      鱼叉猛刺: {step: 41, type: "int" }
+      猛禽一击: {step: 42, type: "int" }
+      野火炸弹: {step: 43, type: "int" }
+
+4: # 盗贼
+  keymap: "rogue.yml"
+  1:
+    spells:
+      毒刃: {step: 31, type: "int" }
+      致盲: {step: 32, type: "int" }
+      佯攻: {step: 33, type: "int" }
+      消失: {step: 34, type: "int" }
+      偷袭: {step: 35, type: "int" }
+      潜伏帷幕: {step: 36, type: "int" }
+      菊花茶: {step: 37, type: "int" }
+      闪避: {step: 38, type: "int" }
+      猩红之瓶: {step: 39, type: "int" }
+      扰乱: {step: 40, type: "int" }
+      疾跑: {step: 41, type: "int" }
+      凿击: {step: 42, type: "int" }
+      肾击: {step: 43, type: "int" }
+      暗影斗篷: {step: 44, type: "int" }
+      脚踢: {step: 45, type: "int" }
+
+      死亡印记: {step: 46, type: "int" }
+      死亡印记2: {step: 47, type: "int" }
+      锁喉: {step: 48, type: "int" }
+      君王之灾: {step: 49, type: "int" }
+      暗影步: {step: 50, type: "int" }
+      
+  2:
+    spells:
+      毒刃: {step: 31, type: "int" }
+      致盲: {step: 32, type: "int" }
+      佯攻: {step: 33, type: "int" }
+      消失: {step: 34, type: "int" }
+      偷袭: {step: 35, type: "int" }
+      潜伏帷幕: {step: 36, type: "int" }
+      菊花茶: {step: 37, type: "int" }
+      闪避: {step: 38, type: "int" }
+      猩红之瓶: {step: 39, type: "int" }
+      扰乱: {step: 40, type: "int" }
+      疾跑: {step: 41, type: "int" }
+      凿击: {step: 42, type: "int" }
+      肾击: {step: 43, type: "int" }
+      暗影斗篷: {step: 44, type: "int" }
+      脚踢: {step: 45, type: "int" }
+
+      冲动: {step: 46, type: "int" }
+      影舞步: {step: 47, type: "int" }
+      刀锋冲刺: {step: 48, type: "int" }
+      正中眉心: {step: 49, type: "int" }
+      剑刃乱舞: {step: 50, type: "int" }
+      抓钩: {step: 51, type: "int" }
+      抓钩充能: {step: 52, type: "int" }
+      命运骨骰: {step: 53, type: "int" }
+  3:
+    spells:
+      毒刃: {step: 31, type: "int" }
+      致盲: {step: 32, type: "int" }
+      佯攻: {step: 33, type: "int" }
+      消失: {step: 34, type: "int" }
+      偷袭: {step: 35, type: "int" }
+      潜伏帷幕: {step: 36, type: "int" }
+      菊花茶: {step: 37, type: "int" }
+      闪避: {step: 38, type: "int" }
+      猩红之瓶: {step: 39, type: "int" }
+      扰乱: {step: 40, type: "int" }
+      疾跑: {step: 41, type: "int" }
+      凿击: {step: 42, type: "int" }
+      肾击: {step: 43, type: "int" }
+      暗影斗篷: {step: 44, type: "int" }
+      脚踢: {step: 45, type: "int" }
+      暗影步: {step: 46, type: "int" }
+      影分身: {step: 47, type: "int" }
+      暗影之刃: {step: 48, type: "int" }
+      暗影之舞: {step: 49, type: "int" }
+      暗影之舞充能: {step: 50, type: "int" }
 
 5: # 牧师
   keymap: "priest.yml"
@@ -413,12 +533,12 @@ state:
       阵风: {step: 40, type: "int" }
       幽魂步: {step: 41, type: "int" }
 
-      熔岩爆裂: {step: 44, type: "int" }
-      爆裂充能: {step: 45, type: "int" }
+      熔岩爆裂: {step: 42, type: "int" }
+      爆裂充能: {step: 43, type: "int" }
       激流: {step: 44, type: "int" }
       激流充能: {step: 45, type: "int" }
-      治疗图腾: {step: 46, type: "int" }
-      治疗图腾充能: {step: 47, type: "int" }
+      治疗之泉图腾: {step: 46, type: "int" }
+      治疗之泉图腾充能: {step: 47, type: "int" }
 
       烈焰震击: {step: 48, type: "int" }
       净化灵魂: {step: 49, type: "int" }
@@ -470,7 +590,7 @@ state:
     小鬼数量: {step: bar, bar: 1, type: "int"}
     灵魂碎片: {step: 23, type: "int" }
     施法技能: {step: 24, type: "int" }
-    法术封锁: {step: 25, type: "int" }
+    吞噬魔法: {step: 25, type: "int" }
 
     spells:
       恐惧: {step: 31, type: "int" }
@@ -489,7 +609,7 @@ state:
       魔典：小鬼领主: {step: 44, type: "int" }
       虚弱灾厄: {step: 45, type: "int" }
       语言灾厄: {step: 46, type: "int" }
-      法术封锁: {step: 47, type: "int" }
+      吞噬魔法: {step: 47, type: "int" }
 
 10: # 武僧
   keymap: "monk.yml"
@@ -580,6 +700,32 @@ state:
 
 11: # 德鲁伊
   keymap: "druid.yml"
+  1:
+    目标生命值: {step: 21, type: "int" }
+    敌人人数: {step: 22, type: "int" }
+    姿态: {step: 23, type: "int" }
+
+    spells:
+      树皮术: {step: 31, type: "int" }
+      台风: {step: 32, type: "int" }
+      夺魂咆哮: {step: 33, type: "int" }
+      激活: {step: 34, type: "int" }
+      乌索尔旋风: {step: 35, type: "int" }
+
+      日光术: {step: 36, type: "int" }
+    
+  2:
+    目标生命值: {step: 21, type: "int" }
+    敌人人数: {step: 22, type: "int" }
+    姿态: {step: 23, type: "int" }
+
+    spells:
+      树皮术: {step: 31, type: "int" }
+      台风: {step: 32, type: "int" }
+      夺魂咆哮: {step: 33, type: "int" }
+      激活: {step: 34, type: "int" }
+      乌索尔旋风: {step: 35, type: "int" }
+
   3:
     目标生命值: {step: 21, type: "int" }
     敌人人数: {step: 22, type: "int" }
@@ -707,3 +853,29 @@ state:
       虚空射线: {step: 55, type: "int" }
       恶魔追击: {step: 56, type: "int" }
       饥渴斩击: {step: 57, type: "int" }
+
+13: # 唤魔师
+  keymap: "evoker.yml"
+  1:
+    施法技能: {step: 21, type: "int" }
+
+    spells:
+      净除: {step: 31, type: "int" }
+      黑曜鳞片: {step: 32, type: "int" }
+      黑曜充能: {step: 33, type: "int" }
+      山崩: {step: 34, type: "int" }
+      青翠之拥: {step: 35, type: "int" }
+      深呼吸: {step: 36, type: "int" }
+      微风: {step: 37, type: "int" }
+      悬空: {step: 38, type: "int" }
+      悬空充能: {step: 39, type: "int"}
+      扫尾: {step: 40, type: "int"}
+      扭转天平: {step: 41, type: "int"}
+      营救: {step: 42, type: "int"}
+      时间螺旋: {step: 43, type: "int"}
+      空间悖论: {step: 44, type: "int"}
+
+      永恒之涌: {step: 45, type: "int"}
+      镇压: {step: 46, type: "int"}
+      狂龙之怒: {step: 47, type: "int"}
+      火焰吐息: {step: 48, type: "int"}

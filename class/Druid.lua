@@ -27,7 +27,26 @@ function fu.updateSpecInfo()
     fu.blocks = nil
     fu.group_blocks = nil
     fu.assistant_spells = nil
-    if specIndex == 3 then
+    if specIndex == 1 then
+        fu.blocks = {
+            ["目标生命值"] = 21,
+            ["敌人人数"] = 22,
+            ["姿态"] = 23,
+            auras = {
+
+            },
+        }
+        fu.spellCooldown[78675] = { index = 36, name = "日光术" }
+    elseif specIndex == 2 then
+        fu.blocks = {
+            ["目标生命值"] = 21,
+            ["敌人人数"] = 22,
+            ["姿态"] = 23,
+            auras = {
+
+            },
+        }
+    elseif specIndex == 3 then
         fu.powerType = "RAGE"
         fu.blocks = {
             ["目标生命值"] = 21,
@@ -101,12 +120,7 @@ function fu.updateSpecInfo()
                 [5] = { 48438, 8936, 774, 155777 }, -- 迅捷治愈(回春术, 萌芽, 愈合, 野性生长)
                 [6] = { 8936 },                     -- 愈合
             },
-            --[[aura = {
-                [4] = { "生命绽放" }, -- 生命绽放
-                [5] = { "回春术", "回春术（萌芽）", "愈合", "野性生长" }, -- 迅捷治愈(回春术, 萌芽, 愈合, 野性生长)
-                [6] = { "愈合" }, -- 愈合
-            },]]
-            rejuv = 7, -- 回春术数量
+            rejuv = 7,                              -- 回春术数量
         }
     end
 end
@@ -116,15 +130,15 @@ function fu.CreateClassMacro()
     local dynamicSpells = { "回春术", "愈合", "生命绽放", "迅捷治愈", "自然之愈" }
     local specialSpells = { [17] = "/cancelaura [spec:4]猎豹形态\n/cast 万灵之召", }
     local staticSpells = {
-        [1] = "[nostance:2]猎豹形态(变形)",
-        [2] = "[nostance:1]熊形态(变形)",
-        [3] = "[nostance:4]枭兽形态",
-        [4] = "月火术",
-        [5] = "树皮术",
-        [6] = "横扫",
-        [7] = "潜行",
-        [8] = "凶猛撕咬",
-        [9] = "愤怒",
+        [1]  = "[nostance:2]猎豹形态(变形)",
+        [2]  = "[nostance:1]熊形态(变形)",
+        [3]  = "[nostance:4]枭兽形态",
+        [4]  = "月火术",
+        [5]  = "树皮术",
+        [6]  = "横扫",
+        [7]  = "潜行",
+        [8]  = "凶猛撕咬",
+        [9]  = "愤怒",
         [10] = "割裂",
         [11] = "撕碎",
         [12] = "斜掠",
@@ -143,6 +157,30 @@ function fu.CreateClassMacro()
         [26] = "台风",
         [27] = "夺魂咆哮",
         [28] = "[@cursor]乌索尔旋风",
+        [29] = "日光术",
+        [30] = "星涌术",
+        [31] = "星火术",
+        [32] = "星辰坠落",
+        [33] = "自然之力",
+        [34] = "日蚀",
+        [35] = "超凡之盟",
+        [36] = "化身：艾露恩之眷",
+        [37] = "艾露恩之怒",
+        [38] = "野性蘑菇",
+        [39] = "新月",
+        [40] = "阳炎术",
+        [41] = "月蚀",
+        [42] = "化身：阿莎曼之灵",
+        [43] = "原始之怒",
+        [44] = "迎头痛击",
+        [45] = "怒意狂乱",
+        [46] = "猛虎之怒",
+        [47] = "生存本能",
+        [48] = "野性冲锋",
+        [49] = "群体缠绕",
+        [50] = "狂暴",
+        [51] = "啃噬",
+        [52] = "野性狂乱",
     }
     fu.CreateMacro(dynamicSpells, staticSpells, specialSpells)
 end
