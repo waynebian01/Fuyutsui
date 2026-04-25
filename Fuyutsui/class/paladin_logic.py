@@ -300,7 +300,6 @@ def run_paladin_logic(state_dict, spec_name):
         爆发开关 = int(state_dict.get("爆发开关", 0) or 0)
         AOE开关 = int(state_dict.get("AOE开关", 0) or 0)
         输出模式 = int(state_dict.get("输出模式", 0) or 0)
-
         神圣能量 = int(state_dict.get("神圣能量", 0) or 0)
 
         公正之剑 = spells.get("公正之剑", 99)
