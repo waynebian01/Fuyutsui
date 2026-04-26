@@ -172,6 +172,7 @@ def run_paladin_logic(state_dict, spec_name):
             "无火最低血量": 无火最低血量,
             "count95": count95,
             "count90": count90,
+            "count80": count80,
         }
 
         驱散单位 = None
@@ -310,18 +311,18 @@ def run_paladin_logic(state_dict, spec_name):
                 elif 0 < 神圣意志 < 4 and 最低单位 is not None and 最低生命值 < 80:
                     current_step = f"意志保护: 荣耀圣令 on {最低单位}"
                     action_hotkey = get_hotkey(int(最低单位), "荣耀圣令")
-                elif 神圣震击 == 0 and 最低单位 is not None and 最低生命值 < 90:
-                    current_step = f"震击主治: 神圣震击 on {最低单位}"
+                elif 神圣震击 == 0 and 最低单位 is not None:
+                    current_step = f"震击补血: 神圣震击 on {最低单位}"
                     action_hotkey = get_hotkey(int(最低单位), "神圣震击")
-                elif 圣洁鸣钟 == 0 and 神圣能量 <= 2 and count80 >= 2 and 战斗:
+                elif 圣洁鸣钟 == 0 and 神圣能量 <= 2 and count90 >= 2 and 战斗:
                     current_step = "群奶攒豆: 圣洁鸣钟"
                     action_hotkey = get_hotkey(0, "圣洁鸣钟")
-                elif 战斗 and 1 <= 目标类型 <= 3:
+                elif 战斗 and 1 <= 目标类型 <= 3 and 最低单位 is None:
                     if 审判 <= 1:
-                        current_step = "进攻攒豆: 审判"
+                        current_step = "团满进攻攒豆: 审判"
                         action_hotkey = get_hotkey(0, "审判")
                     elif 神圣震击 == 0:
-                        current_step = "进攻攒豆: 神圣震击"
+                        current_step = "团满进攻攒豆: 神圣震击"
                         action_hotkey = get_hotkey(0, "神圣震击")
                 elif 最低生命值 is not None and 最低生命值 <= 95:
                     if 神圣能量 >= 3 and 无火最低 is not None and 无火最低血量 <= 80:
