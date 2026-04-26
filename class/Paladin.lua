@@ -1,5 +1,9 @@
 local _, fu = ...
 if fu.classId ~= 2 then return end
+fu.heroSpell = {
+    [432359] = 1, -- 铸光者
+    [431377] = 2, -- 烈日先驱
+}
 
 fu.spellCooldown = {
     [115750] = { index = 31, name = "盲目之光" },
