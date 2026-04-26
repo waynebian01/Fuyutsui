@@ -435,7 +435,7 @@ end
 local function updatePlayerConfig()
     C_Timer.After(3, function()
         if blocks then
-            print("重新描绘配置像素")
+            -- print("重新描绘配置像素")
             if fu.blocks["爆发开关"] then
                 creat(fu.blocks["爆发开关"], FuyutsuiDB.cooldowns / 255)
             end
@@ -1446,7 +1446,7 @@ function frame:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID, castBarID
     if not isSec(spellID) then
         updateAuraBySuccess(spellID, castBarID)
         updateFailedSpellBySuccess(spellID)
-        printSuccSpell(spellID)
+        -- printSuccSpell(spellID) -- 打印成功施放的技能id和名称, 不重复打印已经施放的技能
         -- print(spellID)
         if spellID == 384255 then
             fu.ClearAllFuyutsuiBars()
