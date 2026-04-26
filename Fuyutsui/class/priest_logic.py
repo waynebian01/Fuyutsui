@@ -180,10 +180,7 @@ def _priest_discipline_logic(state_dict):
                 current_step = f"施放 苦修 on {最低单位}, 生命最低的单位"
                 action_hotkey = get_hotkey(int(最低单位), "苦修")
             elif 1 <= 目标类型 <= 3 and 战斗:
-                if 灭 == 0 and 有救赎数量 > 0:
-                    current_step = "施放 暗言术：灭"
-                    action_hotkey = get_hotkey(0, "暗言术：灭")
-                elif not 移动 and 心灵震爆 == 0 and 有救赎数量 > 0:
+                if not 移动 and 心灵震爆 == 0 and 有救赎数量 > 0:
                     current_step = "施放 心灵震爆"
                     action_hotkey = get_hotkey(0, "心灵震爆")
                 elif 苦修 == 0 and 有救赎数量 > 0:
@@ -207,9 +204,7 @@ def _priest_discipline_logic(state_dict):
             elif 无救赎90数量 >= 2 and 福音 == 0:
                 current_step = "施放 福音"
                 action_hotkey = get_hotkey(0, "福音")
-            elif 灭 == 0 and 1 <= 目标类型 <= 3 and 战斗 and 目标生命值 < 20:
-                current_step = "施放 暗言术：灭"
-                action_hotkey = get_hotkey(0, "暗言术：灭")
+            
             elif 圣光涌动 > 0 and 涌动层数 > 0 and 无救赎最低 is not None and 无救赎生命值 is not None and 无救赎生命值 < 90:
                 current_step = f"施放 快速治疗 on {无救赎最低}, 无救赎生命低于90%的单位"
                 action_hotkey = get_hotkey(int(无救赎最低), "快速治疗")
@@ -234,11 +229,11 @@ def _priest_discipline_logic(state_dict):
             elif 苦修 == 0 and 最低单位 is not None and 最低生命值 is not None and 最低生命值 < 75:
                 current_step = f"施放 苦修 on {最低单位}, 生命最低的单位"
                 action_hotkey = get_hotkey(int(最低单位), "苦修")
+            elif 灭 == 0 and 1 <= 目标类型 <= 3 and 战斗 and 目标生命值 < 20:
+                current_step = "施放 暗言术：灭"
+                action_hotkey = get_hotkey(0, "暗言术：灭")
             elif 1 <= 目标类型 <= 3 and 战斗:
-                if 灭 == 0 and 有救赎数量 > 0:
-                    current_step = "施放 暗言术：灭"
-                    action_hotkey = get_hotkey(0, "暗言术：灭")
-                elif not 移动 and 心灵震爆 == 0 and 有救赎数量 > 0:
+                if not 移动 and 心灵震爆 == 0 and 有救赎数量 > 0:
                     current_step = "施放 心灵震爆"
                     action_hotkey = get_hotkey(0, "心灵震爆")
                 elif 苦修 == 0 and 有救赎数量 > 0:
@@ -533,21 +528,18 @@ def _priest_shadow_logic(state_dict):
     吸血鬼的拥抱 = spells.get("吸血鬼的拥抱", -1)
     光晕 = spells.get("光晕", -1)
     虚空齐射 = spells.get("虚空齐射", -1)
+    癫 = spells.get("暗言术：癫", -1)
+    精神鞭笞 = spells.get("精神鞭笞", -1)
+    
+    目标生命值 = state_dict.get("目标生命值", 100)
+    虚空形态buff = state_dict.get("虚空形态buff", 0)
     
     失败法术 = _get_failed_spell(state_dict)
 
     action_hotkey = None
     current_step = "无匹配技能"
     unit_info = {}
-    if 引导 > 0:
-        if 战斗 and 1 <= 目标类型 <= 3 and 一键辅助 !=22:
-            tup = action_map.get(一键辅助)
-            if tup:
-                current_step = f"施放 {tup[0]}"
-                action_hotkey = get_hotkey(0, tup[1])
-            else:
-                current_step = "战斗中-无匹配技能"
-    elif 绝望祷言 == 0 and 生命值 < 50:
+    if 绝望祷言 == 0 and 生命值 < 50:
         current_step = "施放 绝望祷言"
         action_hotkey = get_hotkey(0, "绝望祷言")
     elif 一键辅助 == 10:
@@ -563,12 +555,36 @@ def _priest_shadow_logic(state_dict):
         current_step = f"施放 {失败法术}"
         action_hotkey = get_hotkey(0, 失败法术)
     elif 战斗 and 1 <= 目标类型 <= 3:
-        tup = action_map.get(一键辅助)
-        if tup:
-            current_step = f"施放 {tup[0]}"
-            action_hotkey = get_hotkey(0, tup[1])
+        # 暗牧输出逻辑优先级：
+        # 1. 如果一键辅助推荐的是 暗言术：癫，就施放
+        if 一键辅助 == 21:
+            current_step = "推荐: 暗言术：癫"
+            action_hotkey = get_hotkey(0, "暗言术：癫")
+        # 2. 如果能量值 >= 80，并且可用，就施放 暗言术：癫
+        elif 能量值 >= 80:
+            current_step = "高能: 暗言术：癫"
+            action_hotkey = get_hotkey(0, "暗言术：癫")
+        # 3. 如果一键辅助推荐的是 暗言术：灭，就施放
+        elif 一键辅助 == 13:
+            current_step = "推荐: 暗言术：灭"
+            action_hotkey = get_hotkey(0, "暗言术：灭")
+        # 4. 如果目标生命值 <= 20%，并且可用，就施放 暗言术：灭
+        elif 目标生命值 <= 20 and 灭 == 0:
+            current_step = "残血: 暗言术：灭"
+            action_hotkey = get_hotkey(0, "暗言术：灭")
+        # 5. 如果 虚空齐射 可用，且处于虚空形态，就施放
+        elif 虚空齐射 == 0 and 虚空形态buff > 0:
+            current_step = "施放 虚空齐射"
+            action_hotkey = get_hotkey(0, "虚空齐射")
+        # 6. 如果 心灵震爆 可用，就施放
+        elif 心灵震爆 == 0:
+            current_step = "施放 心灵震爆"
+            action_hotkey = get_hotkey(0, "心灵震爆")
+        # 7. 否则施放 精神鞭笞 (填充技能)
         else:
-            current_step = "战斗中-无匹配技能"
+            current_step = "施放 精神鞭笞"
+            action_hotkey = get_hotkey(0, "精神鞭笞")
+
     return action_hotkey, current_step, unit_info
 
 def run_priest_logic(state_dict, spec_name):

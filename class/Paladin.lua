@@ -147,6 +147,7 @@ function fu.updateSpecInfo()
             ["爆发开关"] = 26,
             ["AOE开关"] = 27,
             ["输出模式"] = 28,
+            ["敌人人数"] = 29,
             auras = {
                 ["神圣意志"] = {
                     index = 22,

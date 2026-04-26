@@ -151,6 +151,7 @@ state:
     爆发开关: {step: 26, type: "int" }
     AOE开关: {step: 27, type: "int" }
     输出模式: {step: 28, type: "int" }
+    敌人人数: {step: 29, type: "int" }
     spells:
       盲目之光: {step: 31, type: "int" }
       制裁之锤: {step: 32, type: "int" }
@@ -377,6 +378,8 @@ state:
       愈合祷言: {step: 4, type: "int" }
       恢复: {step: 5, type: "int" }
   3:
+    目标生命值: {step: 46, type: "int" }
+    虚空形态buff: {step: 47, type: "int" }
     spells:
       心灵尖啸: {step: 31, type: "int" }
       群体驱散: {step: 32, type: "int" }
@@ -392,6 +395,9 @@ state:
       吸血鬼的拥抱: {step: 41, type: "int" }
       光晕: {step: 42, type: "int" }
       虚空齐射: {step: 43, type: "int" }
+      暗言术：癫: {step: 44, type: "int" }
+      精神鞭笞: {step: 45, type: "int" }
+
 
 6: # 死亡骑士
   keymap: "deathknight.yml"

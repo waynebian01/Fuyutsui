@@ -828,6 +828,20 @@ fu.auras = {
         duration = 32,
         expirationTime = nil,
     },
+    ["暗影形态"] = {
+        name = "暗影形态",
+        spellId = 232698,
+        remaining = 0,
+        duration = 0,
+        expirationTime = nil,
+    },
+    ["虚空形态"] = {
+        name = "虚空形态",
+        spellId = 194249,
+        remaining = 0,
+        duration = 0,
+        expirationTime = nil,
+    },
     -- 术士
     ["魔典：邪能破坏者"] = {
         name = "魔典：邪能破坏者",

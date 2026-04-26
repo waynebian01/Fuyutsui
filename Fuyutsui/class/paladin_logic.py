@@ -45,7 +45,7 @@ def _get_failed_spell(state_dict):
         return spell_name
     return None
 
-def _get_ret_helper_finisher(one_key_value, finisher_mode=0):
+def _get_ret_helper_finisher(one_key_value, finisher_mode=0, enemies=0):
     """
     返回惩戒终结技对应的 (显示名, 实际按键技能名)。
     finisher_mode: 0=自动(跟随一键辅助), 1=强制单体
@@ -53,8 +53,8 @@ def _get_ret_helper_finisher(one_key_value, finisher_mode=0):
     自动模式 (0):
     - 推荐最终审判 -> 打最终审判
     - 推荐神圣风暴 -> 打神圣风暴
-    - 推荐圣光之锤 -> 打神圣风暴
-    - 推荐处决宣判 -> 打神圣风暴
+    - 推荐圣光之锤 -> 只有1个或0个敌人时打最终审判，否则打神圣风暴
+    - 推荐处决宣判 -> 只有1个或0个敌人时打最终审判，否则打神圣风暴
     单体模式 (1):
     - 推荐最终审判 -> 打最终审判
     - 推荐神圣风暴 -> 打最终审判
@@ -70,9 +70,13 @@ def _get_ret_helper_finisher(one_key_value, finisher_mode=0):
     if one_key_value == 18:
         if finisher_mode == 1:
             return ("圣光之锤", "最终审判")
+        elif finisher_mode == 0 and enemies <= 1:
+            return ("圣光之锤", "最终审判")
         return ("圣光之锤", "神圣风暴")
     if one_key_value == 20:
         if finisher_mode == 1:
+            return ("处决宣判", "最终审判")
+        elif finisher_mode == 0 and enemies <= 1:
             return ("处决宣判", "最终审判")
         return ("处决宣判", "神圣风暴")
     return None
@@ -103,29 +107,30 @@ def _resolve_ret_3hp_action(公正之剑, 审判, 一键辅助, helper_finisher=
 def run_paladin_logic(state_dict, spec_name):
     spells = state_dict.get("spells") or {}
 
-    战斗 = state_dict.get("战斗", 0)
-    移动 = state_dict.get("移动", 0)
+    战斗 = state_dict.get("战斗", False)
+    移动 = state_dict.get("移动", False)
+    有效性 = state_dict.get("有效性", False)
     施法 = state_dict.get("施法", 0)
     引导 = state_dict.get("引导", 0)
-    蓄力 = state_dict.get("蓄力", 0)
-    蓄力层数 = state_dict.get("蓄力层数", 0)
     生命值 = state_dict.get("生命值", 0)
     能量值 = state_dict.get("能量值", 0)
     一键辅助 = state_dict.get("一键辅助", 0)
     法术失败 = state_dict.get("法术失败", 0)
-    目标类型 = state_dict.get("目标类型", 0)
-    队伍类型 = state_dict.get("队伍类型", 0)
-    队伍人数 = state_dict.get("队伍人数", 0)
-    首领战 = state_dict.get("首领战", 0)
-    难度 = state_dict.get("难度", 0)
-    英雄天赋 = state_dict.get("英雄天赋", 0)
-
+    目标类型 = int(state_dict.get("目标类型", 0) or 0)
+    队伍类型 = int(state_dict.get("队伍类型", 0) or 0)
+    队伍人数 = int(state_dict.get("队伍人数", 0) or 0)
+    首领战 = int(state_dict.get("首领战", 0) or 0)
+    难度 = int(state_dict.get("难度", 0) or 0)
+    英雄天赋 = int(state_dict.get("英雄天赋", 0) or 0)
+    
+    神圣能量 = int(state_dict.get("神圣能量", 0) or 0)
     失败法术 = _get_failed_spell(state_dict)
     tup = action_map.get(一键辅助)
+
     action_hotkey = None
     current_step = "无匹配技能"
     unit_info = {}
-    
+
     if spec_name == "神圣":
         目标距离 = int(state_dict.get("目标距离", 0) or 0)
         施法技能 = int(state_dict.get("施法技能", 0) or 0)
@@ -251,12 +256,12 @@ def run_paladin_logic(state_dict, spec_name):
             current_step = "群奶攒豆: 圣洁鸣钟"
             action_hotkey = get_hotkey(0, "圣洁鸣钟")
         elif 战斗 and 1 <= 目标类型 <= 3:
-            if 神圣震击 == 0:
-                current_step = "进攻攒豆: 神圣震击"
-                action_hotkey = get_hotkey(0, "神圣震击")
-            elif 审判 <= 1:
+            if 审判 <= 1:
                 current_step = "进攻攒豆: 审判"
                 action_hotkey = get_hotkey(0, "审判")
+            elif 神圣震击 == 0:
+                current_step = "进攻攒豆: 神圣震击"
+                action_hotkey = get_hotkey(0, "神圣震击")
         elif 最低生命值 is not None and 最低生命值 <= 95:
             if 神圣能量 >= 3 and 无火最低 is not None and 无火最低血量 <= 80:
                 current_step = f"填充火: 荣耀圣令 on {无火最低}"
@@ -299,14 +304,14 @@ def run_paladin_logic(state_dict, spec_name):
         爆发开关 = int(state_dict.get("爆发开关", 0) or 0)
         AOE开关 = int(state_dict.get("AOE开关", 0) or 0)
         输出模式 = int(state_dict.get("输出模式", 0) or 0)
-
         神圣能量 = int(state_dict.get("神圣能量", 0) or 0)
+        敌人人数 = int(state_dict.get("敌人人数", 0) or 0)
 
         公正之剑 = spells.get("公正之剑", 99)
         审判 = spells.get("审判", 99)
         荣耀圣令 = spells.get("荣耀圣令", 99)
 
-        helper_finisher = _get_ret_helper_finisher(一键辅助, AOE开关)
+        helper_finisher = _get_ret_helper_finisher(一键辅助, AOE开关, 敌人人数)
 
         unit_info["神圣能量"] = 神圣能量
         unit_info["一键辅助"] = 一键辅助

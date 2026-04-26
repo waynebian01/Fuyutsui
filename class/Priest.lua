@@ -141,6 +141,14 @@ function fu.updateSpecInfo()
     elseif specIndex == 3 then
         fu.powerType = "INSANITY"
         fu.blocks = {
+            ["目标生命值"] = 46,
+            auras = {
+                ["虚空形态buff"] = {
+                    index = 47,
+                    auraRef = fu.auras["虚空形态"],
+                    showKey = "remaining",
+                },
+            },
         }
         fu.spellCooldown[8092] = { index = 36, name = "心灵震爆" }
         fu.spellCooldown[32379] = { index = 37, name = "暗言术：灭" }
@@ -150,7 +158,21 @@ function fu.updateSpecInfo()
         fu.spellCooldown[15286] = { index = 41, name = "吸血鬼的拥抱" }
         fu.spellCooldown[120644] = { index = 42, name = "光晕" }
         fu.spellCooldown[1242173] = { index = 43, name = "虚空齐射", forcedKnown = true }
+        fu.spellCooldown[335467] = { index = 44, name = "暗言术：癫" }
+        fu.spellCooldown[15407] = { index = 45, name = "精神鞭笞" }
+
+        -- 虚空形态光环监控修复
+        local vfAura = fu.auras["虚空形态"]
+        if vfAura then
+            vfAura.duration = 20  -- 设置基础时长
+        end
+        -- 注册触发事件 (bySpellCooldown: 按钮转圈时触发; bySuccess: 释放成功时触发)
+        fu.updateAuras.bySpellCooldown[228260] = { { name = "虚空形态" } } -- 虚空爆发
+        fu.updateAuras.bySpellCooldown[391109] = { { name = "虚空形态" } } -- 黑暗升华
+        fu.updateAuras.bySuccess[228260] = { { name = "虚空形态" } }
+        fu.updateAuras.bySuccess[391109] = { { name = "虚空形态" } }
     end
+
 end
 
 function fu.CreateClassMacro()
