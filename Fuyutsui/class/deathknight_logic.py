@@ -64,8 +64,8 @@ def _get_failed_spell(state_dict):
 def run_deathknight_logic(state_dict, spec_name):
     spells = state_dict.get("spells") or {}
 
-    战斗 = state_dict.get("战斗", 0)
-    移动 = state_dict.get("移动", 0)
+    战斗 = state_dict.get("战斗", False)
+    移动 = state_dict.get("移动", False)
     施法 = state_dict.get("施法", 0)
     引导 = state_dict.get("引导", 0)
     蓄力 = state_dict.get("蓄力", 0)
@@ -162,6 +162,14 @@ def run_deathknight_logic(state_dict, spec_name):
                 if 一键辅助 == 6:
                     current_step = "施放 爆发"
                     action_hotkey = get_hotkey(0, "爆发")
+                    # 保持脓疮毒镰buff
+                elif 0 <= 脓疮毒镰2 <= 1 and 脓疮毒镰 > 0:
+                    current_step = "施放 脓疮毒镰"
+                    action_hotkey = get_hotkey(0, "脓疮打击")
+                    # 保持脓疮毒镰buff
+                elif 脓疮毒镰2 <= 3 and 脓疮毒镰 == 0 and 符文 >= 2:
+                    current_step = "施放 脓疮打击"
+                    action_hotkey = get_hotkey(0, "脓疮打击")
                     # 只有"黑暗突变"和"亡者大军"2个技能CD都好了才施放"亡者大军"
                 elif 爆发 == 1 and 黑暗突变 == 0 and 亡者大军 == 0:
                     current_step = "施放 亡者大军"
@@ -178,12 +186,16 @@ def run_deathknight_logic(state_dict, spec_name):
                 elif 腐化 == 0 and 割魂索命 == 0 and 目标生命值 > 35 and 黑暗突变 > 30 and 食尸鬼层数 < 8:
                     current_step = "施放 腐化"
                     action_hotkey = get_hotkey(0, "腐化")
+                    # 确保腐化充能不溢出
+                elif 腐化 == 0 and 腐化充能 == 0 and 目标生命值 > 35 and 食尸鬼层数 < 8:
+                    current_step = "施放 腐化"
+                    action_hotkey = get_hotkey(0, "腐化")
                     # 保持脓疮毒镰buff
                 elif 脓疮毒镰 > 0 and (脓疮毒镰2 == 0 or 脓疮毒镰 < 3):
                     current_step = "施放 脓疮毒镰"
                     action_hotkey = get_hotkey(0, "脓疮打击")
                     # AOE 时, 施放"枯萎凋零"
-                elif 敌人人数 >= 3 and 凋零冷却 == 0 and (枯萎凋零 == 0 or 凋零充能 <= 15):
+                elif 敌人人数 >= 3 and 移动 == False and 凋零冷却 == 0 and (枯萎凋零 == 0 or 凋零充能 <= 15):
                     current_step = "施放 枯萎凋零"
                     action_hotkey = get_hotkey(0, "枯萎凋零")
                     # "末日突降" 或 "能量大于80" , 根据敌人数量消耗符能

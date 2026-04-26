@@ -4,6 +4,8 @@
 ## Version: 0.0.3
 ## Author: Wayne Bian
 ## X-Flavor: Retail
+## SavedVariables: FuyutsuiADB
+## SavedVariablesPerCharacter: FuyutsuiDB
 
 ## Category-enUS: Combat
 ## Category-deDE: Kampf

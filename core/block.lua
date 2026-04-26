@@ -4,7 +4,7 @@ local screenWidth = GetScreenWidth()
 local BLOCK_FIX_CONFIG = {
     blockCount = 255,               -- 总色块数量
     blockWidth = screenWidth / 255, -- 色块宽度
-    blockHeight = 1,                -- 色块高度
+    blockHeight = 2,                -- 色块高度
     blockSpacing = 0,               -- 色块间距
 }
 
@@ -61,7 +61,7 @@ local c = 255
 local BAR_CONFIG = {
     count = c,
     width = screenWidth / c,
-    height = 1,
+    height = 2,
     point = "TOPLEFT",
 }
 
@@ -69,7 +69,7 @@ local BAR_CONFIG = {
 -- 创建"色条"的容器
 local countBars = CreateFrame("Frame", "FuyutsuiCountBars", UIParent)
 countBars:SetSize(screenWidth, 20)
-countBars:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, -1)
+countBars:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, -2)
 countBars:SetFrameStrata("TOOLTIP") -- 确保在最上层
 countBars:SetFrameLevel(1)
 local createdBars = {}
@@ -103,7 +103,7 @@ function fu.CreateAutoLayoutBar(minValue, maxValue, spellId, events)
     bar:SetStatusBarTexture("Interface\\ChatFrame\\ChatFrameBackground")
     bar:GetStatusBarTexture():SetDrawLayer("ARTWORK")
     bar:SetStatusBarColor(1, 1, 1, 1)
-    bar:SetFrameLevel(10000)
+    bar:SetFrameLevel(5000)
 
     -- 2. 创建背景色块 (左右各多出一个)
     for i = -1, maxValue do

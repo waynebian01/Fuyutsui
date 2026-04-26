@@ -103,8 +103,8 @@ def _resolve_ret_3hp_action(公正之剑, 审判, 一键辅助, helper_finisher=
 def run_paladin_logic(state_dict, spec_name):
     spells = state_dict.get("spells") or {}
 
-    战斗 = state_dict.get("战斗", 0)
-    移动 = state_dict.get("移动", 0)
+    战斗 = state_dict.get("战斗", False)
+    移动 = state_dict.get("移动", False)
     施法 = state_dict.get("施法", 0)
     引导 = state_dict.get("引导", 0)
     蓄力 = state_dict.get("蓄力", 0)
@@ -119,13 +119,16 @@ def run_paladin_logic(state_dict, spec_name):
     首领战 = state_dict.get("首领战", 0)
     难度 = state_dict.get("难度", 0)
     英雄天赋 = state_dict.get("英雄天赋", 0)
-
+    神圣能量 = int(state_dict.get("神圣能量", 0) or 0)
+    
     失败法术 = _get_failed_spell(state_dict)
     tup = action_map.get(一键辅助)
     action_hotkey = None
     current_step = "无匹配技能"
     unit_info = {}
     
+    
+
     if spec_name == "神圣":
         目标距离 = int(state_dict.get("目标距离", 0) or 0)
         施法技能 = int(state_dict.get("施法技能", 0) or 0)
@@ -299,8 +302,6 @@ def run_paladin_logic(state_dict, spec_name):
         爆发开关 = int(state_dict.get("爆发开关", 0) or 0)
         AOE开关 = int(state_dict.get("AOE开关", 0) or 0)
         输出模式 = int(state_dict.get("输出模式", 0) or 0)
-
-        神圣能量 = int(state_dict.get("神圣能量", 0) or 0)
 
         公正之剑 = spells.get("公正之剑", 99)
         审判 = spells.get("审判", 99)

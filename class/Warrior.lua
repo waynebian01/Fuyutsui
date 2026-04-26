@@ -120,6 +120,7 @@ function fu.CreateClassMacro()
         [34] = "盾牌冲锋",
         [35] = "挫志怒吼",
         [36] = "无视苦痛",
+        [37] = "[@player]破坏者",
     }
     fu.CreateMacro(dynamicSpells, staticSpells, _)
 end

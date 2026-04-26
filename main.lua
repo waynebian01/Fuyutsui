@@ -147,7 +147,6 @@ local function getPlayerInfo()
     state.powerType = fu.powerType or nil -- 更新能量类型
     group_blocks = fu.group_blocks        -- 更新队伍块
     blocks = fu.blocks                    -- 更新色块
-    print(fu.classId)
     -- 创建固定色块
     creat(fixed["锚点"], 0)
     creat(fixed["职业"], fu.classId / 255)

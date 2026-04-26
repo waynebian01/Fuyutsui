@@ -1,6 +1,5 @@
 local _, fu = ...
 
-
 -- 游戏内宏命令
 -- /fu 命令系统
 -- /fu cd       — 爆发 开 / 关 切换
@@ -19,6 +18,14 @@ local aoeMode = 0
 local cooldowns = 0
 local dpsMode = 0
 
+local function SaveConfig()
+    -- 确保全局变量已初始化
+    FuyutsuiDB = FuyutsuiDB or {}
+    FuyutsuiDB.aoeMode = aoeMode
+    FuyutsuiDB.cooldowns = cooldowns
+    FuyutsuiDB.dpsMode = dpsMode
+end
+
 local function switchCooldown()
     if cooldowns == 0 then
         print("|cff00ff00[Fuyutsui]|r 爆发已|cffff0000关闭|r") -- 修改"关闭"为红色
@@ -28,6 +35,7 @@ local function switchCooldown()
     if fu.blocks and fu.blocks["爆发开关"] then
         fu.updateOrCreatTextureByIndex(fu.blocks["爆发开关"], cooldowns / 255)
     end
+    SaveConfig() -- 保存
 end
 
 local function switchAoeMode()
@@ -39,6 +47,7 @@ local function switchAoeMode()
     if fu.blocks and fu.blocks["AOE开关"] then
         fu.updateOrCreatTextureByIndex(fu.blocks["AOE开关"], aoeMode / 255)
     end
+    SaveConfig() -- 保存
 end
 
 local function switchDpsMode()
@@ -50,6 +59,7 @@ local function switchDpsMode()
     if fu.blocks and fu.blocks["输出模式"] then
         fu.updateOrCreatTextureByIndex(fu.blocks["输出模式"], dpsMode / 255)
     end
+    SaveConfig() -- 保存
 end
 
 -- 定义主处理函数
@@ -162,3 +172,32 @@ function fu.creatColorCurve(point, b)
     curve:AddPoint(point, CreateColor(0, 0, b / 255, 1))
     return curve
 end
+
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("ADDON_LOADED")
+
+frame:SetScript("OnEvent", function(self, event, addonName)
+    if addonName == "Fuyutsui" then
+        -- 如果配置不存在，则初始化
+        if not FuyutsuiDB then
+            FuyutsuiDB = {
+                aoeMode = 0,
+                cooldowns = 0,
+                dpsMode = 0
+            }
+        end
+
+        -- 将保存的数据读回本地变量
+        aoeMode = FuyutsuiDB.aoeMode or 0
+        cooldowns = FuyutsuiDB.cooldowns or 0
+        dpsMode = FuyutsuiDB.dpsMode or 0
+
+        -- 根据读取到的数据初始化界面/状态
+        -- 调用一次以同步你代码中的 fu.blocks 逻辑
+        C_Timer.After(5, function()
+            if switchCooldown then switchCooldown() end
+            if switchAoeMode then switchAoeMode() end
+            if switchDpsMode then switchDpsMode() end
+        end)
+    end
+end)

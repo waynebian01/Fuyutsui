@@ -68,8 +68,8 @@ def _get_failed_spell(state_dict):
 def run_shaman_logic(state_dict, spec_name):
     spells = state_dict.get("spells") or {}
 
-    战斗 = state_dict.get("战斗", 0)
-    移动 = state_dict.get("移动", 0)
+    战斗 = state_dict.get("战斗", False)
+    移动 = state_dict.get("移动", False)
     施法 = state_dict.get("施法", 0)
     引导 = state_dict.get("引导", 0)
     蓄力 = state_dict.get("蓄力", 0)
