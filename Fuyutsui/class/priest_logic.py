@@ -352,7 +352,10 @@ def _priest_holy_logic(state_dict):
     # 战斗逻辑
     def _combat_filler():
         nonlocal current_step, action_hotkey
-        if not 移动 and 神圣之火_cd == 0:
+        if 罚_cd == 0:
+            current_step = "施放 圣言术：罚"
+            action_hotkey = get_hotkey(0, "圣言术：罚")
+        elif not 移动 and 神圣之火_cd == 0:
             current_step = "施放 神圣之火"
             action_hotkey = get_hotkey(0, "神圣之火")
         elif not 移动:
@@ -400,6 +403,39 @@ def _priest_holy_logic(state_dict):
     elif 法术失败 != 0 and 失败法术 is not None:
         current_step = f"施放 {失败法术}"
         action_hotkey = get_hotkey(0, 失败法术)
+    elif 英雄天赋 == 1:
+        # ======== 【神谕者】 ========
+        if 队伍类型 <= 40 or 队伍类型 == 46:
+            # 纯净术
+            if 纯净术 == 0 and 驱散单位 is not None:
+                current_step = f"施放 纯净术 on {驱散单位}"
+                action_hotkey = get_hotkey(int(驱散单位), "纯净术")
+            elif 目标类型 == 12:
+                current_step = f"施放 纯净术 on 目标"
+                action_hotkey = get_hotkey(0, "纯净术")
+            # 愈合祷言
+            elif 愈合祷言_cd == 0:
+                _mending_filler()
+            # 治疗逻辑
+            elif lowest_u is not None and lowest_p is not None and lowest_p < 90:
+                # 圣言术：静
+                if 静_charge <= 1 and lowest_p < 80:
+                    current_step = f"施放 圣言术：静 on {lowest_u}, 生命低于80%的单位"
+                    action_hotkey = get_hotkey(int(lowest_u), "圣言术：静")
+                elif 静_cd == 0 and lowest_p < 50:
+                    current_step = f"施放 圣言术：静 on {lowest_u}, 生命低于50%的单位"
+                    action_hotkey = get_hotkey(int(lowest_u), "圣言术：静")
+                # 神圣化身
+                elif 战斗 and 神圣化身_cd == 0 and count80 >= 3 and 静_cd > 2:
+                    current_step = "施放 神圣化身"
+                    action_hotkey = get_hotkey(0, "神圣化身")               
+                # 快速治疗
+                else:
+                    current_step = f"施放 快速治疗 on {lowest_u}, 生命最低的单位"
+                    action_hotkey = get_hotkey(int(lowest_u), "快速治疗")
+            elif 1 <= 目标类型 <= 3 and 战斗:
+                _combat_filler()
+
     elif 英雄天赋 == 3:
         if 队伍类型 <= 40:
             # 驱散
