@@ -356,16 +356,16 @@ def run_paladin_logic(state_dict, spec_name):
                 elif 神性层数 > 0 and 最低单位 is not None and 最低生命值 < 50:
                     current_step = f"神性救急: 圣光术 on {最低单位}"
                     action_hotkey = get_hotkey(int(最低单位), "圣光术")
-                elif 神圣能量 < 5 and not 移动 and 最低单位 is not None and 最低生命值 < 40:
+                elif 神圣能量 < 3 and not 移动 and 最低单位 is not None and 最低生命值 < 40:
                     current_step = f"低血站桩: 圣光术 on {最低单位}"
                     action_hotkey = get_hotkey(int(最低单位), "圣光术")
                 elif 神圣能量 == 5:
-                    if 最低单位 is not None and 最低生命值 < 70:
-                        current_step = f"5豆单抬: 荣耀圣令 on {最低单位}"
-                        action_hotkey = get_hotkey(int(最低单位), "荣耀圣令")
-                    elif count90 >= 3:
+                    if count90 >= 3 and 最低生命值 is not None and 最低生命值 > 60:
                         current_step = "5豆群抬: 黎明之光"
                         action_hotkey = get_hotkey(0, "黎明之光")
+                    elif 最低单位 is not None and 最低生命值 < 80:
+                        current_step = f"5豆单抬: 荣耀圣令 on {最低单位}"
+                        action_hotkey = get_hotkey(int(最低单位), "荣耀圣令")
                     elif 战斗 and 1 <= 目标类型 <= 3 and 目标距离 <= 5:
                         current_step = "5豆进攻: 正义盾击"
                         action_hotkey = get_hotkey(0, "正义盾击")
@@ -375,9 +375,14 @@ def run_paladin_logic(state_dict, spec_name):
                     else:
                         current_step = "5豆兜底: 荣耀圣令 on 玩家"
                         action_hotkey = get_hotkey(1, "荣耀圣令")
+                        
+                elif (神圣能量 >= 3 or 神圣意志 > 0) and count90 >= 3 and 最低生命值 is not None and 最低生命值 > 60:
+                    current_step = "3豆/意志群抬优先: 黎明之光"
+                    action_hotkey = get_hotkey(0, "黎明之光")
                 elif 圣光灌注 > 0 and 最低单位 is not None and 最低生命值 < 80:
                     current_step = f"灌注闪现: 圣光闪现 on {最低单位}"
                     action_hotkey = get_hotkey(int(最低单位), "圣光闪现")
+
                 elif 0 < 神圣意志 < 4:
                     if 最低单位 is not None and 最低生命值 < 80:
                         current_step = f"意志保护: 荣耀圣令 on {最低单位}"
@@ -385,25 +390,22 @@ def run_paladin_logic(state_dict, spec_name):
                     elif 战斗 and 1 <= 目标类型 <= 3 and 目标距离 <= 5:
                         current_step = "意志保护进攻: 正义盾击"
                         action_hotkey = get_hotkey(0, "正义盾击")
+
                 elif 神圣震击 == 0 and 最低单位 is not None and 最低生命值 < 90:
                     current_step = f"震击主治: 神圣震击 on {最低单位}"
                     action_hotkey = get_hotkey(int(最低单位), "神圣震击")
+
                 elif 神圣能量 >= 3 or 神圣意志 > 0:
-                    if 最低单位 is not None and 最低生命值 < 75:
+                    if 最低单位 is not None and 最低生命值 < 80:
                         current_step = f"3豆/意志单抬: 荣耀圣令 on {最低单位}"
                         action_hotkey = get_hotkey(int(最低单位), "荣耀圣令")
-                    elif count90 >= 3:
-                        current_step = "3豆/意志群抬: 黎明之光"
-                        action_hotkey = get_hotkey(0, "黎明之光")
-                    elif 战斗 and 1 <= 目标类型 <= 3 and 目标距离 <= 5:
-                        current_step = "3豆/意志进攻: 正义盾击"
-                        action_hotkey = get_hotkey(0, "正义盾击")
                     elif 最低单位 is not None and 最低生命值 < 90:
                         current_step = f"3豆兜底抬血: 荣耀圣令 on {最低单位}"
                         action_hotkey = get_hotkey(int(最低单位), "荣耀圣令")
                     elif 0 < 神圣意志 < 4:
                         current_step = "意志过期兜底: 荣耀圣令 on 玩家"
                         action_hotkey = get_hotkey(1, "荣耀圣令")
+
                 elif 圣洁鸣钟 == 0 and 神圣能量 <= 2 and count80 >= 2 and 战斗:
                     current_step = "群奶攒豆: 圣洁鸣钟"
                     action_hotkey = get_hotkey(0, "圣洁鸣钟")
