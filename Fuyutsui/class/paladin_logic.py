@@ -45,17 +45,6 @@ def _get_failed_spell(state_dict):
         return spell_name
     return None
 
-# 特殊技能按键（不走keymap，直接按指定键）
-direct_key_map = {
-    "制裁之锤": "x",
-}
-
-def get_action_hotkey(skill_name, unit=0):
-    """获取技能按键，特殊技能直接返回固定按键"""
-    if skill_name in direct_key_map:
-        return direct_key_map[skill_name]
-    return get_hotkey(unit, skill_name)
-
 def run_paladin_logic(state_dict, spec_name):
     spells = state_dict.get("spells") or {}
 
@@ -177,86 +166,97 @@ def run_paladin_logic(state_dict, spec_name):
 
         # ---- 优先级 1: 法术失败重试 ----
         elif 法术失败 != 0 and 失败法术 is not None:
-            current_step = f"施放 {失败法术}"
+            current_step = f"施放: {失败法术}"
             action_hotkey = get_hotkey(0, 失败法术)
 
         # ---- 优先级 2: 驱散 ----
         elif 清洁术CD == 0 and 驱散单位 is not None:
-            current_step = f"施放 清毒术 on {驱散单位}"
+            current_step = f"施放: 清毒术 on {驱散单位}"
             action_hotkey = get_hotkey(int(驱散单位), "清毒术")
         elif 清洁术CD == 0 and 目标类型 == 12:
-            current_step = "施放 清毒术 on 目标"
+            current_step = "施放: 清毒术 on 目标"
             action_hotkey = get_hotkey(0, "清毒术")
         
-        # ---- 优先级 3: 治疗 ----
-        elif 圣疗术CD == 0 and 生命值 < 20:   # 自己快死
-            current_step = "施放 圣疗术"
+        # ---- 自救 ----
+        elif 圣疗术CD == 0 and 生命值 < 20:
+            current_step = "施放: 圣疗术"
             action_hotkey = get_hotkey(1, "圣疗术")
-        # ---- AOE美德道标 ----
+        # ---- AOE群抬 ----
+        # 美德道标
         elif 美德道标CD == 0 and count75 >= 3:
-            current_step = "施放 美德道标"
+            current_step = "施放: 美德道标"
             action_hotkey = get_hotkey(0, "美德道标")
+        # 圣洁鸣钟:
         elif 美德道标CD >= 6 and 圣洁鸣钟CD == 0 and 神圣能量 <= 2 and count80 >= 3:
-            current_step = "群奶攒豆: 圣洁鸣钟"
+            current_step = "群奶: 圣洁鸣钟"
             action_hotkey = get_hotkey(1, "圣洁鸣钟")
-        # ---- 5豆 ----
+        # ---- 5豆消耗 ----
         elif 神圣能量 == 5:
+            # 永恒之火
             if 无火最低 is not None and 无火最低血量 is not None and 无火最低血量 <= 80:
-                current_step = f"5豆填充火: 荣耀圣令 on {无火最低}"
+                current_step = f"5豆: 永恒之火 on {无火最低}"
                 action_hotkey = get_hotkey(int(无火最低), "荣耀圣令")
+            # 荣耀圣令
             elif 最低单位 is not None and 最低生命值 is not None and 最低生命值 <= 75:
-                current_step = f"5豆单抬: 荣耀圣令 on {最低单位}"
+                current_step = f"5豆: 荣耀圣令 on {最低单位}"
                 action_hotkey = get_hotkey(int(最低单位), "荣耀圣令")
+            # 群抬: 黎明之光
             elif count90 >= 3:
-                current_step = "5豆群抬: 黎明之光"
+                current_step = "5豆: 黎明之光"
                 action_hotkey = get_hotkey(0, "黎明之光")
+            # 进攻: 正义盾击
             elif 战斗 and 1 <= 目标类型 <= 3 and 目标距离 is not None and 目标距离 <= 5:
-                current_step = "5豆进攻: 正义盾击"
+                current_step = "5豆: 正义盾击"
                 action_hotkey = get_hotkey(0, "正义盾击")
-        # ---- 3豆/意志 ----
+        # ---- 3豆/意志消耗 ----
         elif 神圣能量 >= 3 or 神圣意志BUFF > 0:
+            # 永恒之火
             if 无火最低 is not None and 无火最低血量 is not None and 无火最低血量 <= 80:
-                current_step = f"3豆填充火: 荣耀圣令 on {无火最低}"
+                current_step = f"3豆: 永恒之火 on {无火最低}"
                 action_hotkey = get_hotkey(int(无火最低), "荣耀圣令")
+            # 荣耀圣令
             elif 最低单位 is not None and 最低生命值 is not None and 最低生命值 <= 75:
-                current_step = f"3豆单抬: 荣耀圣令 on {最低单位}"
+                current_step = f"3豆: 荣耀圣令 on {最低单位}"
                 action_hotkey = get_hotkey(int(最低单位), "荣耀圣令")
+            # 群抬: 黎明之光
             elif count90 >= 3:
-                current_step = "3豆群抬: 黎明之光"
+                current_step = "3豆: 黎明之光"
                 action_hotkey = get_hotkey(0, "黎明之光")
         # ---- 神性层免费圣光术 ----
         elif 最低单位 is not None and 最低生命值 is not None and not 施法 and 神性层数BUFF > 0 and 最低生命值 < 60:
-            current_step = f"神性救急: 圣光术 on {最低单位}"
+            current_step = f"神性: 圣光术 on {最低单位}"
             action_hotkey = get_hotkey(int(最低单位), "圣光术")
-        # ---- 灌注闪现 ----
+        # ---- 灌注圣光闪现 ----
         elif 最低单位 is not None and 最低生命值 is not None and not 施法 and 圣光灌注BUFF > 0 and 最低生命值 <= 85 and 神圣能量 <= 3:
-            current_step = f"灌注闪现: 圣光闪现 on {最低单位}"
+            current_step = f"灌注: 圣光闪现 on {最低单位}"
             action_hotkey = get_hotkey(int(最低单位), "圣光闪现")
         # ---- 神圣震击 ----
         elif 最低单位 is not None and 最低生命值 is not None and 神圣震击CD == 0 and not 施法 and 圣光灌注BUFF == 0 and 最低生命值 < 90 and 神圣能量 <= 4:
-            current_step = f"震击主治: 神圣震击 on {最低单位}"
+            current_step = f"施放: 神圣震击 on {最低单位}"
             action_hotkey = get_hotkey(int(最低单位), "神圣震击")
         # ---- 圣光术站桩 ----
         elif 最低单位 is not None and 最低生命值 is not None and not 施法 and not 移动 and 最低生命值 < 50 and 能量值 >= 50:
-            current_step = f"低血站桩: 圣光术 on {最低单位}"
+            current_step = f"站桩: 圣光术 on {最低单位}"
             action_hotkey = get_hotkey(int(最低单位), "圣光术")
         # ---- 审判补能量 ----
         elif 战斗 and 1 <= 目标类型 <= 3 and 神圣能量 == 2 and 审判CD == 0:
-            current_step = "进攻攒豆: 审判"
+            current_step = "能量: 审判"
             action_hotkey = get_hotkey(0, "审判")
         # ---- 平刷兜底 ----
         elif 最低单位 is not None and 最低生命值 is not None and not 施法 and not 移动 and 最低生命值 <= 90 and 圣光灌注BUFF == 0:
-            current_step = f"空闲平刷: 圣光闪现 on {最低单位}"
+            current_step = f"平刷: 圣光闪现 on {最低单位}"
             action_hotkey = get_hotkey(int(最低单位), "圣光闪现")
         else:
             current_step = "无匹配技能"
-        # ---- 进攻攒豆（独立于 elif 链，任何豆数都能攒） ----
+        # ---- 进攻攒豆（独立判断，不受 elif 链限制） ----
         if current_step == "无匹配技能" and 战斗 and 1 <= 目标类型 <= 3:
+            # 审判优先
             if 神圣能量 <= 4 and 审判CD == 0:
-                current_step = "进攻攒豆: 审判"
+                current_step = "进攻: 审判"
                 action_hotkey = get_hotkey(0, "审判")
+            # 震击兜底
             elif not 施法 and 神圣能量 <= 4 and 神圣震击CD == 0:
-                current_step = "进攻攒豆: 神圣震击"
+                current_step = "进攻: 神圣震击"
                 action_hotkey = get_hotkey(0, "神圣震击")
 
     elif spec_name == "防护":
@@ -298,7 +298,7 @@ def run_paladin_logic(state_dict, spec_name):
                 action_hotkey = get_hotkey(0, "正义盾击")
             elif 复仇者之盾CD == 0: # 复仇者之盾
                 current_step = "施放 复仇者之盾"
-                action_hotkey = "1"
+                action_hotkey = get_hotkey(0, "复仇者之盾")
             elif 审判CD == 0:   # 审判
                 current_step = "施放 审判"
                 action_hotkey = get_hotkey(0, "审判")
