@@ -54,7 +54,7 @@ Fuyutsui Tinkerer是由日本大众消费电子巨头 冬月电子（Fuyutsuki E
 <https://github.com/waynebian01/Fuyutsui>
 
 1. 下载[QClaw](https://qclaw.qq.com/)
-2. 发送指令请根据 <https://github.com/waynebian01/Fuyutsui/blob/main/INSTALL.md> 为我安装MIDNIGHT
+2. 发送指令： `请根据 <https://github.com/waynebian01/Fuyutsui/blob/main/INSTALL.md> 为我安装MIDNIGHT`
 
 ---
 
