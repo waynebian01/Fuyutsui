@@ -1,12 +1,19 @@
 # Fuyutsui（“冬月修补匠3型”）
-Fuyutsui Tinkerer是由日本大众消费电子巨头 冬月电子（Fuyutsuki Electronics） 研发的一块网络接入仓（Cyberdeck），能显著提升你玩《魔兽世界》的快感。
+
+Fuyutsui Tinkerer是由日本大众消费电子巨头 冬月电子（Fuyutsuki Electronics） 研发的一块网络接入仓（Cyberdeck），能显著提升你玩《魔兽世界》的快感
 ---
+
 ## 它支持谁?
+
 - **版本**: 听说它只支持_Relic_
-   ### 职业与专精支持
-   #### 天赋
+
+  ### 职业与专精支持
+
+  #### 天赋
+
    脚本使用的天赋均来自于[WOWHEAD](https://www.wowhead.com/guides/classes)推荐的天赋
-   #### 图标含义:
+
+  #### 图标含义
 
    ✅: 手写逻辑
 
@@ -17,7 +24,7 @@ Fuyutsui Tinkerer是由日本大众消费电子巨头 冬月电子（Fuyutsuki E
    | 职业 | 专精 |专精  |专精  |专精  |
    | --- | --- | --- | --- | --- |
    | 战士 | 武器 🔄 | 狂怒 🔄 | 防护 ✅🔄 |  |
-   | 圣骑士 | 神圣 ✅ | 防护✅🔄 | 惩戒 🔄 |  | : 
+   | 圣骑士 | 神圣 ✅ | 防护✅🔄 | 惩戒 🔄 |  | :
    | 猎人 | 野兽 🔄 | 射击 🔄 | 生存 🔄 |  |
    | 盗贼 | 奇袭 🔄 | 狂徒 🔄 | 敏锐 🔄 |  |
    | 牧师 | 戒律 ✅ | 神圣 ✅ | 暗影 ✅🔄 |  |
@@ -29,7 +36,6 @@ Fuyutsui Tinkerer是由日本大众消费电子巨头 冬月电子（Fuyutsuki E
    | 德鲁伊 | 平衡 🔄 | 野性 🔄 | 守护 ✅🔄 | 恢复 ✅ |
    | 恶魔猎手 | 浩劫 🔄 | 复仇 🔄 | 噬灭 🔄 |  |
    | 唤魔师 | 湮灭 🔄 | 恩护 ❌ | 增辉 ❌ |  |
-
 
 - **感觉支持的职业非常少**
 
@@ -43,13 +49,25 @@ Fuyutsui Tinkerer是由日本大众消费电子巨头 冬月电子（Fuyutsuki E
 
 ---
 
+## 快速安装
+
+<https://github.com/waynebian01/Fuyutsui>
+
+1. 下载[QClaw](https://qclaw.qq.com/)
+2. 发送指令： `请根据 <https://github.com/waynebian01/Fuyutsui/blob/main/INSTALL.md> 为我安装MIDNIGHT`
+
+---
+
 ## 如何启动
+
 下面按“游戏内 Lua 插件 + 桌面端 Python”两部分说明。该项目面向 Windows（会调用屏幕截图与 Windows API）。
 
 ### 1. 文件放在哪里
+
 **Lua 插件（WoW AddOn）**：把仓库里的 `Fuyutsui` 这个文件夹整体复制到魔兽世界安装目录的 `Interface/AddOns/` 下面。
 
 ### 2. 安装 VS Code
+
 1. 安装 VS Code（任意版本即可）。
 2. 打开 VS Code 后：`文件 -> 打开文件夹`，选择项目根目录, 也就是`Interface/AddOns/Fuyutsui`。
 
@@ -163,5 +181,3 @@ python logic_gui.py
 
 本项目偏“个人工具/实验性质”，通过读取游戏画面像素并触发热键来实现辅助决策。
 请你自行判断是否符合你的需求，别让它被荒坂发现。
-
-[icon]: https://wow.zamimg.com/images/wow/icons/large/ui_spellbook_onebutton.jpg
