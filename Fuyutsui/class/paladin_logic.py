@@ -28,7 +28,7 @@ def _calc_death_countdown(state_dict):
     oldest_t, oldest_h = _death_history[0]
     hp_lost = oldest_h - hp
     elapsed = now - oldest_t
-    if hp_lost <= 0 or elapsed <= 0:
+    if hp_lost <= 0 or elapsed < 3:
         return -1
     avg_loss_per_sec = hp_lost / elapsed
     return hp / avg_loss_per_sec
@@ -378,20 +378,24 @@ def run_paladin_logic(state_dict, spec_name):
                 action_hotkey = get_hotkey(0, "荣耀圣令")
 
             # ---- 输出循环 ----
-            # 复仇者之怒:爆发-自动
-            elif 复仇之怒CD == 0 and 处决宣判CD == 0 and 爆发 == 1 and 目标死亡 >= 50:
+            # 复仇者之怒:爆发
+            elif 复仇之怒CD == 0 and 处决宣判CD == 0 and 灰烬觉醒CD == 0 and 爆发 == 1 and 目标死亡 >= 45:
                 current_step = "施放 复仇之怒"
                 action_hotkey = get_hotkey(0, "复仇之怒")
-            # 灰烬觉醒:爆发-自动
-            elif 复仇之怒CD >= 25 and 灰烬觉醒CD == 0 and 神圣能量 < 3 and 爆发 == 1 and 目标死亡 >= 25:
-                current_step = "施放 灰烬觉醒"
-                action_hotkey = get_hotkey(0, "灰烬觉醒")
             # 处决宣判
             elif 复仇之怒BUFF > 0 and 处决宣判CD == 0:
                 current_step = "施放 处决宣判"
                 action_hotkey = get_hotkey(0, "处决宣判")
+            # 灰烬觉醒:翅膀
+            elif 复仇之怒CD >= 50 and 灰烬觉醒CD == 0 and 处决宣判BUFF > 0 and 神圣能量 <= 3 and 爆发 == 1:
+                current_step = "施放 灰烬觉醒"
+                action_hotkey = get_hotkey(0, "灰烬觉醒")
+            # 灰烬觉醒: not 翅膀
+            elif 复仇之怒CD >= 25 and 灰烬觉醒CD == 0 and 神圣能量 <= 3 and 爆发 == 1 and 目标死亡 >= 20:
+                current_step = "施放 灰烬觉醒"
+                action_hotkey = get_hotkey(0, "灰烬觉醒")
             # 灰烬觉醒
-            elif 灰烬觉醒CD == 0 and 处决宣判BUFF > 0 and 神圣能量 < 3:
+            elif 灰烬觉醒CD == 0 and 处决宣判BUFF > 0 and 神圣能量 <= 3:
                 current_step = "施放 灰烬觉醒"
                 action_hotkey = get_hotkey(0, "灰烬觉醒")
             # 圣光之锤
