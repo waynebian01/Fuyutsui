@@ -434,16 +434,16 @@ end
 -- 更新玩家配置
 local function updatePlayerConfig()
     C_Timer.After(3, function()
-        if blocks then
+        if blocks and FuyutsuiDB then
             print("重新描绘配置像素")
             if fu.blocks["爆发开关"] then
-                creat(fu.blocks["爆发开关"], FuyutsuiDB.cooldowns / 255)
+                creat(fu.blocks["爆发开关"], (FuyutsuiDB.cooldowns or 0) / 255)
             end
             if fu.blocks["AOE开关"] then
-                creat(fu.blocks["AOE开关"], FuyutsuiDB.aoeMode / 255)
+                creat(fu.blocks["AOE开关"], (FuyutsuiDB.aoeMode or 0) / 255)
             end
             if fu.blocks["输出模式"] then
-                creat(fu.blocks["输出模式"], FuyutsuiDB.dpsMode / 255)
+                creat(fu.blocks["输出模式"], (FuyutsuiDB.dpsMode or 0) / 255)
             end
         end
     end)

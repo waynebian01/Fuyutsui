@@ -82,7 +82,6 @@ state:
     圣光灌注: {step: 26, type: "int" }
     灌注层数: {step: 27, type: "int" }
     神性层数: {step: 28, type: "int" }
-
     spells:
       盲目之光: {step: 31, type: "int" }
       制裁之锤: {step: 32, type: "int" }
@@ -119,6 +118,7 @@ state:
     奉献: {step: 28, type: "int" }
     复仇之怒: {step: 29, type: "int" }
     圣光之锤: {step: 30, type: "int" }
+    目标距离: {step: 31, type: "int" }
     spells:
       盲目之光: {step: 31, type: "int" }
       制裁之锤: {step: 32, type: "int" }
@@ -136,21 +136,19 @@ state:
       奉献: {step: 44, type: "int" }
       正义盾击: {step: 45, type: "int" }
       祝福之锤: {step: 46, type: "int" }
-    group:
-      start: 70
-      num: 3
-      生命值: {step: 1, type: "int" }
-      职责: {step: 2, type: "int" }
-      驱散: {step: 3, type: "int" }
+      正义之锤: {step: 47, type: "int" }
   3:
     神圣能量: {step: 21, type: "int" }
     神圣意志: {step: 22, type: "int" }
-    复仇之怒: {step: 23, type: "int" }
-    处决宣判: {step: 24, type: "int" }
-    圣光之锤: {step: 25, type: "int" }
-    爆发开关: {step: 26, type: "int" }
-    AOE开关: {step: 27, type: "int" }
-    输出模式: {step: 28, type: "int" }
+    目标距离: {step: 23, type: "int" }
+    复仇之怒: {step: 24, type: "int" }
+    处决宣判: {step: 25, type: "int" }
+    敌人人数: {step: 26, type: "int" }
+    圣光之锤: {step: 27, type: "int" }
+    目标死亡: {step: 28, type: "int" }
+    目标生命值: {step: 29, type: "int" }
+    爆发开关: {step: 30, type: "int" }
+    
     spells:
       盲目之光: {step: 31, type: "int" }
       制裁之锤: {step: 32, type: "int" }
@@ -166,6 +164,7 @@ state:
       公正之剑: {step: 42, type: "int" }
       处决宣判: {step: 43, type: "int" }
       灰烬觉醒: {step: 44, type: "int" }
+      复仇之怒: {step: 45, type: "int" }
     group:
       start: 70
       num: 3
