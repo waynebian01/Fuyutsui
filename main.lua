@@ -1446,7 +1446,7 @@ function frame:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID, castBarID
     if not isSec(spellID) then
         updateAuraBySuccess(spellID, castBarID)
         updateFailedSpellBySuccess(spellID)
-        printSuccSpell(spellID)
+        -- printSuccSpell(spellID)
         -- print(spellID)
         if spellID == 384255 then
             fu.ClearAllFuyutsuiBars()
