@@ -19,7 +19,7 @@ colorBars:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
 colorBars:SetSize(screenWidth, BLOCK_FIX_CONFIG.blockHeight)
 colorBars:SetFrameStrata("TOOLTIP") -- 确保在最上层
 colorBars:SetFrameLevel(10000)
--- mainAnchor:Raise()   -- Increases the frame's frame level above all other frames in its strata
+-- colorBars:Raise()   -- Increases the frame's frame level above all other frames in its strata
 fu.MainAnchor = colorBars
 
 -- 存储纹理的数组 (1 到 255)

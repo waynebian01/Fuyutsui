@@ -20,7 +20,7 @@ except Exception:
 # config.yml 与 GetPixels.py 同目录
 CONFIG_PATH = os.path.join(_SCRIPT_DIR, "config.yml")
 
-PIXELS_PER_ROW = 256  # 扫描 256 个数据点
+PIXELS_PER_ROW = 255  # 扫描 255 个数据点
 
 # mss 的 DC 是线程局部的，用 threading.local 让每个线程持有自己的单例
 import threading
