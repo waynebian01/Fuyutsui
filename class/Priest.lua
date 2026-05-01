@@ -147,6 +147,7 @@ function fu.updateSpecInfo()
                     index = 47,
                     auraRef = fu.auras["虚空形态"],
                     showKey = "remaining",
+                    playerAuraSpellId = 194249,
                 },
             },
         }

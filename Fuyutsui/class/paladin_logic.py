@@ -402,6 +402,13 @@ def run_paladin_logic(state_dict, spec_name):
                     elif 0 < 神圣意志 < 4:
                         current_step = "意志过期兜底: 荣耀圣令 on 玩家"
                         action_hotkey = get_hotkey(1, "荣耀圣令")
+                    elif 神圣能量 < 5 and 战斗 and 1 <= 目标类型 <= 3:
+                        if 审判 <= 1:
+                            current_step = "3/4豆继续攒豆: 审判"
+                            action_hotkey = get_hotkey(0, "审判")
+                        elif 神圣震击 == 0:
+                            current_step = "3/4豆继续攒豆: 神圣震击"
+                            action_hotkey = get_hotkey(0, "神圣震击")
 
                 elif 圣洁鸣钟 == 0 and 神圣能量 <= 2 and count80 >= 2 and 战斗:
                     current_step = "群奶攒豆: 圣洁鸣钟"

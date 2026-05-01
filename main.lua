@@ -630,6 +630,22 @@ local function updateAuraBlocks()
     end
 end
 
+local function updatePlayerAuraBlocks()
+    if not fu.blocks or not fu.blocks.auras then return end
+    for _, info in pairs(fu.blocks.auras) do
+        if info.playerAuraSpellId and info.auraRef then
+            local aura = C_UnitAuras.GetUnitAuraBySpellID("player", info.playerAuraSpellId)
+            if aura then
+                info.auraRef.remaining = 1
+            else
+                info.auraRef.expirationTime = nil
+                info.auraRef.remaining = 0
+                if info.auraRef.count then info.auraRef.count = info.auraRef.countMin end
+            end
+        end
+    end
+end
+
 local function updateRune()
     if blocks and blocks["符文"] then
         local total = 0
@@ -1673,6 +1689,7 @@ frame:SetScript("OnUpdate", function(_, elapsed)
         updatePlayerAssistant()
         updateRune()
         updateAura()
+        updatePlayerAuraBlocks()
         updateAuraBlocks()
         updateTargetRangeBlock()
         updateEnemyCount()
