@@ -1,6 +1,8 @@
-local _, fu = ...
+local addon, fu = ...
+local Fuyutsui =_G[addon]
 local classId = fu.classId
 local addAuras, updateAuras, removeAuras = {}, {}, {} -- 添加、更新、移除光环
+Fuyutsui.Auras = {}
 local e = {
     ["法术冷却"] = "SPELL_UPDATE_COOLDOWN", -- 冷却事件
     ["施法成功"] = "UNIT_SPELLCAST_SUCCEEDED", -- 成功事件
@@ -741,21 +743,39 @@ local auras = {
 }
 
 do
-    for k, v in pairs(auras[classId]) do
-        if addAuras then
+    Fuyutsui.Auras = auras[classId]
+    for _, v in pairs(Fuyutsui.Auras) do
+        if v.addAuras then
             for spellId, data in pairs(v.addAuras) do
-                print(spellId, data)
+                if not addAuras[data.event] then
+                    addAuras[data.event] = {}
+                end
+                addAuras[data.event][spellId] = data
             end
         end
-        if updateAuras then
+        if v.updateAuras then
             for spellId, data in pairs(v.updateAuras) do
-                print(spellId, data)
+                if not updateAuras[data.event] then
+                    updateAuras[data.event] = {}
+                end
+                updateAuras[data.event][spellId] = data
             end
         end
-        if removeAuras then
+        if v.removeAuras then
             for spellId, data in pairs(v.removeAuras) do
-                print(spellId, data)
+                if not removeAuras[data.event] then
+                    removeAuras[data.event] = {}
+                end
+                removeAuras[data.event][spellId] = data
             end
         end
     end
 end
+
+local frame = CreateFrame("Frame")
+frame:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
+
+for _, v in pairs(e) do
+    frame:RegisterEvent(v)
+end
+
