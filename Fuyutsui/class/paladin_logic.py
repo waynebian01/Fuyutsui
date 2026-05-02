@@ -52,7 +52,7 @@ def _get_ret_helper_finisher(one_key_value, finisher_mode=0, enemies=0):
     终结技规则：
     自动模式 (0):
     - 推荐最终审判 -> 打最终审判
-    - 推荐神圣风暴 -> 打神圣风暴
+    - 推荐神圣风暴 -> 只有2个或更少敌人时打最终审判，否则打神圣风暴
     - 推荐圣光之锤 -> 只有2个或更少敌人时打最终审判，否则打神圣风暴
     - 推荐处决宣判 -> 只有2个或更少敌人时打最终审判，否则打神圣风暴
     单体模式 (1):
@@ -65,6 +65,8 @@ def _get_ret_helper_finisher(one_key_value, finisher_mode=0, enemies=0):
         return ("最终审判", "最终审判")
     if one_key_value == 17:
         if finisher_mode == 1:
+            return ("神圣风暴", "最终审判")
+        elif finisher_mode == 0 and enemies <= 2:
             return ("神圣风暴", "最终审判")
         return ("神圣风暴", "神圣风暴")
     if one_key_value == 18:
