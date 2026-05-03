@@ -1,5 +1,5 @@
 local _, fu = ...
-
+Fuyutsui = LibStub("AceAddon-3.0"):NewAddon("Fuyutsui", "AceConsole-3.0", "AceEvent-3.0")
 local className, classFilename, classId = UnitClass("player")
 local specIndex = C_SpecializationInfo.GetSpecialization()
 print("职业:", className, "职业文件:", classFilename, "职业ID:", classId, "专精索引:", specIndex)
@@ -69,6 +69,11 @@ local function switchDpsMode()
     SaveConfig() -- 保存
 end
 
+--- 供 gui.lua 等界面在改 FuyutsuiDB 后调用，与斜杠命令一致（含 print、像素、保存）
+fu.switchCooldown = switchCooldown
+fu.switchAoeMode = switchAoeMode
+fu.switchDpsMode = switchDpsMode
+
 -- 定义主处理函数
 local function Fuyutsui_SlashHandler(msg)
     -- 将输入转换为小写并拆分参数
@@ -116,6 +121,10 @@ local function Fuyutsui_SlashHandler(msg)
         print("切换输出模式为|cff00ff00手写逻辑|r: /fu dpsmode manual")
         print("切换输出模式为|cff00ff00一键辅助|r: /fu dpsmode assistant")
     elseif command == "gui" then
+        if fu.OpenInfoGUI then
+            fu.OpenInfoGUI()
+        end
+    else
         if fu.OpenInfoGUI then
             fu.OpenInfoGUI()
         end

@@ -1,7 +1,7 @@
 local _, fu = ...
 if fu.classId ~= 6 then return end
 local creat = fu.updateOrCreatTextureByIndex
-fu.HarmfulSpellId = 47528
+local eventTable = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD" }
 
 fu.heroSpell = {
     [439843] = 1, -- 死亡使者
@@ -20,6 +20,7 @@ function fu.updateSpecInfo()
     local specIndex = C_SpecializationInfo.GetSpecialization()
     fu.powerType = nil
     fu.blocks = nil
+    fu.countBars = nil
     fu.group_blocks = nil
     fu.assistant_spells = nil
     if specIndex == 1 then
@@ -49,9 +50,9 @@ function fu.updateSpecInfo()
             }
         }
     elseif specIndex == 3 then
-        local eventTable = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD" }
-        fu.CreateAutoLayoutBar(0, 20, 55090, eventTable) -- 天灾打击
-
+        fu.countBars = {
+            [1] = { name = "天灾打击", minValue = 0, maxValue = 20, spellId = 55090, events = eventTable },
+        }
         fu.blocks = {
             ["符文"] = 21,
             ["目标生命值"] = 22,

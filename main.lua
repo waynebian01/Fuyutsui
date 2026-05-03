@@ -10,8 +10,8 @@ local IsSpellKnown = C_SpellBook.IsSpellKnown
 local IsSpellInSpellBook = C_SpellBook.IsSpellInSpellBook
 local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
 local GetBuffDataByIndex = C_UnitAuras.GetBuffDataByIndex
-local rc = LibStub("LibRangeCheck-3.0")
 local creat = fu.updateOrCreatTextureByIndex
+local rc = LibStub("LibRangeCheck-3.0")
 
 local state, spells, group, group_list, target, nameplate = {}, {}, {}, {}, {}, {}
 local fixed, group_blocks, blocks = {}, nil, nil
@@ -41,7 +41,7 @@ fixed["队伍人数"] = 17
 fixed["首领战"] = 18
 fixed["难度"] = 19
 fixed["英雄天赋"] = 20
-
+fu.fixedBlocks = fixed
 
 -- ================================================================
 --                          创建颜色曲线
@@ -136,12 +136,22 @@ end
 -- ================================================================
 -- https://github.com/waynebian01/Fuyutsui
 
+-- 创建玩家bar信息
+local function updatePlayerBarInfo()
+    if fu.countBars then
+        for k, v in pairs(fu.countBars) do
+            print(k, v.name, v.minValue, v.maxValue, v.spellId, v.events)
+            fu.CreateAutoLayoutBar(v.minValue, v.maxValue, v.spellId, v.events)
+        end
+    end
+end
+
 -- 获取玩家固定信息, 函数, 变量
 local function getPlayerInfo()
     local name = UnitName("player")
     local GUID = UnitGUID("player")
     local specIndex = C_SpecializationInfo.GetSpecialization()
-    local specID, _, _, _, role = C_SpecializationInfo.GetSpecializationInfo(specIndex)
+    local specID, specName, _, _, role = C_SpecializationInfo.GetSpecializationInfo(specIndex)
 
     -- 更新玩家信息
     state.name, state.GUID = name, GUID
@@ -154,7 +164,7 @@ local function getPlayerInfo()
     -- 更新函数
     if type(updateSpecInfo) == "function" then updateSpecInfo() end     -- 更新专精信息
     if type(createClassMacro) == "function" then createClassMacro() end -- 创建类宏
-
+    updatePlayerBarInfo()
     -- 更新变量
     state.powerType = fu.powerType or nil -- 更新能量类型
     group_blocks = fu.group_blocks        -- 更新队伍块
@@ -276,17 +286,19 @@ end
 local function updatePlayerSpecInfo()
     fu.clearAllTextures()
     local specIndex = C_SpecializationInfo.GetSpecialization()
-    local specID = C_SpecializationInfo.GetSpecializationInfo(specIndex)
+    local specID, specName = C_SpecializationInfo.GetSpecializationInfo(specIndex)
     -- 更新专精信息
     if type(updateSpecInfo) == "function" then
         updateSpecInfo()
     end
     -- 更新变量
     state.specIndex, state.specID = specIndex, specID
+    fu.specName = specName
     state.powerType = fu.powerType or nil -- 更新能量类型
     group_blocks = fu.group_blocks        -- 更新队伍块
     blocks = fu.blocks                    -- 更新色块
     updateSpellKnown()
+    updatePlayerBarInfo()
     -- 更新专精色块
     creat(fixed["专精"], specIndex / 255)
 end
@@ -458,7 +470,6 @@ local function updatePlayerStagger()
         creat(blocks["酒池"], staggerPercent / 255)
     end
 end
-
 
 local function updateRune()
     if blocks and blocks["符文"] then
@@ -1062,6 +1073,21 @@ end
 -- ================================================================
 local frame = CreateFrame("Frame")
 frame:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
+function Fuyutsui:OnInitialize()
+
+end
+
+function Fuyutsui:OnEnable()
+    self:RegisterEvent("ZONE_CHANGED")
+end
+
+function Fuyutsui:ZONE_CHANGED()
+    local subzone = GetSubZoneText()
+    self:Print("你已经改变了地区!", GetZoneText(), subzone)
+    if GetBindLocation() == subzone then
+        self:Print("欢迎回家!")
+    end
+end
 
 local function updateAllFunction()
     getPlayerInfo()

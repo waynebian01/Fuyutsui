@@ -29,6 +29,7 @@ function fu.updateSpecInfo()
     local specIndex = C_SpecializationInfo.GetSpecialization()
     fu.powerType = nil
     fu.blocks = nil
+    fu.countBars = nil
     fu.group_blocks = nil
     if specIndex == 1 then
         fu.blocks = {

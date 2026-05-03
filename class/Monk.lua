@@ -17,8 +17,10 @@ function fu.updateSpecInfo()
     local specIndex = C_SpecializationInfo.GetSpecialization()
     fu.powerType = nil
     fu.blocks = nil
+    fu.countBars = nil
     fu.group_blocks = nil
     fu.assistant_spells = nil
+
     if specIndex == 1 then
         -- 疗伤珠
         fu.CreateAutoLayoutBar(0, 10, 322101, eventTable)
@@ -69,21 +71,16 @@ function fu.updateSpecInfo()
             [205523] = { index = 53, name = "幻灭踢" },
         }
     elseif specIndex == 2 then
-        -- 法力茶
-        fu.CreateAutoLayoutBar(0, 20, 115294, eventTable)
-        -- 神龙之赐
-        fu.CreateAutoLayoutBar(0, 10, 399491, eventTable)
+        fu.countBars = {
+            [1] = { name = "法力茶", minValue = 0, maxValue = 20, spellId = 115294, events = eventTable },
+            [2] = { name = "神龙之赐", minValue = 0, maxValue = 10, spellId = 399491, events = eventTable },
+        }
 
         fu.blocks = {
             ["敌人人数"] = 21,
             ["施法技能"] = 22,
             ["施法目标"] = 23,
             auras = {
-                ["法力茶层数"] = {
-                    index = 24,
-                    auraRef = fu.Auras["法力茶"],
-                    showKey = "count",
-                },
                 ["生生不息1"] = {
                     index = 25,
                     auraRef = fu.Auras["生生不息1"],
@@ -93,11 +90,6 @@ function fu.updateSpecInfo()
                     index = 26,
                     auraRef = fu.Auras["生生不息2"],
                     showKey = "remaining",
-                },
-                ["神龙之赐层数"] = {
-                    index = 27,
-                    auraRef = fu.Auras["神龙之赐"],
-                    showKey = "count",
                 },
                 ["灵泉"] = {
                     index = 28,
