@@ -103,7 +103,7 @@ local function Fuyutsui_SlashHandler(msg)
     elseif command == "dpsmode assistant" then
         FuyutsuiDB.dpsMode = 0
         switchDpsMode()
-    else
+    elseif command == "help" then
         -- 默认显示的帮助信息
         print("|cff00ff00Fuyutsui|r 命令列表:")
         print("爆发开关: /fu cd")
@@ -115,6 +115,10 @@ local function Fuyutsui_SlashHandler(msg)
         print("切换输出模式: /fu dpsmode")
         print("切换输出模式为|cff00ff00手写逻辑|r: /fu dpsmode manual")
         print("切换输出模式为|cff00ff00一键辅助|r: /fu dpsmode assistant")
+    elseif command == "gui" then
+        if fu.OpenInfoGUI then
+            fu.OpenInfoGUI()
+        end
     end
 end
 

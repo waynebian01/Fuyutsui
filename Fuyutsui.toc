@@ -57,3 +57,4 @@ class/DemonHunter.lua
 class/Evoker.lua
 
 main.lua
+gui.lua

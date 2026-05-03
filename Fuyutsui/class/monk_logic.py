@@ -105,6 +105,7 @@ def run_monk_logic(state_dict, spec_name):
         真气爆裂 = spells.get("真气爆裂", 0)
         爆炸酒桶 = spells.get("爆炸酒桶", 0)
         赤精之歌 = spells.get("赤精之歌", 0)
+        幻灭踢 = spells.get("幻灭踢", 0)
 
         if 引导 > 0:
             current_step = "在引导,不执行任何操作"
@@ -133,14 +134,18 @@ def run_monk_logic(state_dict, spec_name):
             elif 清空地窖 > 0:
                 current_step = "施放 爆炸酒桶"
                 action_hotkey = get_hotkey(0, "爆炸酒桶")
-            elif 醉酿投 < 1:
+            elif 幻灭踢 == 0:          # 新增：优先幻灭踢
+                current_step = "施放 幻灭踢"
+                action_hotkey = get_hotkey(0, "幻灭踢")
+            elif 醉酿投 == 0:          # 其次醉酿投（原为 <1，改为 ==0 与整体一致）
                 current_step = "施放 醉酿投"
                 action_hotkey = get_hotkey(0, "醉酿投")
-            elif tup:
-                current_step = f"施放 {tup[0]}"
-                action_hotkey = get_hotkey(0, tup[1])
-            else:
-                current_step = "战斗中-无匹配技能"
+            elif 火焰之息 == 0:        # 然后火焰之息
+                current_step = "施放 火焰之息"
+                action_hotkey = get_hotkey(0, "火焰之息")
+            else:                       # 最后猛虎掌填充
+                current_step = "施放 猛虎掌"
+                action_hotkey = get_hotkey(0, "猛虎掌")
         else:
             current_step = "非战斗状态,不执行任何操作"
 

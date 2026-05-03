@@ -168,7 +168,7 @@ end
 -- 各法术的驱散能力映射
 local dispelAbilities = {
     [1] = { 527, 360823, 4987, 115450, 88423, 77130 },              -- 魔法驱散
-    [2] = { 383016, 51886, 392378, 2782, 475 },                     -- 诅咒驱散
+    [2] = { 383016, 51886, 392378, 2782, 475, 77130 },              -- 诅咒驱散
     [3] = { 390632, 213634, 393024, 213644, 388874, 218164 },       -- 疾病驱散
     [4] = { 392378, 2782, 393024, 213644, 388874, 218164, 365585 }, -- 中毒驱散
     [11] = {}                                                       -- 流血驱散
@@ -435,7 +435,7 @@ end
 local function updatePlayerConfig()
     C_Timer.After(3, function()
         if blocks then
-            -- print("重新描绘配置像素")
+            print("重新描绘配置像素")
             if fu.blocks["爆发开关"] then
                 creat(fu.blocks["爆发开关"], FuyutsuiDB.cooldowns / 255)
             end
@@ -1236,7 +1236,7 @@ frame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 function frame:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID, castBarID)
     if not isSec(spellID) then
         updateFailedSpellBySuccess(spellID)
-        -- printSuccSpell(spellID) -- 打印成功施放的技能id和名称, 不重复打印已经施放的技能
+        -- printSuccSpell(spellID)
         -- print(spellID)
         if spellID == 384255 then
             fu.ClearAllFuyutsuiBars()
