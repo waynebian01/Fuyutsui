@@ -1,6 +1,5 @@
 local _, fu = ...
 if fu.classId ~= 6 then return end
-local creat = fu.updateOrCreatTextureByIndex
 local eventTable = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD" }
 
 fu.heroSpell = {

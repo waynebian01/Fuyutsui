@@ -1,6 +1,6 @@
 local addonName, fu = ...
-local AceConfig = LibStub("AceConfig-3.0")
-local AceConfigDialog = LibStub("AceConfigDialog-3.0")
+local AC = LibStub("AceConfig-3.0")
+local ACD = LibStub("AceConfigDialog-3.0")
 
 local function GetClassColorStr()
     local raid = fu.classFilename and RAID_CLASS_COLORS[fu.classFilename]
@@ -326,12 +326,12 @@ Fuyutsui Tinkerer是由Fuyutsuki Electronics研发的一块|cFF00FF00免费|r网
     },
 }
 
-AceConfig:RegisterOptionsTable(INFO_APP, options, nil)
+AC:RegisterOptionsTable(INFO_APP, options, nil)
 
 function fu.OpenInfoGUI()
-    AceConfigDialog:SetDefaultSize(INFO_APP, 520, 480)
-    AceConfigDialog:Open(INFO_APP)
-    local root = AceConfigDialog.OpenFrames[INFO_APP]
+    ACD:SetDefaultSize(INFO_APP, 520, 480)
+    ACD:Open(INFO_APP)
+    local root = ACD.OpenFrames[INFO_APP]
     if root and root.SetStatusText then
         root:SetStatusText(GetFooterStatusText())
     end

@@ -99,17 +99,6 @@ for i = 0, 11 do
     testColorCurve:AddPoint(i, CreateColor(0, 1, i / 255, 1))
 end
 
-local function testcurve()
-    local unit = "target"
-    if not UnitExists(unit) then return end
-    local auraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs(unit, "HELPFUL", 1, 4)
-    if auraInstanceIDs and #auraInstanceIDs > 0 then
-        local color = C_UnitAuras.GetAuraDispelTypeColor(unit, auraInstanceIDs[1], testColorCurve)
-        -- print(color.b)
-    end
-end
-
-
 -- ================================================================
 --                          通用函数
 -- ================================================================
@@ -140,7 +129,6 @@ end
 local function updatePlayerBarInfo()
     if fu.countBars then
         for k, v in pairs(fu.countBars) do
-            print(k, v.name, v.minValue, v.maxValue, v.spellId, v.events)
             fu.CreateAutoLayoutBar(v.minValue, v.maxValue, v.spellId, v.events)
         end
     end
@@ -338,7 +326,7 @@ local function updatePlayerState()
 end
 
 -- 更新玩家施法状态
-local function updatePlayerCastingInfo()
+function Fuyutsui:updatePlayerCastingInfo()
     if state.casting then
         local cast = UnitCastingDuration("player")
         if cast then
@@ -353,7 +341,7 @@ local function updatePlayerCastingInfo()
 end
 
 -- 更新玩家引导状态
-local function updatePlayerChannelingInfo()
+function Fuyutsui:updatePlayerChannelingInfo()
     if state.channeling then
         local channel = UnitChannelDuration("player")
         if channel then
@@ -368,7 +356,7 @@ local function updatePlayerChannelingInfo()
 end
 
 -- 更新玩家蓄力状态
-local function updatePlayerEmpowerInfo()
+function Fuyutsui:updatePlayerEmpowerInfo()
     if state.empowering then
         local empowerStages = UnitEmpoweredStageDurations("player")
         local empowerDuration = UnitEmpoweredChannelDuration("player")
@@ -447,7 +435,6 @@ end
 local function updatePlayerConfig()
     C_Timer.After(3, function()
         if blocks then
-            print("重新描绘配置像素")
             if fu.blocks["爆发开关"] then
                 creat(fu.blocks["爆发开关"], FuyutsuiDB.cooldowns / 255)
             end
@@ -471,7 +458,7 @@ local function updatePlayerStagger()
     end
 end
 
-local function updateRune()
+function Fuyutsui:updateRune()
     if blocks and blocks["符文"] then
         local total = 0
         for i = 1, 6 do
@@ -502,7 +489,7 @@ local function updateEncounterID(encounterID, difficultyID)
 end
 
 -- 更新玩家[一键辅助]
-local function updatePlayerAssistant()
+function Fuyutsui:updatePlayerAssistant()
     local spellId = C_AssistedCombat.GetNextCastSpell()
     local spellIndex = spellsList[spellId] and spellsList[spellId].index or nil
     if spellIndex then
@@ -513,7 +500,7 @@ local function updatePlayerAssistant()
 end
 
 -- 更新法术冷却信息
-local function updateSpellCooldown()
+function Fuyutsui:updateSpellCooldown()
     if not spells then return end
     for spellID, info in pairs(spells) do
         local index = info.index
@@ -666,7 +653,7 @@ local function updateTargetType()
     updateTargetValid()
 end
 
-local function updateTargetRangeBlock()
+function Fuyutsui:updateTargetRangeBlock()
     local minRange, maxRange = updateUnitRange("target")
     target.maxRange = maxRange
     if target.maxRange and specRange then
@@ -724,7 +711,7 @@ local function addNameplate(unit)
 end
 
 -- 更新范围内敌方姓名版数量
-local function updateEnemyCount()
+function Fuyutsui:updateEnemyCount()
     local count = 0
     local inTestMap = state.mapID and state.mapID == 2393
     for unit, data in pairs(nameplate) do
@@ -765,7 +752,7 @@ local function updateUnitValid(unit)
 end
 
 local falseValue = CreateColor(0, 0, 0, 1)
-local function updateGroupInRange()
+function Fuyutsui:updateGroupInRange()
     if not group_blocks then return end
     local numUnits = #group_list
     if numUnits >= 1 then
@@ -920,7 +907,7 @@ local function getRejuvCount(unit)
     return rejuvCount
 end
 
-local function OnUpdateUnitAura()
+function Fuyutsui:OnUpdateUnitAura()
     if not group_blocks or not group_blocks.aura then return end
     for unit, data in pairs(group) do
         for i, spellIds in pairs(group_blocks.aura) do
@@ -1069,22 +1056,25 @@ local function updateGroup()
 end
 
 -- ================================================================
---                          注册事件
+--                          事件
 -- ================================================================
-local frame = CreateFrame("Frame")
-frame:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
-function Fuyutsui:OnInitialize()
-
-end
-
-function Fuyutsui:OnEnable()
-    self:RegisterEvent("ZONE_CHANGED")
-end
 
 function Fuyutsui:ZONE_CHANGED()
-    local subzone = GetSubZoneText()
-    self:Print("你已经改变了地区!", GetZoneText(), subzone)
-    if GetBindLocation() == subzone then
+    state.mapID = C_Map.GetBestMapForUnit("player") or 0
+    state.mapInfo = C_Map.GetMapInfo(state.mapID)
+    state.subzone = GetSubZoneText()
+    self:Print("你已经改变了地区!", GetZoneText(), state.subzone)
+    if GetBindLocation() == state.subzone then
+        self:Print("欢迎回家!")
+    end
+end
+
+function Fuyutsui:ZONE_CHANGED_INDOORS()
+    state.mapID = C_Map.GetBestMapForUnit("player") or 0
+    state.mapInfo = C_Map.GetMapInfo(state.mapID)
+    state.subzone = GetSubZoneText()
+    self:Print("你已经改变了地区!", GetZoneText(), state.subzone)
+    if GetBindLocation() == state.subzone then
         self:Print("欢迎回家!")
     end
 end
@@ -1102,94 +1092,76 @@ local function updateAllFunction()
     fu.readKeybindings()
 end
 
-frame:RegisterEvent("PLAYER_LOGIN")
-function frame:PLAYER_LOGIN()
+function Fuyutsui:PLAYER_LOGIN()
     updateAllFunction()
 end
 
-frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-function frame:PLAYER_ENTERING_WORLD()
+function Fuyutsui:PLAYER_ENTERING_WORLD()
     state.mapID = C_Map.GetBestMapForUnit("player") or 0
     fu.ClearAllFuyutsuiBars()
+    updatePlayerState()
+    updateSpellKnown()
+    updatePlayerConfig()
     C_Timer.After(1, function()
         updatePlayerSpecInfo()
         updateGroup()
     end)
-    updatePlayerState()
-    updateSpellKnown()
-    updatePlayerConfig()
 end
 
-frame:RegisterEvent("ZONE_CHANGED")
-function frame:ZONE_CHANGED()
-    state.mapID = C_Map.GetBestMapForUnit("player") or 0
-    state.mapInfo = C_Map.GetMapInfo(state.mapID)
-end
-
-frame:RegisterEvent("PLAYER_TALENT_UPDATE")
-function frame:PLAYER_TALENT_UPDATE()
+function Fuyutsui:PLAYER_TALENT_UPDATE()
     updatePlayerSpecInfo()
     updatePlayerMoving(IsPlayerMoving())
     updatePlayerValid()
     updatePlayerCombat()
     updatePlayerHealth()
     updatePlayerPower()
-    updatePlayerAssistant()
     updateGroup()
     updateTargetFullInfo()
     updateShapeshiftForm()
     fu.readKeybindings()
 end
 
-frame:RegisterEvent("PLAYER_DEAD")
-function frame:PLAYER_DEAD()
+function Fuyutsui:PLAYER_DEAD()
     state.isDead = UnitIsDeadOrGhost("player")
     updatePlayerValid()
 end
 
-frame:RegisterEvent("PLAYER_ALIVE")
-function frame:PLAYER_ALIVE()
+function Fuyutsui:PLAYER_ALIVE()
     state.isDead = UnitIsDeadOrGhost("player")
     updatePlayerValid()
 end
 
-frame:RegisterEvent("PLAYER_UNGHOST")
-function frame:PLAYER_UNGHOST()
+function Fuyutsui:PLAYER_UNGHOST()
     state.isDead = UnitIsDeadOrGhost("player")
     updatePlayerValid()
 end
 
-frame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
-function frame:PLAYER_MOUNT_DISPLAY_CHANGED()
+function Fuyutsui:PLAYER_MOUNT_DISPLAY_CHANGED()
     updatePlayerMounted()
 end
 
 -- 战斗状态更新
-frame:RegisterEvent("PLAYER_REGEN_DISABLED") -- 进入战斗
-frame:RegisterEvent("PLAYER_REGEN_ENABLED")  -- 离开战斗
-function frame:PLAYER_REGEN_DISABLED()
+function Fuyutsui:PLAYER_REGEN_DISABLED()
     updateTargetType()
     updatePlayerCombat()
 end
 
-function frame:PLAYER_REGEN_ENABLED()
+function Fuyutsui:PLAYER_REGEN_ENABLED()
     updateTargetType()
     updatePlayerCombat()
 end
 
 -- 移动状态更新
-frame:RegisterEvent("PLAYER_STARTED_MOVING")
-frame:RegisterEvent("PLAYER_STOPPED_MOVING")
-function frame:PLAYER_STARTED_MOVING()
+function Fuyutsui:PLAYER_STARTED_MOVING()
     updatePlayerMoving(true)
 end
 
-function frame:PLAYER_STOPPED_MOVING()
+function Fuyutsui:PLAYER_STOPPED_MOVING()
     updatePlayerMoving(false)
 end
 
-frame:RegisterEvent("UNIT_SPELLCAST_SENT")
-function frame:UNIT_SPELLCAST_SENT(player, targetName, castGUID, spellID)
+function Fuyutsui:UNIT_SPELLCAST_SENT(_, unitTarget, targetName, castGUID, spellID)
+    if unitTarget ~= "player" then return end
     if not isSec(targetName) then
         for unit, data in pairs(group) do
             if data.name == targetName then
@@ -1204,15 +1176,15 @@ function frame:UNIT_SPELLCAST_SENT(player, targetName, castGUID, spellID)
 end
 
 -- 施法状态
-frame:RegisterUnitEvent("UNIT_SPELLCAST_START", "player")
-frame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", "player")
-function frame:UNIT_SPELLCAST_START(unitTarget, castGUID, spellID, castBarID)
+function Fuyutsui:UNIT_SPELLCAST_START(_, unitTarget, castGUID, spellID, castBarID)
+    if unitTarget ~= "player" then return end
     state.casting = true
     updateUnitIncomingHealsCurve(spellID)
     updatePlayerCasting(spellID)
 end
 
-function frame:UNIT_SPELLCAST_STOP(unitTarget, castGUID, spellID, castBarID)
+function Fuyutsui:UNIT_SPELLCAST_STOP(_, unitTarget, castGUID, spellID, castBarID)
+    if unitTarget ~= "player" then return end
     -- print("结束施法时间:", GetTime())
     updateUnitIncomingHealsCurve2()
     state.casting = false
@@ -1223,15 +1195,15 @@ function frame:UNIT_SPELLCAST_STOP(unitTarget, castGUID, spellID, castBarID)
 end
 
 -- 引导状态
-frame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", "player")
-frame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
-function frame:UNIT_SPELLCAST_CHANNEL_START(unitTarget, castGUID, spellID, castBarID)
+function Fuyutsui:UNIT_SPELLCAST_CHANNEL_START(_, unitTarget, castGUID, spellID, castBarID)
+    if unitTarget ~= "player" then return end
     state.channeling = true
     state.channelingSpellID = spellID
     updatePlayerCasting(spellID)
 end
 
-function frame:UNIT_SPELLCAST_CHANNEL_STOP(unitTarget, castGUID, spellID, castBarID)
+function Fuyutsui:UNIT_SPELLCAST_CHANNEL_STOP(_, unitTarget, castGUID, spellID, castBarID)
+    if unitTarget ~= "player" then return end
     state.channeling = false
     state.castTargetUnit = nil
     state.castTargetName = nil
@@ -1241,15 +1213,15 @@ function frame:UNIT_SPELLCAST_CHANNEL_STOP(unitTarget, castGUID, spellID, castBa
 end
 
 -- 蓄力状态
-frame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", "player")
-frame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", "player")
-function frame:UNIT_SPELLCAST_EMPOWER_START(unitTarget, castGUID, spellID, castBarID)
+function Fuyutsui:UNIT_SPELLCAST_EMPOWER_START(_, unitTarget, castGUID, spellID, castBarID)
+    if unitTarget ~= "player" then return end
     state.empowering = true
     state.empoweringSpellID = spellID
     updatePlayerCasting(spellID)
 end
 
-function frame:UNIT_SPELLCAST_EMPOWER_STOP(unitTarget, castGUID, spellID, complete, interruptedBy, castBarID)
+function Fuyutsui:UNIT_SPELLCAST_EMPOWER_STOP(_, unitTarget, castGUID, spellID, complete, interruptedBy, castBarID)
+    if unitTarget ~= "player" then return end
     state.empowering = false
     state.castTargetUnit = nil
     state.castTargetName = nil
@@ -1258,12 +1230,11 @@ function frame:UNIT_SPELLCAST_EMPOWER_STOP(unitTarget, castGUID, spellID, comple
 end
 
 local updateLesserGhoul = false
-frame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
-function frame:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID, castBarID)
+function Fuyutsui:UNIT_SPELLCAST_SUCCEEDED(_, unitTarget, castGUID, spellID, castBarID)
+    if unitTarget ~= "player" then return end
     if not isSec(spellID) then
         updateFailedSpellBySuccess(spellID)
-        -- printSuccSpell(spellID)
-        -- print(spellID)
+        self:updateAuraBySuccess(spellID, castBarID)
         if spellID == 384255 then
             fu.ClearAllFuyutsuiBars()
             print("切换天赋")
@@ -1280,15 +1251,43 @@ function frame:UNIT_SPELLCAST_SUCCEEDED(unitTarget, castGUID, spellID, castBarID
     end
 end
 
-frame:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", "player")
-function frame:UNIT_SPELLCAST_FAILED(unitTarget, castGUID, spellID, castBarID)
+function Fuyutsui:UNIT_SPELLCAST_FAILED(_, unitTarget, castGUID, spellID, castBarID)
+    if unitTarget ~= "player" then return end
     if not isSec(spellID) then
         updateSpellFailed(spellID)
     end
 end
 
-frame:RegisterEvent("UNIT_HEALTH")
-function frame:UNIT_HEALTH(unit)
+function Fuyutsui:SPELL_UPDATE_COOLDOWN(_, spellID)
+    -- print(spellID, C_Spell.GetSpellName(spellID))
+    self:updateAuraBySpellCooldown(spellID)
+end
+
+function Fuyutsui:SPELL_UPDATE_ICON(_, spellId)
+    self:updateAuraByIcon(spellId)
+end
+
+function Fuyutsui:COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED(_, baseSpellID, overrideSpellID)
+    self:updateAuraBySpellOverride(baseSpellID, overrideSpellID)
+end
+
+function Fuyutsui:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(_, spellId)
+    self:updateAuraByOverlayGlow(spellId)
+end
+
+function Fuyutsui:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(_, spellId)
+    self:updateAuraByOverlayGlow(spellId)
+end
+
+function Fuyutsui:SPELL_ACTIVATION_OVERLAY_SHOW(_, spellId)
+    self:updateAuraByActivationOverlayShow(spellId)
+end
+
+function Fuyutsui:SPELL_ACTIVATION_OVERLAY_HIDE(_, spellId)
+    self:updateAuraByActivationOverlayHide(spellId)
+end
+
+function Fuyutsui:UNIT_HEALTH(_, unit)
     if unit == "player" then
         updatePlayerHealth()
         updatePlayerStagger()
@@ -1302,8 +1301,7 @@ function frame:UNIT_HEALTH(unit)
     end
 end
 
-frame:RegisterEvent("UNIT_MAXHEALTH")
-function frame:UNIT_MAXHEALTH(unit)
+function Fuyutsui:UNIT_MAXHEALTH(_, unit)
     if unit == "player" then
         updatePlayerHealth()
     end
@@ -1313,8 +1311,7 @@ function frame:UNIT_MAXHEALTH(unit)
     end
 end
 
-frame:RegisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
-function frame:UNIT_HEAL_ABSORB_AMOUNT_CHANGED(unit)
+function Fuyutsui:UNIT_HEAL_ABSORB_AMOUNT_CHANGED(_, unit)
     if unit == "player" then
         updatePlayerHealth()
     end
@@ -1325,8 +1322,7 @@ function frame:UNIT_HEAL_ABSORB_AMOUNT_CHANGED(unit)
     end
 end
 
-frame:RegisterEvent("UNIT_HEAL_PREDICTION")
-function frame:UNIT_HEAL_PREDICTION(unit)
+function Fuyutsui:UNIT_HEAL_PREDICTION(_, unit)
     if unit == "player" then
         updatePlayerHealth()
     end
@@ -1337,8 +1333,8 @@ function frame:UNIT_HEAL_PREDICTION(unit)
 end
 
 -- 能量更新
-frame:RegisterUnitEvent("UNIT_POWER_UPDATE", "player")
-function frame:UNIT_POWER_UPDATE(unit, powerType)
+function Fuyutsui:UNIT_POWER_UPDATE(_, unit, powerType)
+    if unit ~= "player" then return end
     updatePlayerPower(powerType)
 end
 
@@ -1357,10 +1353,7 @@ for i = 1, NUM_CHAT_WINDOWS do
     end
 end
 
-
-
-frame:RegisterEvent("SPELL_UPDATE_USES") -- 法术充能冷却更新
-function frame:SPELL_UPDATE_USES(spellID, baseSpellID)
+function Fuyutsui:SPELL_UPDATE_USES(_, spellID, baseSpellID)
     fu.updateUsesSpell = spellID
     fu.updateUsesBaseSpell = baseSpellID
     C_Timer.After(0.3, function()
@@ -1369,9 +1362,8 @@ function frame:SPELL_UPDATE_USES(spellID, baseSpellID)
     end)
 end
 
-frame:RegisterEvent("GROUP_ROSTER_UPDATE")
 local rosterTimer
-function frame:GROUP_ROSTER_UPDATE()
+function Fuyutsui:GROUP_ROSTER_UPDATE()
     state.castTargetName, state.castTargetUnit = nil, nil
     if rosterTimer then
         rosterTimer:Cancel()
@@ -1385,25 +1377,21 @@ function frame:GROUP_ROSTER_UPDATE()
     end)
 end
 
-frame:RegisterEvent("UNIT_DIED")
-function frame:UNIT_DIED(unitGUID)
+function Fuyutsui:UNIT_DIED(_, unitGUID)
     if not isSec(unitGUID) then
         updateUnitDeath(unitGUID)
     end
 end
 
-frame:RegisterEvent("SPELL_RANGE_CHECK_UPDATE")
-function frame:SPELL_RANGE_CHECK_UPDATE()
+function Fuyutsui:SPELL_RANGE_CHECK_UPDATE()
     -- updateNameplateCount()
 end
 
-frame:RegisterEvent("ACTION_RANGE_CHECK_UPDATE")
-function frame:ACTION_RANGE_CHECK_UPDATE(slot, isInRange, checksRange)
+function Fuyutsui:ACTION_RANGE_CHECK_UPDATE(_, slot, isInRange, checksRange)
     -- updateNameplateCount()
 end
 
-frame:RegisterEvent("UI_ERROR_MESSAGE")
-function frame:UI_ERROR_MESSAGE(errorType, message)
+function Fuyutsui:UI_ERROR_MESSAGE(_, errorType, message)
     -- print(errorType, message)
     if message == "目标不在视野中" then
         updateUnitInSight(state.castTargetUnit)
@@ -1412,47 +1400,39 @@ function frame:UI_ERROR_MESSAGE(errorType, message)
     end
 end
 
-frame:RegisterEvent("PLAYER_TARGET_CHANGED")
-function frame:PLAYER_TARGET_CHANGED()
+function Fuyutsui:PLAYER_TARGET_CHANGED()
     updateTargetFullInfo()
 end
 
-frame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
-function frame:NAME_PLATE_UNIT_ADDED(unit)
+function Fuyutsui:NAME_PLATE_UNIT_ADDED(_, unit)
     addNameplate(unit)
     updateTargetType()
 end
 
-frame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
-function frame:NAME_PLATE_UNIT_REMOVED(unit)
+function Fuyutsui:NAME_PLATE_UNIT_REMOVED(_, unit)
     nameplate[unit] = nil
     updateTargetType()
 end
 
-frame:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
-function frame:UPDATE_SHAPESHIFT_FORM()
+function Fuyutsui:UPDATE_SHAPESHIFT_FORM()
     updateShapeshiftForm()
     updatePlayerMounted()
 end
 
-frame:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
-function frame:UPDATE_SHAPESHIFT_FORMS()
+function Fuyutsui:UPDATE_SHAPESHIFT_FORMS()
     updateShapeshiftForm()
     updatePlayerMounted()
 end
 
-frame:RegisterEvent("ENCOUNTER_START")
-function frame:ENCOUNTER_START(encounterID, encounterName, difficultyID, groupSize)
+function Fuyutsui:ENCOUNTER_START(_, encounterID, encounterName, difficultyID, groupSize)
     updateEncounterID(encounterID, difficultyID)
 end
 
-frame:RegisterEvent("ENCOUNTER_END")
-function frame:ENCOUNTER_END(encounterID, encounterName, difficultyID, groupSize, success)
+function Fuyutsui:ENCOUNTER_END(_, encounterID, encounterName, difficultyID, groupSize, success)
     updateEncounterID(0, 0)
 end
 
-frame:RegisterEvent("UNIT_AURA")
-function frame:UNIT_AURA(unit, info)
+function Fuyutsui:UNIT_AURA(_, unit, info)
     local obj = group[unit]
     if not obj then return end
     getAuraDispelTypeColor(unit)
@@ -1485,21 +1465,36 @@ function frame:UNIT_AURA(unit, info)
     end
 end
 
-local timeElapsed = 0
-frame:SetScript("OnUpdate", function(_, elapsed)
-    timeElapsed = timeElapsed + elapsed
-    updatePlayerCastingInfo()
-    updatePlayerChannelingInfo()
-    updatePlayerEmpowerInfo()
-    updateGroupInRange()
-    if timeElapsed > 0.2 then
-        updateSpellCooldown()
-        OnUpdateUnitAura()
-        updatePlayerAssistant()
-        updateRune()
-        updateTargetRangeBlock()
-        updateEnemyCount()
-        testcurve()
-        timeElapsed = 0
+function Fuyutsui:StartFrameUpdates()
+    if not self.updateFrame then
+        self.updateFrame = CreateFrame("Frame")
     end
-end)
+    local parent = self
+    self.updateFrame:SetScript("OnUpdate", function(frame, elapsed)
+        parent:OnUpdate(elapsed)
+    end)
+end
+
+Fuyutsui.timeElapsed = 0
+function Fuyutsui:OnUpdate(elapsed)
+    -- 1. 高频逻辑（每帧执行）
+    -- 这里的函数必须确保能被访问到，如果是成员函数请加 self:
+    self:updatePlayerCastingInfo()
+    self:updatePlayerChannelingInfo()
+    self:updatePlayerEmpowerInfo()
+    self:updateGroupInRange()
+    self:updateAura()
+
+    -- 2. 低频逻辑（每 0.2 秒执行）
+    self.timeElapsed = self.timeElapsed + elapsed
+    if self.timeElapsed > 0.2 then
+        self:updateSpellCooldown()
+        self:OnUpdateUnitAura()
+        self:updateAuraBlocks()
+        self:updatePlayerAssistant()
+        self:updateRune()
+        self:updateTargetRangeBlock()
+        self:updateEnemyCount()
+        self.timeElapsed = 0
+    end
+end

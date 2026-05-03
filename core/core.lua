@@ -1,25 +1,142 @@
 local _, fu = ...
-Fuyutsui = LibStub("AceAddon-3.0"):NewAddon("Fuyutsui", "AceConsole-3.0", "AceEvent-3.0")
+Fuyutsui = LibStub("AceAddon-3.0"):NewAddon("Fuyutsui", "AceEvent-3.0", "AceConsole-3.0")
+local AC = LibStub("AceConfig-3.0")
+local ACD = LibStub("AceConfigDialog-3.0")
 local className, classFilename, classId = UnitClass("player")
 local specIndex = C_SpecializationInfo.GetSpecialization()
 print("职业:", className, "职业文件:", classFilename, "职业ID:", classId, "专精索引:", specIndex)
 fu.className, fu.classFilename, fu.classId = className, classFilename, classId
 fu.specIndex = specIndex
 
--- 游戏内宏命令
--- /fu 命令系统
--- /fu cd       — 爆发 开 / 关 切换
--- /fu cd on      — 爆发 开启
--- /fu cd off     — 爆发 关闭
+-- AceDB / AceConfig：RegisterOptionsTable 需要 table；defaults 可为 AceDB 提供 profile/char 初值
+-- 使用 ## SavedVariables: FuyutsuiADB，避免与角色变量 FuyutsuiDB（爆发/AOE 等）混在同一张表里
+Fuyutsui.defaults = {
+    profile = {
+        someInput = "",
+    },
+    char = {
+        level = 0,
+    },
+}
 
--- /fu aoemode   — 自动 / 单体 切换
--- /fu aoemode auro  — 切换回自动模式
--- /fu aoemode aoe      — 仅开 AOE 模式
+Fuyutsui.options = {
+    type = "group",
+    name = "Fuyutsui",
+    args = {
+        intro = {
+            type = "description",
+            name = "与 /fu 子命令配合；游戏内开关仍保存在「角色专用」变量 FuyutsuiDB。",
+            fontSize = "medium",
+            order = 0,
+        },
+        someInput = {
+            type = "input",
+            name = "示例文本",
+            desc = "/fu message 会打印此项（profile）",
+            order = 10,
+            width = "full",
+            get = function()
+                return (Fuyutsui.db and Fuyutsui.db.profile and Fuyutsui.db.profile.someInput) or ""
+            end,
+            set = function(_, v)
+                if Fuyutsui.db and Fuyutsui.db.profile then
+                    Fuyutsui.db.profile.someInput = v or ""
+                end
+            end,
+        },
+    },
+}
 
--- /fu dpsmode  — DPS 模式 开 / 关 切换
--- /fu dpsmode manual     — 输出模式 切换到 手动编写逻辑
--- /fu dpsmode assistant  — 输出模式 切换到 官方一键辅助
+function Fuyutsui:OnInitialize()
+    self.db = LibStub("AceDB-3.0"):New("FuyutsuiADB", self.defaults, true)
+    AC:RegisterOptionsTable("Fuyutsui_Options", self.options)
+    self.optionsFrame = ACD:AddToBlizOptions("Fuyutsui_Options", "Fuyutsui (label 1)")
+    local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
+    AC:RegisterOptionsTable("Fuyutsui_Profiles", profiles)
+    ACD:AddToBlizOptions("Fuyutsui_Profiles", "Profiles", "Fuyutsui (label 1)")
 
+    self:RegisterChatCommand("fu", "SlashCommand")
+    self:RegisterChatCommand("Fuyutsui", "SlashCommand")
+    self:GetCharacterInfo()
+end
+
+function Fuyutsui:OnEnable()
+    self:RegisterEvent("ZONE_CHANGED")
+    self:RegisterEvent("ZONE_CHANGED_INDOORS")
+    self:RegisterEvent("PLAYER_ENTERING_WORLD")
+    self:RegisterEvent("PLAYER_TALENT_UPDATE")
+    self:RegisterEvent("PLAYER_DEAD")
+    self:RegisterEvent("PLAYER_ALIVE")
+    self:RegisterEvent("PLAYER_UNGHOST")
+    self:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
+    self:RegisterEvent("PLAYER_REGEN_DISABLED")
+    self:RegisterEvent("PLAYER_REGEN_ENABLED")
+    self:RegisterEvent("PLAYER_STARTED_MOVING")
+    self:RegisterEvent("PLAYER_STOPPED_MOVING")
+    self:RegisterEvent("UNIT_SPELLCAST_SENT")
+    self:RegisterEvent("UNIT_SPELLCAST_START")
+    self:RegisterEvent("UNIT_SPELLCAST_STOP")
+    self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
+    self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
+    self:RegisterEvent("UNIT_SPELLCAST_EMPOWER_START")
+    self:RegisterEvent("UNIT_SPELLCAST_EMPOWER_STOP")
+    self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+    self:RegisterEvent("UNIT_SPELLCAST_FAILED")
+    self:RegisterEvent("UNIT_POWER_UPDATE")
+    self:RegisterEvent("UNIT_HEALTH")
+    self:RegisterEvent("UNIT_MAXHEALTH")
+    self:RegisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
+    self:RegisterEvent("UNIT_HEAL_PREDICTION")
+    self:RegisterEvent("SPELL_UPDATE_USES")
+    self:RegisterEvent("GROUP_ROSTER_UPDATE")
+    self:RegisterEvent("UNIT_DIED")
+    self:RegisterEvent("SPELL_RANGE_CHECK_UPDATE")
+    self:RegisterEvent("ACTION_RANGE_CHECK_UPDATE")
+    self:RegisterEvent("UI_ERROR_MESSAGE")
+    self:RegisterEvent("PLAYER_TARGET_CHANGED")
+    self:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+    self:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
+    self:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+    self:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
+    self:RegisterEvent("ENCOUNTER_START")
+    self:RegisterEvent("ENCOUNTER_END")
+    self:RegisterEvent("UNIT_AURA")
+    self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+    self:RegisterEvent("SPELL_UPDATE_ICON")
+    self:RegisterEvent("COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED")
+    self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
+    self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
+    self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW")
+    self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE")
+
+    self:PLAYER_LOGIN()
+    if self.StartFrameUpdates then
+        self:StartFrameUpdates()
+    end
+end
+
+function Fuyutsui:GetCharacterInfo()
+    -- 写入角色专属数据
+
+    self.db.char.level = UnitLevel("player")
+end
+
+-- 如果配置不存在，则初始化
+if not FuyutsuiDB then
+    FuyutsuiDB = {
+        aoeMode = 0,
+        cooldowns = 0,
+        dpsMode = 0
+    }
+end
+
+-- 将保存的数据读回本地变量
+FuyutsuiDB.aoeMode = FuyutsuiDB.aoeMode
+FuyutsuiDB.cooldowns = FuyutsuiDB.cooldowns
+FuyutsuiDB.dpsMode = FuyutsuiDB.dpsMode
+
+-- 根据读取到的数据初始化界面/状态
+-- 调用一次以同步你代码中的 fu.blocks 逻辑
 FuyutsuiDB = {
     aoeMode = 0,
     cooldowns = 0,
@@ -74,11 +191,33 @@ fu.switchCooldown = switchCooldown
 fu.switchAoeMode = switchAoeMode
 fu.switchDpsMode = switchDpsMode
 
--- 定义主处理函数
-local function Fuyutsui_SlashHandler(msg)
-    -- 将输入转换为小写并拆分参数
-    local command = string.lower(msg:trim())
-    -- 爆发
+--- AceConsole：由 RegisterChatCommand("fu"|"fuyutsui", "SlashCommand") 分发，勿再手写 SlashCmdList
+function Fuyutsui:SlashCommand(input, editbox)
+    input = (input or ""):trim()
+    local command = string.lower(input)
+
+    -- Ace 调试 / 选项（子命令优先于游戏逻辑同名）
+    if command == "enable" then
+        self:Enable()
+        self:Print("Enabled.")
+        return
+    elseif command == "disable" then
+        self:Disable()
+        self:Print("Disabled.")
+        return
+    elseif command == "message" then
+        print("this is our saved message:", self.db and self.db.profile and self.db.profile.someInput)
+        return
+    elseif command == "options" or command == "config" then
+        if self.optionsFrame and self.optionsFrame.name then
+            Settings.OpenToCategory(self.optionsFrame.name)
+        else
+            self:Print("选项界面未就绪。")
+        end
+        return
+    end
+
+    -- 游戏内功能（原 Fuyutsui_SlashHandler）
     if command == "cd" then
         FuyutsuiDB.cooldowns = (FuyutsuiDB.cooldowns == 0) and 1 or 0
         switchCooldown()
@@ -88,7 +227,6 @@ local function Fuyutsui_SlashHandler(msg)
     elseif command == "cd off" then
         FuyutsuiDB.cooldowns = 0
         switchCooldown()
-        -- AOE模式
     elseif command == "aoemode" then
         FuyutsuiDB.aoeMode = (FuyutsuiDB.aoeMode == 0) and 1 or 0
         switchAoeMode()
@@ -98,7 +236,6 @@ local function Fuyutsui_SlashHandler(msg)
     elseif command == "aoemode aoe" then
         FuyutsuiDB.aoeMode = 1
         switchAoeMode()
-        -- 输出模式
     elseif command == "dpsmode" then
         FuyutsuiDB.dpsMode = (FuyutsuiDB.dpsMode == 0) and 1 or 0
         switchDpsMode()
@@ -109,17 +246,17 @@ local function Fuyutsui_SlashHandler(msg)
         FuyutsuiDB.dpsMode = 0
         switchDpsMode()
     elseif command == "help" then
-        -- 默认显示的帮助信息
         print("|cff00ff00Fuyutsui|r 命令列表:")
         print("爆发开关: /fu cd")
         print("|cff00ff00开启|r爆发: /fu cd on")
         print("|cffff0000关闭|r爆发: /fu cd off")
-        print("切换AOE模式: /fu aoemode              ")
+        print("切换AOE模式: /fu aoemode")
         print("切换AOE为|cff00ff00自动|r: /fu aoemode auto")
-        print("切换AOE为|cff00ff00单体|r: /fu aoemode single")
+        print("切换AOE为|cff00ff00单体|r: /fu aoemode aoe")
         print("切换输出模式: /fu dpsmode")
         print("切换输出模式为|cff00ff00手写逻辑|r: /fu dpsmode manual")
         print("切换输出模式为|cff00ff00一键辅助|r: /fu dpsmode assistant")
+        print("界面设置(Ace): /fu options")
     elseif command == "gui" then
         if fu.OpenInfoGUI then
             fu.OpenInfoGUI()
@@ -127,14 +264,13 @@ local function Fuyutsui_SlashHandler(msg)
     else
         if fu.OpenInfoGUI then
             fu.OpenInfoGUI()
+        elseif self.optionsFrame and self.optionsFrame.name then
+            Settings.OpenToCategory(self.optionsFrame.name)
+        else
+            self:Print("输入 /fu help 查看命令。")
         end
     end
 end
-
--- 绑定命令（使用你定义的变量名）
-SLASH_FUYUTSUI1 = "/fu"
-SLASH_FUYUTSUI2 = "/fuyutsui"
-SlashCmdList["FUYUTSUI"] = Fuyutsui_SlashHandler
 
 function SetTestSecret(set)
     SetCVar("secretChallengeModeRestrictionsForced", set)
@@ -192,32 +328,3 @@ function fu.creatColorCurve(point, b)
     curve:AddPoint(point, CreateColor(0, 0, b / 255, 1))
     return curve
 end
-
-local frame = CreateFrame("Frame")
-frame:RegisterEvent("ADDON_LOADED")
-
-frame:SetScript("OnEvent", function(self, event, addonName)
-    if addonName == "Fuyutsui" then
-        -- 如果配置不存在，则初始化
-        if not FuyutsuiDB then
-            FuyutsuiDB = {
-                aoeMode = 0,
-                cooldowns = 0,
-                dpsMode = 0
-            }
-        end
-
-        -- 将保存的数据读回本地变量
-        FuyutsuiDB.aoeMode = FuyutsuiDB.aoeMode
-        FuyutsuiDB.cooldowns = FuyutsuiDB.cooldowns
-        FuyutsuiDB.dpsMode = FuyutsuiDB.dpsMode
-
-        -- 根据读取到的数据初始化界面/状态
-        -- 调用一次以同步你代码中的 fu.blocks 逻辑
-        C_Timer.After(5, function()
-            if switchCooldown then switchCooldown() end
-            if switchAoeMode then switchAoeMode() end
-            if switchDpsMode then switchDpsMode() end
-        end)
-    end
-end)

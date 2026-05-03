@@ -7,9 +7,7 @@
 ## OptionalDeps: LibRangeCheck-3.0, Ace3
 ## SavedVariables: FuyutsuiADB
 ## SavedVariablesPerCharacter: FuyutsuiDB
-## OptionalDeps: Ace3
 ## X-Embeds: Ace3
-
 
 ## Category-enUS: Combat
 ## Category-deDE: Kampf
