@@ -700,6 +700,7 @@ state:
       平心之环: {step: 50, type: "int" }
       分筋错骨: {step: 51, type: "int" }
       玄牛下凡: {step: 52, type: "int" }
+      幻灭踢: {step: 53, type: "int" }
   2:
     敌人人数: {step: 21, type: "int" }
     施法技能: {step: 22, type: "int" }

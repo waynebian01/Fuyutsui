@@ -66,6 +66,7 @@ function fu.updateSpecInfo()
             [116844] = { index = 50, name = "平心之环" },
             [115078] = { index = 51, name = "分筋错骨" },
             [132578] = { index = 52, name = "玄牛下凡" },
+            [205523] = { index = 53, name = "幻灭踢" },
         }
     elseif specIndex == 2 then
         -- 法力茶
