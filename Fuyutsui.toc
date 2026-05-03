@@ -4,8 +4,7 @@
 ## Version: 0.0.3
 ## Author: Wayne Bian
 ## IconTexture: Interface\AddOns\Fuyutsui\core\Spell_Misc_EmotionHappy.blp
-## OptionalDeps: LibRangeCheck-3.0
-## X-Flavor: Retail
+## OptionalDeps: LibRangeCheck-3.0, Ace3
 ## SavedVariables: FuyutsuiADB
 ## SavedVariablesPerCharacter: FuyutsuiDB
 
@@ -25,8 +24,17 @@
 
 ## X-Category: Combat
 
-libs/LibStub/LibStub.lua
-libs/LibRangeCheck-3.0/LibRangeCheck-3.0.lua
+Libs/LibStub/LibStub.lua
+Libs/LibRangeCheck-3.0/LibRangeCheck-3.0.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+
 core/core.lua
 core/config.lua
 core/block.lua
