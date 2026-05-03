@@ -3,6 +3,8 @@
 ## Title: Fuyutsui
 ## Version: 0.0.3
 ## Author: Wayne Bian
+## IconTexture: Interface\AddOns\Fuyutsui\core\Spell_Misc_EmotionHappy.blp
+## OptionalDeps: LibRangeCheck-3.0
 ## X-Flavor: Retail
 ## SavedVariables: FuyutsuiADB
 ## SavedVariablesPerCharacter: FuyutsuiDB
@@ -31,6 +33,7 @@ core/block.lua
 core/macro.lua
 core/keybinds.lua
 core/auras.lua
+
 class/Warrior.lua
 class/Paladin.lua
 class/Rogue.lua
@@ -44,4 +47,5 @@ class/Monk.lua
 class/Druid.lua
 class/DemonHunter.lua
 class/Evoker.lua
+
 main.lua

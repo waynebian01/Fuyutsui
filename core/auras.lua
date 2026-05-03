@@ -1,3 +1,23 @@
+--[[
+    auras.lua — 逻辑光环状态机（按职业）
+    如何在本文件里新增一条光环
+    1. 在 `auras[职业ID]` 下增加键名（中文名），与职业 Lua 里 `fu.blocks.auras` 引用的名称一致。
+    2. 常用字段：
+       - remaining / duration / expirationTime：倒计时；有 duration 时事件会刷新 expirationTime。
+       - count, countMin, countMax：层数；配合映射表里的 step（正加负减）在「法术冷却」或「施法成功」等路径更新。
+       - addAuras / updateAuras / removeAuras：三张「法术 ID -> { event = e["…"], … }」表；
+       
+       event 必须是`e` 的键之一: 
+       「法术冷却」
+       「施法成功」
+       「图标改变」
+       「法术覆盖」
+       「屏幕提示显示/隐藏」
+       「图标发光隐藏」
+       - 可选：step、castBar（施法成功时是否要求有读条）、overrideSpellID、单条上的 duration 覆盖、isIcon 等；
+         若多条逻辑共用显示名可用 name + spellId 指向另一条（见文件中武僧等示例）。
+
+]]
 local addon, fu = ...
 local classId, e = fu.classId, fu.e
 local addAuras, updateAuras, removeAuras = {}, {}, {} -- 添加、更新、移除光环
