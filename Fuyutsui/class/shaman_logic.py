@@ -13,7 +13,7 @@ from utils import *
 # 将需要驱散的首领 ID
 need_dispel_bosses = {4, 5}
 # 不需要驱散的首领 ID
-no_dispel_bosses = {64}
+no_dispel_bosses = {64, 58}
 
 # 失败法术映射
 failed_spell_map = {
@@ -142,9 +142,9 @@ def run_shaman_logic(state_dict, spec_name):
         升腾 = spells.get("升腾", -1)
         治疗之潮图腾 = spells.get("治疗之潮图腾", -1)
 
-        dispel_unit_magic, _ = get_unit_with_dispel_type(state_dict, 1) # 获取可以驱散魔法类型的单位
-        dispel_unit_curse, _ = get_unit_with_dispel_type(state_dict, 2) # 获取可以驱散诅咒类型的单位
-
+        需要驱散魔法单位, _ = get_unit_with_dispel_type(state_dict, 1) # 获取可以驱散魔法类型的单位
+        需要驱散诅咒单位, _ = get_unit_with_dispel_type(state_dict, 2) # 获取可以驱散诅咒类型的单位
+        
         无盾坦克,_ = get_unit_with_role_and_without_aura_name(state_dict, 1, "大地之盾" , reverse=False) # 没有大地之盾的坦克单位
         无盾治疗,_ = get_unit_with_role_and_without_aura_name(state_dict, 2, "大地之盾") # 没有大地之盾的治疗单位
         lowest_u, lowest_p = get_lowest_health_unit(state_dict, 100)
@@ -158,13 +158,16 @@ def run_shaman_logic(state_dict, spec_name):
         无激流最低, 无激流最低血量= get_lowest_health_unit_without_aura(state_dict, "激流", 101) # 没有激流且需要补血的最低血量单位
 
         驱散单位 = None
-        if dispel_unit_magic is not None:
+        if 需要驱散魔法单位 is not None:
             if 队伍类型 == 46 and 首领战 not in no_dispel_bosses:
-                驱散单位 = dispel_unit_magic
+                驱散单位 = 需要驱散魔法单位
             elif 队伍类型 <= 40 and 首领战 in need_dispel_bosses:
-                驱散单位 = dispel_unit_magic
-        if 驱散单位 is None:
-            驱散单位 = dispel_unit_curse
+                驱散单位 = 需要驱散魔法单位
+        if 需要驱散诅咒单位 is not None:
+            if 队伍类型 == 46 and 首领战 not in no_dispel_bosses:
+                驱散单位 = 需要驱散魔法单位
+            elif 队伍类型 <= 40 and 首领战 in need_dispel_bosses:
+                驱散单位 = 需要驱散魔法单位
 
         if 引导 > 0:
             current_step = "引导,不执行任何操作"
