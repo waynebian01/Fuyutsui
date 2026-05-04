@@ -49,7 +49,7 @@ function fu.updateSpecInfo()
             auras = {
                 ["魔典：邪能破坏者"] = {
                     index = 25,
-                    auraRef = fu.updateAuras.byIcon[1276467],
+                    auraRef = fu.Auras["魔典：邪能破坏者"],
                     showKey = "isIcon",
                 },
             },

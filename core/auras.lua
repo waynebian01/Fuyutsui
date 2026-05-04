@@ -540,23 +540,22 @@ local auras = {
     [9] = {
         ["魔典：邪能破坏者"] = {
             remaining = 0,
-            duration = 120,
+            duration = 0,
             expirationTime = nil,
+            isIcon = 1,
             addAuras = {
-                [132409] = { event = e["法术冷却"] },
+                [1276467] = {
+                    event = e["图标改变"],
+                    overrideSpellID = 388215,
+                },
             },
             updateAuras = nil,
-            removeAuras = nil,
-        },
-        ["吞噬魔法"] = {
-            remaining = 0,
-            duration = 120,
-            expirationTime = nil,
-            addAuras = {
-                [1276610] = { event = e["法术冷却"] },
+            removeAuras = {
+                [1276467] = {
+                    event = e["图标改变"],
+                    overrideSpellID = 388215,
+                },
             },
-            updateAuras = nil,
-            removeAuras = nil,
         },
     },
     -- 武僧
