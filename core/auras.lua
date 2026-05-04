@@ -526,10 +526,18 @@ local auras = {
                     event = e["图标改变"],
                     overrideSpellID = 199786,
                 },
+                [431044] = { -- 霜火箭
+                    event = e["图标改变"],
+                    overrideSpellID = 199786,
+                },
             },
             updateAuras = nil,
             removeAuras = {
                 [116] = { -- 寒冰箭
+                    event = e["图标改变"],
+                    overrideSpellID = 199786,
+                },
+                [431044] = { -- 霜火箭
                     event = e["图标改变"],
                     overrideSpellID = 199786,
                 },
