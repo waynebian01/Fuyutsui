@@ -43,7 +43,9 @@ function fu.updateSpecInfo()
     elseif specIndex == 2 then
         fu.powerType = "MANA"
         local eventTable = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD" }
-        fu.CreateAutoLayoutBar(0, 20, 196277, eventTable) -- 内爆
+        fu.countBars = {
+            [1] = { name = "内爆", minValue = 0, maxValue = 20, spellId = 196277, events = eventTable },
+        }
         fu.blocks = {
             ["灵魂碎片"] = 23,
             ["施法技能"] = 24,

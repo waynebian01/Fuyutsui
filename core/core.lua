@@ -1,6 +1,6 @@
 local _, fu = ...
 Fuyutsui = LibStub("AceAddon-3.0"):NewAddon("Fuyutsui", "AceEvent-3.0", "AceConsole-3.0")
-local AC = LibStub("AceConfig-3.0")
+local AC = LibStub("AceConfig-3.0") -- AceConfig-3.0 是 Ace3 库中的一个模块，用于注册和管理配置选项
 local ACD = LibStub("AceConfigDialog-3.0")
 local className, classFilename, classId = UnitClass("player")
 local specIndex = C_SpecializationInfo.GetSpecialization()
@@ -8,55 +8,22 @@ print("职业:", className, "职业文件:", classFilename, "职业ID:", classId
 fu.className, fu.classFilename, fu.classId = className, classFilename, classId
 fu.specIndex = specIndex
 
--- AceDB / AceConfig：RegisterOptionsTable 需要 table；defaults 可为 AceDB 提供 profile/char 初值
--- 使用 ## SavedVariables: FuyutsuiADB，避免与角色变量 FuyutsuiDB（爆发/AOE 等）混在同一张表里
-Fuyutsui.defaults = {
-    profile = {
-        someInput = "",
-    },
-    char = {
-        level = 0,
-    },
-}
-
-Fuyutsui.options = {
-    type = "group",
-    name = "Fuyutsui",
-    args = {
-        intro = {
-            type = "description",
-            name = "与 /fu 子命令配合；游戏内开关仍保存在「角色专用」变量 FuyutsuiDB。",
-            fontSize = "medium",
-            order = 0,
-        },
-        someInput = {
-            type = "input",
-            name = "示例文本",
-            desc = "/fu message 会打印此项（profile）",
-            order = 10,
-            width = "full",
-            get = function()
-                return (Fuyutsui.db and Fuyutsui.db.profile and Fuyutsui.db.profile.someInput) or ""
-            end,
-            set = function(_, v)
-                if Fuyutsui.db and Fuyutsui.db.profile then
-                    Fuyutsui.db.profile.someInput = v or ""
-                end
-            end,
-        },
-    },
-}
-
 function Fuyutsui:OnInitialize()
+    -- 使用“默认”配置文件，而非特定角色的配置文件。
+    -- https://www.wowace.com/projects/ace3/pages/api/ace-db-3-0
     self.db = LibStub("AceDB-3.0"):New("FuyutsuiADB", self.defaults, true)
+    -- 注册一个选项表，并将其添加到暴雪选项窗口中。
+    -- https://www.wowace.com/projects/ace3/pages/api/ace-config-3-0
     AC:RegisterOptionsTable("Fuyutsui_Options", self.options)
-    self.optionsFrame = ACD:AddToBlizOptions("Fuyutsui_Options", "Fuyutsui (label 1)")
+    self.optionsFrame = ACD:AddToBlizOptions("Fuyutsui_Options", "Fuyutsui")
+    -- 添加一个子选项表 —— 即我们的配置文件面板。
     local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
     AC:RegisterOptionsTable("Fuyutsui_Profiles", profiles)
-    ACD:AddToBlizOptions("Fuyutsui_Profiles", "Profiles", "Fuyutsui (label 1)")
-
+    ACD:AddToBlizOptions("Fuyutsui_Profiles", "Profiles", "Fuyutsui")
+    -- 注册斜杠命令
     self:RegisterChatCommand("fu", "SlashCommand")
     self:RegisterChatCommand("Fuyutsui", "SlashCommand")
+
     self:GetCharacterInfo()
 end
 
@@ -109,6 +76,11 @@ function Fuyutsui:OnEnable()
     self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_SHOW")
     self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_HIDE")
 
+    self:RegisterEvent("UPDATE_BINDINGS")
+    self:RegisterEvent("SPELLS_CHANGED")
+    self:RegisterEvent("ACTIONBAR_HIDEGRID")
+    self:RegisterEvent("ACTIONBAR_SHOWGRID")
+
     self:PLAYER_LOGIN()
     if self.StartFrameUpdates then
         self:StartFrameUpdates()
@@ -116,8 +88,6 @@ function Fuyutsui:OnEnable()
 end
 
 function Fuyutsui:GetCharacterInfo()
-    -- 写入角色专属数据
-
     self.db.char.level = UnitLevel("player")
 end
 

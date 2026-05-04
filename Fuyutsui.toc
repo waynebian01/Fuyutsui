@@ -1,7 +1,7 @@
 ## Interface: 120000, 120001, 120005
 
 ## Title: Fuyutsui
-## Version: 0.0.3
+## Version: 0.0.4
 ## Author: Wayne Bian
 ## IconTexture: Interface\AddOns\Fuyutsui\core\Spell_Misc_EmotionHappy.blp
 ## OptionalDeps: LibRangeCheck-3.0, Ace3
@@ -26,10 +26,7 @@
 ## X-Category: Combat
 
 embeds.xml
-
 Libs/LibRangeCheck-3.0/LibRangeCheck-3.0.lua
-
-
 
 core/core.lua
 core/config.lua

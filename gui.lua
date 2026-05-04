@@ -2,6 +2,15 @@ local addonName, fu = ...
 local AC = LibStub("AceConfig-3.0")
 local ACD = LibStub("AceConfigDialog-3.0")
 
+Fuyutsui.defaults = {
+    profile = {
+        someInput = "",
+    },
+    char = {
+        level = 0,
+    },
+}
+
 local function GetClassColorStr()
     local raid = fu.classFilename and RAID_CLASS_COLORS[fu.classFilename]
     return raid and raid.colorStr or "ffffffff"
@@ -13,8 +22,6 @@ local function GetFooterStatusText()
     local spec = fu.specName or "?"
     return ("职业：|c%s%s|r  专精：|c%s%s|r"):format(GetClassColorStr(), cls, GetClassColorStr(), spec)
 end
-
-local INFO_APP = addonName .. "Info"
 
 local tinsert, sort, wipe = table.insert, table.sort, wipe
 
@@ -199,7 +206,7 @@ local function GetVersion()
 end
 
 --- AceConfig options 表：根节点 childGroups = "tab" 时，子 group 显示为标签页
-local options = {
+Fuyutsui.options = {
     type = "group",
     name = "Fuyutsui",
     childGroups = "tab",
@@ -326,12 +333,12 @@ Fuyutsui Tinkerer是由Fuyutsuki Electronics研发的一块|cFF00FF00免费|r网
     },
 }
 
-AC:RegisterOptionsTable(INFO_APP, options, nil)
+AC:RegisterOptionsTable("Fuyutsui_Options", Fuyutsui.options, nil)
 
 function fu.OpenInfoGUI()
-    ACD:SetDefaultSize(INFO_APP, 520, 480)
-    ACD:Open(INFO_APP)
-    local root = ACD.OpenFrames[INFO_APP]
+    ACD:SetDefaultSize("Fuyutsui_Options", 520, 480)
+    ACD:Open("Fuyutsui_Options")
+    local root = ACD.OpenFrames["Fuyutsui_Options"]
     if root and root.SetStatusText then
         root:SetStatusText(GetFooterStatusText())
     end

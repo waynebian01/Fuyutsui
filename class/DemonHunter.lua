@@ -76,7 +76,7 @@ end
 
 function fu.CreateClassMacro()
     local dynamicSpells = {}
-    local specialSpells = { [19] = "/castsequence reset=3 烈火烙印,0", }
+    local specialSpells = { [19] = "/castsequence reset=3 烈火烙印,x", }
     local staticSpells = {
         [1] = "复仇回避",
         [2] = "投掷利刃",

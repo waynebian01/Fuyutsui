@@ -4,12 +4,10 @@ local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
 local GetSpellChargeDuration = C_Spell.GetSpellChargeDuration
 local GetSpellCooldown = C_Spell.GetSpellCooldown
 local GetOverrideSpell = C_Spell.GetOverrideSpell
-local IsSpellInRange = C_Spell.IsSpellInRange
 local GetSpellName = C_Spell.GetSpellName
 local IsSpellKnown = C_SpellBook.IsSpellKnown
 local IsSpellInSpellBook = C_SpellBook.IsSpellInSpellBook
 local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
-local GetBuffDataByIndex = C_UnitAuras.GetBuffDataByIndex
 local creat = fu.updateOrCreatTextureByIndex
 local rc = LibStub("LibRangeCheck-3.0")
 
@@ -1063,7 +1061,6 @@ function Fuyutsui:ZONE_CHANGED()
     state.mapID = C_Map.GetBestMapForUnit("player") or 0
     state.mapInfo = C_Map.GetMapInfo(state.mapID)
     state.subzone = GetSubZoneText()
-    self:Print("你已经改变了地区!", GetZoneText(), state.subzone)
     if GetBindLocation() == state.subzone then
         self:Print("欢迎回家!")
     end
@@ -1073,13 +1070,12 @@ function Fuyutsui:ZONE_CHANGED_INDOORS()
     state.mapID = C_Map.GetBestMapForUnit("player") or 0
     state.mapInfo = C_Map.GetMapInfo(state.mapID)
     state.subzone = GetSubZoneText()
-    self:Print("你已经改变了地区!", GetZoneText(), state.subzone)
     if GetBindLocation() == state.subzone then
         self:Print("欢迎回家!")
     end
 end
 
-local function updateAllFunction()
+function Fuyutsui:PLAYER_LOGIN()
     getPlayerInfo()
     updatePlayerState()
     updatePlayerCombat()
@@ -1089,11 +1085,7 @@ local function updateAllFunction()
     updateShapeshiftForm()
     updateGroupCount()
     updateGroupType()
-    fu.readKeybindings()
-end
-
-function Fuyutsui:PLAYER_LOGIN()
-    updateAllFunction()
+    self:readKeybindings()
 end
 
 function Fuyutsui:PLAYER_ENTERING_WORLD()
@@ -1118,7 +1110,7 @@ function Fuyutsui:PLAYER_TALENT_UPDATE()
     updateGroup()
     updateTargetFullInfo()
     updateShapeshiftForm()
-    fu.readKeybindings()
+    self:readKeybindings()
 end
 
 function Fuyutsui:PLAYER_DEAD()
@@ -1229,7 +1221,6 @@ function Fuyutsui:UNIT_SPELLCAST_EMPOWER_STOP(_, unitTarget, castGUID, spellID, 
     updatePlayerCasting(0)
 end
 
-local updateLesserGhoul = false
 function Fuyutsui:UNIT_SPELLCAST_SUCCEEDED(_, unitTarget, castGUID, spellID, castBarID)
     if unitTarget ~= "player" then return end
     if not isSec(spellID) then
@@ -1239,13 +1230,13 @@ function Fuyutsui:UNIT_SPELLCAST_SUCCEEDED(_, unitTarget, castGUID, spellID, cas
             fu.ClearAllFuyutsuiBars()
             print("切换天赋")
             C_Timer.After(1, function()
-                updateAllFunction()
+                self:PLAYER_LOGIN()
             end)
         elseif spellID == 200749 then
             fu.ClearAllFuyutsuiBars()
             print("切换专精")
             C_Timer.After(1, function()
-                updateAllFunction()
+                self:PLAYER_LOGIN()
             end)
         end
     end
@@ -1259,12 +1250,13 @@ function Fuyutsui:UNIT_SPELLCAST_FAILED(_, unitTarget, castGUID, spellID, castBa
 end
 
 function Fuyutsui:SPELL_UPDATE_COOLDOWN(_, spellID)
-    -- print(spellID, C_Spell.GetSpellName(spellID))
+    if issecretvalue(spellID) then return end
     self:updateAuraBySpellCooldown(spellID)
 end
 
-function Fuyutsui:SPELL_UPDATE_ICON(_, spellId)
-    self:updateAuraByIcon(spellId)
+function Fuyutsui:SPELL_UPDATE_ICON(_, spellID)
+    if issecretvalue(spellID) then return end
+    self:updateAuraByIcon(spellID)
 end
 
 function Fuyutsui:COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED(_, baseSpellID, overrideSpellID)
@@ -1398,6 +1390,22 @@ function Fuyutsui:UI_ERROR_MESSAGE(_, errorType, message)
     elseif message == "射程范围内无有效目标。" then
         updateDiseaseJudge()
     end
+end
+
+function Fuyutsui:UPDATE_BINDINGS()
+    self:readKeybindings()
+end
+
+function Fuyutsui:SPELLS_CHANGED()
+    self:readKeybindings()
+end
+
+function Fuyutsui:ACTIONBAR_SHOWGRID()
+    self:readKeybindings()
+end
+
+function Fuyutsui:ACTIONBAR_HIDEGRID()
+    self:readKeybindings()
 end
 
 function Fuyutsui:PLAYER_TARGET_CHANGED()
