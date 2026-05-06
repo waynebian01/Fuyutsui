@@ -185,13 +185,16 @@ function Fuyutsui:SyncBlockFromDB()
     local st = Fuyutsui.blocks and Fuyutsui.blocks.state
     if not c or not st then return end
     if st["爆发开关"] then
-        self:CreatTexture(st["爆发开关"], c.cooldowns or 0)
+        self:CreatTexture(st["爆发开关"], c.cooldowns / 255 or 0)
     end
     if st["AOE开关"] then
-        self:CreatTexture(st["AOE开关"], c.aoeMode or 0)
+        self:CreatTexture(st["AOE开关"], c.aoeMode / 255 or 0)
     end
     if st["输出模式"] then
-        self:CreatTexture(st["输出模式"], c.dpsMode or 0)
+        self:CreatTexture(st["输出模式"], c.dpsMode / 255 or 0)
+    end
+    if self.RefreshQuickToggleAppearance then
+        self:RefreshQuickToggleAppearance()
     end
 end
 

@@ -631,13 +631,13 @@ function Fuyutsui:updatePlayerConfig()
     local c = self.db and self.db.char
     if not c or not blocks then return end
     if blocks.state["爆发开关"] then
-        Fuyutsui:CreatTexture(blocks.state["爆发开关"], c.cooldowns)
+        self:CreatTexture(blocks.state["爆发开关"], c.cooldowns / 255 or 0)
     end
     if blocks.state["AOE开关"] then
-        Fuyutsui:CreatTexture(blocks.state["AOE开关"], c.aoeMode)
+        self:CreatTexture(blocks.state["AOE开关"], c.aoeMode / 255 or 0)
     end
     if blocks.state["输出模式"] then
-        Fuyutsui:CreatTexture(blocks.state["输出模式"], c.dpsMode)
+        self:CreatTexture(blocks.state["输出模式"], c.dpsMode / 255 or 0)
     end
 end
 

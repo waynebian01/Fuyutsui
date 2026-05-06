@@ -84,6 +84,9 @@ function Fuyutsui:OnEnable()
     if self.StartFrameUpdates then
         self:StartFrameUpdates()
     end
+    if self.InitQuickToggleButton then
+        self:InitQuickToggleButton()
+    end
     self.Initialize = true
 end
 
@@ -110,9 +113,12 @@ function Fuyutsui:SwitchCooldown()
     end
     local st = self.blocks and self.blocks.state
     if st and st["爆发开关"] then
-        self:CreatTexture(st["爆发开关"], c.cooldowns or 0)
+        self:CreatTexture(st["爆发开关"], c.cooldowns / 255 or 0)
     end
     SaveConfig()
+    if self.RefreshQuickToggleAppearance then
+        self:RefreshQuickToggleAppearance()
+    end
 end
 
 function Fuyutsui:SwitchAoeMode()
@@ -120,14 +126,17 @@ function Fuyutsui:SwitchAoeMode()
     if not c then return end
     if c.aoeMode == 0 then
         print("|cff00ff00[Fuyutsui]|r 已切换|cff00ff00自动|r模式！")
-    elseif c.aoeMode == 1 then
+    else
         print("|cff00ff00[Fuyutsui]|r 已切换|cff00ff00单体|r模式！")
     end
     local st = self.blocks and self.blocks.state
     if st and st["AOE开关"] then
-        self:CreatTexture(st["AOE开关"], c.aoeMode or 0)
+        self:CreatTexture(st["AOE开关"], c.aoeMode / 255 or 0)
     end
     SaveConfig()
+    if self.RefreshQuickToggleAppearance then
+        self:RefreshQuickToggleAppearance()
+    end
 end
 
 function Fuyutsui:SwitchDpsMode()
@@ -140,9 +149,12 @@ function Fuyutsui:SwitchDpsMode()
     end
     local st = self.blocks and self.blocks.state
     if st and st["输出模式"] then
-        self:CreatTexture(st["输出模式"], c.dpsMode or 0)
+        self:CreatTexture(st["输出模式"], c.dpsMode / 255 or 0)
     end
     SaveConfig()
+    if self.RefreshQuickToggleAppearance then
+        self:RefreshQuickToggleAppearance()
+    end
 end
 
 --- AceConsole：由 RegisterChatCommand("fu"|"fuyutsui", "SlashCommand") 分发，勿再手写 SlashCmdList
@@ -293,6 +305,8 @@ Fuyutsui.defaults = {
         aoeMode = 0,
         cooldowns = 0,
         dpsMode = 0,
+        quickButtonCX = 180,
+        quickButtonCY = -100,
     },
 }
 Fuyutsui.options = {
