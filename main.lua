@@ -118,6 +118,7 @@ local function updateCooldownSpellKnown()
     spells = {}
     if not blocks.spells then return end
     for spellID, info in pairs(blocks.spells) do
+        print(spellID, info.index, info.name, info.charge)
         local isKnown = IsSpellKnown(spellID)
         local isInBook = IsSpellInSpellBook(spellID)
         local index = info.index
@@ -251,10 +252,11 @@ function Fuyutsui:loadPlayerBlocks(specIndex)
                 if not blocks.spells[v.spellId] then
                     blocks.spells[v.spellId] = {}
                 end
-                blocks.spells[v.spellId].index = k
-                blocks.spells[v.spellId].name = v.name
                 if v.charge then
                     blocks.spells[v.spellId].charge = k
+                else
+                    blocks.spells[v.spellId].index = k
+                    blocks.spells[v.spellId].name = v.name
                 end
             end
         elseif v.type == "countBar" then

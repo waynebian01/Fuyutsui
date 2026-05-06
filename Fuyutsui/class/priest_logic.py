@@ -155,10 +155,10 @@ def _priest_discipline_logic(state_dict):
             elif 无救赎90数量 >= 5 and 福音 == 0:
                 current_step = "施放 福音"
                 action_hotkey = get_hotkey(0, "福音")
-            elif 圣光涌动 > 0 and 无救赎最低 is not None and 无救赎生命值 is not None and 无救赎生命值 < 90:
+            elif 圣光涌动 > 0 and 暗影愈合 == 0 and 无救赎最低 is not None and 无救赎生命值 is not None and 无救赎生命值 < 90:
                 current_step = f"施放 快速治疗 on {无救赎最低}, 无救赎生命低于90%的单位"
                 action_hotkey = get_hotkey(int(无救赎最低), "快速治疗")
-            elif 圣光涌动 > 0 and 最低单位 is not None and 最低生命值 is not None and 最低生命值 < 70:
+            elif 圣光涌动 > 0 and 暗影愈合 == 0 and 最低单位 is not None and 最低生命值 is not None and 最低生命值 < 70:
                 current_step = f"施放 快速治疗 on {最低单位}, 生命最低的单位"
                 action_hotkey = get_hotkey(int(最低单位), "快速治疗")
             elif 暗影愈合 > 0 and 暗影层数 > 0 and 施法技能 != 34 and 最低单位 is not None and 最低生命值 is not None and 最低生命值 < 暗影愈合阈值:
