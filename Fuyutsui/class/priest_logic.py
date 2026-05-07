@@ -236,7 +236,7 @@ def _priest_discipline_logic(state_dict):
             if 纯净术 == 0 and 驱散单位 is not None:
                 current_step = f"施放 纯净术 on {驱散单位}"
                 action_hotkey = get_hotkey(int(驱散单位), "纯净术")
-            elif 暗影愈合单位 is not None:
+            elif 暗影愈合单位 is not None and (not 移动 or 圣光涌动 > 0):
                 current_step = f"施放 暗影愈合 on {暗影愈合单位}, 暗影愈合"
                 action_hotkey = get_hotkey(int(暗影愈合单位), "快速治疗")
             elif 目标有效 and 一键辅助 == 14:
@@ -260,7 +260,7 @@ def _priest_discipline_logic(state_dict):
             elif not 移动 and 无救赎数_90 >= 3 and 耀 == 0:
                 current_step = "施放 真言术：耀"
                 action_hotkey = get_hotkey(0, "真言术：耀")
-            elif 苦修 == 0 and 最低单位 is not None and 最低生命值 is not None and 最低生命值 < 75:
+            elif 苦修 == 0 and 虚空之盾 != 0 and 最低单位 is not None and 最低生命值 is not None and 最低生命值 < 75:
                 current_step = f"施放 苦修 on {最低单位}, 生命最低的单位"
                 action_hotkey = get_hotkey(int(最低单位), "苦修")
             elif 目标有效:
@@ -278,7 +278,6 @@ def _priest_discipline_logic(state_dict):
                     action_hotkey = get_hotkey(0, "惩击")
                 else:
                     current_step = "战斗中-无匹配技能"
-
     elif 英雄天赋 == 2:
         if 战斗:
             if 1 <= 目标类型 <= 3 and 一键辅助 == 14:
@@ -583,9 +582,6 @@ def _priest_shadow_logic(state_dict):
     elif 绝望祷言 == 0 and 生命值 < 50:
         current_step = "施放 绝望祷言"
         action_hotkey = get_hotkey(0, "绝望祷言")
-    elif 一键辅助 == 10:
-        current_step = "施放 真言术：韧"
-        action_hotkey = get_hotkey(0, "真言术：韧")
     elif 一键辅助 == 20:
         current_step = "施放 暗影形态"
         action_hotkey = get_hotkey(0, "暗影形态")
@@ -602,6 +598,9 @@ def _priest_shadow_logic(state_dict):
             action_hotkey = get_hotkey(0, tup[1])
         else:
             current_step = "战斗中-无匹配技能"
+    elif 一键辅助 == 10:
+        current_step = "施放 真言术：韧"
+        action_hotkey = get_hotkey(0, "真言术：韧")
     return action_hotkey, current_step, unit_info
 
 def run_priest_logic(state_dict, spec_name):
