@@ -193,7 +193,7 @@
 193: {unit: 0, 技能: "神圣棱镜", 热键: "ALT-SHIFT-0"}
 194: {unit: 0, 技能: "神圣震击", 热键: "ALT-SHIFT--"}
 195: {unit: 0, 技能: "公正之剑", 热键: "ALT-SHIFT-="}
-196: {unit: 0, 技能: "", 热键: "CTRL-SHIFT-NUMPAD1"}
+196: {unit: 1, 技能: "圣洁鸣钟", 热键: "CTRL-SHIFT-NUMPAD1"}
 197: {unit: 0, 技能: "处决宣判", 热键: "CTRL-SHIFT-NUMPAD2"}
 198: {unit: 0, 技能: "最终审判", 热键: "CTRL-SHIFT-NUMPAD3"}
 199: {unit: 0, 技能: "复仇之怒", 热键: "CTRL-SHIFT-NUMPAD4"}
