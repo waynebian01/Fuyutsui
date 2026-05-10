@@ -232,7 +232,7 @@ def run_paladin_logic(state_dict, spec_name):
             action_hotkey = get_hotkey(0, "清毒术")
 
         # ==================== 队伍/大秘逻辑 ====================
-        elif 队伍类型 == 46:
+        elif 队伍类型 == 0 or 队伍类型 == 46:
             # ---- 优先级 1: 重要 ----
             if 圣疗术CD == 0 and 生命值 < 20:
                 current_step = "施放 圣疗术"
