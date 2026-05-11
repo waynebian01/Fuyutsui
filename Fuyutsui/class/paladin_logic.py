@@ -66,12 +66,15 @@ failed_spell_map = {
     24: "美德道标",
 }
 
+# 法术专精限制（仅限指定专精生效）
+failed_spell_spec = {"圣洁鸣钟": "防护"}
+
 # 找到失败法术，必须是法术有冷却时间，并且冷却时间为 0
-def _get_failed_spell(state_dict):
+def _get_failed_spell(state_dict, spec_name=""):
     法术失败 = state_dict.get("法术失败", 0)
     spells = state_dict.get("spells") or {}
     spell_name = failed_spell_map.get(法术失败)
-    if spell_name and spells.get(spell_name, -1) == 0:
+    if spell_name and spells.get(spell_name, -1) == 0 and (spell_name not in failed_spell_spec or failed_spell_spec[spell_name] == spec_name):
         return spell_name
     return None
 # 特殊技能按键（不走keymap，直接按指定键）
@@ -117,7 +120,7 @@ def run_paladin_logic(state_dict, spec_name):
     神圣能量 = state_dict.get("神圣能量", 0)
     施法技能 = state_dict.get("施法技能", 0)
     施法目标 = state_dict.get("施法目标", 0)
-    失败法术 = _get_failed_spell(state_dict)
+    失败法术 = _get_failed_spell(state_dict, spec_name)
 
     # ==================== 公共变量（多专精共享） ====================
     # --- BUFF ---
@@ -232,7 +235,7 @@ def run_paladin_logic(state_dict, spec_name):
             current_step = "施放 清毒术 on 目标"
             action_hotkey = get_hotkey(0, "清毒术")
 
-        # ==================== 队伍/大秘逻辑 ====================
+        # ==================== 队伍/大秘/单人逻辑 ====================
         elif 队伍类型 == 0 or 队伍类型 == 46:
             # ---- 优先级 1: 重要 ----
             if 圣疗术CD == 0 and 生命值 < 20:
@@ -281,7 +284,7 @@ def run_paladin_logic(state_dict, spec_name):
                     current_step = "站桩 圣光术"
                     action_hotkey = get_hotkey(int(最低单位), "圣光术")
                 # 灌注圣光闪现
-                elif not 施法 and 圣光灌注BUFF > 0 and 最低生命值 <= 85:
+                elif not 施法 and 圣光灌注BUFF > 0 and 最低生命值 <= 90:
                     current_step = "灌注 圣光闪现"
                     action_hotkey = get_hotkey(int(最低单位), "圣光闪现")
                 # 神圣震击
@@ -487,7 +490,7 @@ def run_paladin_logic(state_dict, spec_name):
                 action_hotkey = get_hotkey(0, "荣耀圣令")
 
             # ---- 输出循环 ----
-            # 复仇者之怒:爆发
+            # 复仇者之怒:爆发开为自动\关闭为手动
             elif 复仇之怒CD == 0 and 处决宣判CD == 0 and 灰烬觉醒CD == 0 and 爆发 == 1:
                 current_step = "施放 复仇之怒"
                 action_hotkey = get_hotkey(0, "复仇之怒")
@@ -495,16 +498,16 @@ def run_paladin_logic(state_dict, spec_name):
             elif 复仇之怒BUFF > 0 and 处决宣判CD == 0:
                 current_step = "施放 处决宣判"
                 action_hotkey = get_hotkey(0, "处决宣判")
-            # 灰烬觉醒:翅膀
-            elif 复仇之怒CD >= 50 and 灰烬觉醒CD == 0 and 处决宣判BUFF > 0 and 神圣能量 <= 3 and 爆发 == 1:
-                current_step = "施放 灰烬觉醒"
-                action_hotkey = get_hotkey(0, "灰烬觉醒")
-            # 灰烬觉醒: not 翅膀
+            # 灰烬觉醒: not翅膀
             elif 复仇之怒CD >= 20 and 灰烬觉醒CD == 0 and 神圣能量 <= 3 and 爆发 == 1:
                 current_step = "施放 灰烬觉醒"
                 action_hotkey = get_hotkey(0, "灰烬觉醒")
             # 灰烬觉醒
             elif 灰烬觉醒CD == 0 and 处决宣判BUFF > 0 and 神圣能量 <= 3:
+                current_step = "施放 灰烬觉醒"
+                action_hotkey = get_hotkey(0, "灰烬觉醒")
+            # 灰烬觉醒(30秒流 爆发开为自动)
+            elif 灰烬觉醒CD == 0 and 神圣能量 <= 3 and 处决宣判CD == 255 and 爆发 == 1:
                 current_step = "施放 灰烬觉醒"
                 action_hotkey = get_hotkey(0, "灰烬觉醒")
             # 圣光之锤
