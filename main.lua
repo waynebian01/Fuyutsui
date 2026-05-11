@@ -641,7 +641,6 @@ local function updatePlayerAuraBlocks()
                 info.auraRef.remaining = expirationTime and math.max(0, expirationTime - GetTime()) or 1
                 if info.auraRef.count ~= nil then
                     local applications = aura.applications or 0
-                    if applications <= 0 then applications = 1 end
                     info.auraRef.count = math.min(info.auraRef.countMax or applications, applications)
                 end
             else
