@@ -483,6 +483,8 @@ state:
   2:
     目标生命值: {step: 21, type: "int" }
     敌人人数: {step: 22, type: "int" }
+    漩涡武器: {step: 23, type: "int" }
+    溢流漩涡: {step: 24, type: "int" }
     spells:
       风剪: {step: 31, type: "int" }
       土元素: {step: 32, type: "int" }
@@ -510,6 +512,7 @@ state:
       升腾: {step: 52, type: "int" }
       毁灭闪电: {step: 53, type: "int" }
       流电炽焰: {step: 54, type: "int" }
+      治疗之涌: {step: 56, type: "int" }
   3:
     施法技能: {step: 22, type: "int" }
     施法目标: {step: 23, type: "int" }

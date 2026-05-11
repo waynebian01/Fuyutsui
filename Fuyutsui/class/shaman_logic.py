@@ -80,6 +80,14 @@ def _unit_hotkey(unit, spell):
         return None
     return get_hotkey(int(unit), spell)
 
+def _pick_enhancement_finisher(spells, enemy_count):
+    狂风怒号 = spells.get("狂风怒号", -1)
+    if _ready(狂风怒号):
+        return "狂风怒号", "闪电箭"
+    if enemy_count >= 2:
+        return "闪电链", "闪电链"
+    return "闪电箭", "闪电箭"
+
 def _pick_shaman_dispel_unit(state_dict, 队伍类型, 首领战):
     dispel_unit_magic, _ = get_unit_with_dispel_type(state_dict, 1)
     dispel_unit_curse, _ = get_unit_with_dispel_type(state_dict, 2)
@@ -282,14 +290,54 @@ def run_shaman_logic(state_dict, spec_name):
             current_step = "战斗中-无匹配技能"
                 
     elif spec_name == "增强":
+        漩涡武器 = _as_int(state_dict.get("漩涡武器", 0))
+        溢流漩涡 = _as_int(state_dict.get("溢流漩涡", 0))
+        敌人人数 = _as_int(state_dict.get("敌人人数", 0))
+        if 1 <= 目标类型 <= 3:
+            敌人人数 = max(1, 敌人人数)
+
+        治疗之涌 = spells.get("治疗之涌", -1)
+        毁灭闪电 = spells.get("毁灭闪电", -1)
+        风暴打击 = spells.get("风暴打击", -1)
+        流电炽焰 = spells.get("流电炽焰", -1)
+        熔岩猛击 = spells.get("熔岩猛击", -1)
+
+        unit_info = {
+            "漩涡武器": 漩涡武器,
+            "溢流漩涡": 溢流漩涡,
+            "敌人人数": 敌人人数,
+            "生命值": 生命值,
+            "治疗之涌": 治疗之涌,
+        }
+
         if 引导 > 0:
             current_step = "在引导,不执行任何操作"
         elif 法术失败 != 0 and 失败法术 is not None:
             current_step = f"施放 {失败法术}"
             action_hotkey = get_hotkey(0, 失败法术)
-        elif 战斗 and  1 <= 目标类型 <= 3 and tup:
-            current_step = f"施放 {tup[0]}"
-            action_hotkey = get_hotkey(0, tup[1])
+        elif 溢流漩涡 >= 10 and _as_int(生命值) <= 40 and _ready(治疗之涌):
+            current_step = "增强-自保: 10层溢流漩涡治疗之涌"
+            action_hotkey = get_hotkey(0, "治疗之涌")
+        elif 战斗 and 1 <= 目标类型 <= 3:
+            if _ready(毁灭闪电):
+                current_step = "增强-最高优先级: 毁灭闪电"
+                action_hotkey = get_hotkey(0, "毁灭闪电")
+            elif 漩涡武器 >= 9:
+                shown_name, cast_name = _pick_enhancement_finisher(spells, 敌人人数)
+                current_step = f"增强-9层漩涡武器终结技: {shown_name}"
+                action_hotkey = get_hotkey(0, cast_name)
+            elif _ready(风暴打击):
+                current_step = "增强-风打: 风暴打击"
+                action_hotkey = get_hotkey(0, "风暴打击")
+            elif _ready(流电炽焰):
+                current_step = "增强-流电炽焰"
+                action_hotkey = get_hotkey(0, "流电炽焰")
+            elif _ready(熔岩猛击):
+                current_step = "增强-火打: 熔岩猛击"
+                action_hotkey = get_hotkey(0, "熔岩猛击")
+
+            else:
+                current_step = "战斗中-无匹配技能"
         else:
             current_step = "战斗中-无匹配技能"
 

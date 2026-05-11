@@ -69,6 +69,7 @@ function fu.updateSpecInfo()
         fu.spellCooldown[114051] = { index = 52, name = "升腾" }
         fu.spellCooldown[187874] = { index = 53, name = "毁灭闪电" }
         fu.spellCooldown[470057] = { index = 54, name = "流电炽焰" }
+        fu.spellCooldown[8004] = { index = 56, name = "治疗之涌" }
     elseif specIndex == 3 then
         fu.powerType = "MANA"
         fu.blocks = {
@@ -174,6 +175,7 @@ function fu.CreateClassMacro()
         [35] = "大地震击",
         [36] = "风暴守护者",
         [37] = "闪电之盾",
+        [38] = "[@player]治疗之涌",
     }
 
     fu.CreateMacro(dynamicSpells, staticSpells)

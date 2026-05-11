@@ -215,7 +215,7 @@
 215: {unit: 0, 技能: "大地震击", 热键: "ALT-CTRL-SHIFT-NUMPADDECIMAL"}
 216: {unit: 0, 技能: "风暴守护者", 热键: "ALT-CTRL-SHIFT-NUMPADPLUS"}
 217: {unit: 0, 技能: "闪电之盾", 热键: "ALT-CTRL-SHIFT-NUMPADMINUS"}
-218: {unit: "0 技能: 热键: ALT-CTRL-SHIFT-NUMPADMULTIPLY"}
+218: {unit: 0, 技能: "治疗之涌", 热键: "ALT-CTRL-SHIFT-NUMPADMULTIPLY"}
 219: {unit: "0 技能: 热键: ALT-CTRL-SHIFT-NUMPADDIVIDE"}
 220: {unit: "0 技能: 热键: ALT-CTRL-SHIFT-F1"}
 221: {unit: "0 技能: 热键: ALT-CTRL-SHIFT-F2"}
