@@ -186,28 +186,28 @@ def _run_totemic_party_logic(state_dict, spells, tup):
             return tide_setup
         return _unit_hotkey(lowest_u, "治疗波"), f"图腾-濒死单点: 治疗波 on {lowest_u}", unit_info
 
-    # 高额 AOE：涌动图腾前置，后续用风暴涌流、治疗泉和治疗链兜住。
+    # 高额 AOE：生命释放前置，后续用风暴涌流、治疗泉和治疗链兜住。
     if high_aoe:
+        if has_lowest and _ready(生命释放):
+            return _unit_hotkey(lowest_u, "生命释放"), f"图腾-高压AOE前置: 生命释放 on {lowest_u}", unit_info
         if storm_proc and _ready(治疗之泉):
             return get_hotkey(0, "治疗之泉图腾"), "图腾-高压AOE: 风暴涌流图腾", unit_info
         if _ready(治疗之泉):
             return get_hotkey(0, "治疗之泉图腾"), "图腾-高压AOE: 治疗之泉图腾", unit_info
-        if has_lowest and _ready(生命释放):
-            return _unit_hotkey(lowest_u, "生命释放"), f"图腾-高压AOE: 生命释放 on {lowest_u}", unit_info
         if has_lowest:
             tide_setup = _riptide_before_hard_cast("高压治疗链")
             if tide_setup:
                 return tide_setup
             return _unit_hotkey(lowest_u, "治疗链"), f"图腾-高压AOE: 治疗链 on {lowest_u}", unit_info
 
-    # 双目标/中等 AOE：先吃风暴涌流和治疗泉，再用生命释放+治疗链。
+    # 双目标/中等 AOE：生命释放前置，再吃风暴涌流、治疗泉和治疗链。
     if medium_aoe:
+        if has_lowest and _ready(生命释放):
+            return _unit_hotkey(lowest_u, "生命释放"), f"图腾-中压AOE前置: 生命释放 on {lowest_u}", unit_info
         if storm_proc and _ready(治疗之泉):
             return get_hotkey(0, "治疗之泉图腾"), "图腾-中压AOE: 风暴涌流图腾", unit_info
         if _ready(治疗之泉):
             return get_hotkey(0, "治疗之泉图腾"), "图腾-中压AOE: 治疗之泉图腾", unit_info
-        if has_lowest and _ready(生命释放):
-            return _unit_hotkey(lowest_u, "生命释放"), f"图腾-中压AOE: 生命释放 on {lowest_u}", unit_info
         if has_lowest and healing_buff:
             tide_setup = _riptide_before_hard_cast("中压治疗链")
             if tide_setup:
