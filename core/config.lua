@@ -949,6 +949,13 @@ fu.auras = {
         duration = 6,
         expirationTime = nil,
     },
+    ["升腾增强"] = {
+        name = "升腾增强",
+        spellId = 114051,
+        remaining = 0,
+        duration = 15,
+        expirationTime = nil,
+    },
 }
 -- 更新光环
 fu.updateAuras = {
@@ -1016,6 +1023,7 @@ fu.updateAuras = {
         [1267089] = { { name = "风暴涌流图腾", step = 1 } },
         [73685] = { { name = "生命释放", step = 2 } },
         [114052] = { { name = "升腾", } },
+        [114051] = { { name = "升腾增强", } },
     },
     -- COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED
     -- 法术覆盖事件, 检测参数: 基本法术ID, 覆盖法术ID

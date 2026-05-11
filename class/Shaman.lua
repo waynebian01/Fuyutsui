@@ -65,6 +65,12 @@ function fu.updateSpecInfo()
                     showKey = "count",
                     playerAuraSpellId = 410681,
                 },
+                ["升腾"] = {
+                    index = 25,
+                    auraRef = fu.auras["升腾增强"],
+                    showKey = "remaining",
+                    playerAuraSpellId = 114051,
+                },
             },
         }
 

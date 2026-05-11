@@ -292,6 +292,7 @@ def run_shaman_logic(state_dict, spec_name):
     elif spec_name == "增强":
         漩涡武器 = _as_int(state_dict.get("漩涡武器", 0))
         溢流漩涡 = _as_int(state_dict.get("溢流漩涡", 0))
+        升腾buff = _active(state_dict.get("升腾", 0))
         敌人人数 = _as_int(state_dict.get("敌人人数", 0))
         if 1 <= 目标类型 <= 3:
             敌人人数 = max(1, 敌人人数)
@@ -305,6 +306,7 @@ def run_shaman_logic(state_dict, spec_name):
         unit_info = {
             "漩涡武器": 漩涡武器,
             "溢流漩涡": 溢流漩涡,
+            "升腾": 升腾buff,
             "敌人人数": 敌人人数,
             "生命值": 生命值,
             "治疗之涌": 治疗之涌,
@@ -318,6 +320,15 @@ def run_shaman_logic(state_dict, spec_name):
         elif 溢流漩涡 >= 10 and _as_int(生命值) <= 40 and _ready(治疗之涌):
             current_step = "增强-自保: 10层溢流漩涡治疗之涌"
             action_hotkey = get_hotkey(0, "治疗之涌")
+        elif 升腾buff and 战斗 and 1 <= 目标类型 <= 3:
+            if _ready(毁灭闪电):
+                current_step = "增强-升腾期: 毁灭闪电"
+                action_hotkey = get_hotkey(0, "毁灭闪电")
+            elif _ready(风暴打击):
+                current_step = "增强-升腾期: 风暴打击"
+                action_hotkey = get_hotkey(0, "风暴打击")
+            else:
+                current_step = "增强-升腾期: 无匹配技能"
         elif 战斗 and 1 <= 目标类型 <= 3:
             if _ready(毁灭闪电):
                 current_step = "增强-最高优先级: 毁灭闪电"
