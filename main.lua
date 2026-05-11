@@ -117,15 +117,20 @@ end
 local function updateCooldownSpellKnown()
     spells = {}
     if not blocks.spells then return end
-    for spellID, info in pairs(blocks.spells) do
-        local isKnown = IsSpellKnown(spellID)
-        local index = info.index
-        if isKnown or info.forcedKnown then
-            spells[spellID] = info
-        else
-            Fuyutsui:CreatTexture(index, 1)
+    C_Timer.After(1, function()
+        for spellID, info in pairs(blocks.spells) do
+            local isKnown = IsSpellKnown(spellID)
+            if info.inSpellBook then
+                isKnown = IsSpellInSpellBook(spellID)
+            end
+            local index = info.index
+            if isKnown or info.forcedKnown then
+                spells[spellID] = info
+            else
+                Fuyutsui:CreatTexture(index, 1)
+            end
         end
-    end
+    end)
 end
 
 -- 更新法术已知状态
@@ -254,7 +259,12 @@ function Fuyutsui:loadPlayerBlocks(specIndex)
                     blocks.spells[v.spellId].charge = k
                 else
                     blocks.spells[v.spellId].index = k
-                    blocks.spells[v.spellId].name = v.name
+                end
+                if v.forcedKnown then
+                    blocks.spells[v.spellId].forcedKnown = v.forcedKnown
+                end
+                if v.inSpellBook then
+                    blocks.spells[v.spellId].inSpellBook = v.inSpellBook
                 end
             end
         elseif v.type == "countBar" then
@@ -591,13 +601,16 @@ end
 -- 20. 更新玩家英雄天赋
 function Fuyutsui:updateHeroTalent()
     if self.heroTalents and blocks.state["英雄天赋"] then
-        self.state.heroTalent = 0
-        for spellID, info in pairs(self.heroTalents) do
-            if IsSpellKnown(spellID) or IsSpellInSpellBook(spellID) then
-                self.state.heroTalent = info
+        C_Timer.After(1, function()
+            self.state.heroTalent = 0
+            for spellID, index in pairs(self.heroTalents) do
+                if IsSpellKnown(spellID) or IsSpellInSpellBook(spellID) then
+                    self.state.heroTalent = index
+                    break
+                end
             end
-        end
-        self:CreatTexture(blocks.state["英雄天赋"], self.state.heroTalent / 255)
+            self:CreatTexture(blocks.state["英雄天赋"], self.state.heroTalent / 255)
+        end)
     end
 end
 
@@ -713,7 +726,7 @@ function Fuyutsui:updateSpellCooldown()
         local cdInfo = GetSpellCooldown(spellID)
         if cdDurationObj and cdInfo then
             local result = cdDurationObj:EvaluateRemainingDuration(curve255, 1)
-            fallbackColor:SetRGBA(0, index, 1)
+            fallbackColor:SetRGBA(0, index, 254 / 255)
             ---@diagnostic disable-next-line: param-type-mismatch
             local value = EvaluateColorFromBoolean(cdInfo.isEnabled, result, fallbackColor)
             local _, _, b = value:GetRGB()
@@ -1117,6 +1130,7 @@ end
 
 function Fuyutsui:PLAYER_ENTERING_WORLD()
     state.mapID = C_Map.GetBestMapForUnit("player") or 0
+    self:updateHeroTalent()
 end
 
 function Fuyutsui:PLAYER_TALENT_UPDATE()

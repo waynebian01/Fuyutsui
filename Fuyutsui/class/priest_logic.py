@@ -215,14 +215,14 @@ def _priest_discipline_logic(state_dict):
             elif 无救赎数_阈值 >= 5 and 耀 == 0 and not 移动:
                 current_step = "施放 真言术：耀"
                 action_hotkey = get_hotkey(0, "耀")
-            elif 战斗 and 1 <= 目标类型 <= 3 and 有救赎数量 > 0:
+            elif 战斗 and 1 <= 目标类型 <= 3:
                 if 灭 == 0:
                     current_step = "施放 暗言术：灭"
                     action_hotkey = get_hotkey(0, "暗言术：灭")
                 elif not 移动 and 心灵震爆 == 0:
                     current_step = "施放 心灵震爆"
                     action_hotkey = get_hotkey(0, "心灵震爆")
-                elif 苦修 == 0:
+                elif 苦修 == 0 and 苦修充能 < 1:
                     current_step = "施放 苦修"
                     action_hotkey = get_hotkey(0, "苦修")
                 elif not 移动:

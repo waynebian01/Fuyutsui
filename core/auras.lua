@@ -447,6 +447,44 @@ local auras = {
                 [1064] = { event = e["施法成功"] },
             },
         },
+        ["飞旋之水"] = {
+            name = "飞旋之水",
+            spellId = 453407,
+            remaining = 0,
+            duration = 25,
+            expirationTime = nil,
+            addAuras = {
+                [453407] = { event = e["法术冷却"] },
+            },
+            updateAuras = nil,
+            removeAuras = {
+                [77472] = { event = e["施法成功"] },
+            },
+        },
+        ["治疗之雨"] = {
+            name = "治疗之雨",
+            spellId = 73920,
+            remaining = 0,
+            duration = 18,
+            expirationTime = nil,
+            addAuras = {
+                [73920] = { event = e["法术冷却"] },
+            },
+            updateAuras = nil,
+            removeAuras = nil,
+        },
+        ["治疗之雨-涌动"] = {
+            name = "治疗之雨-涌动",
+            spellId = 456366,
+            remaining = 0,
+            duration = 18,
+            expirationTime = nil,
+            addAuras = {
+                [456366] = { event = e["法术冷却"] },
+            },
+            updateAuras = nil,
+            removeAuras = nil,
+        },
         ["潮汐奔涌"] = {
             remaining = 0,
             duration = 15,

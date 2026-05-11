@@ -552,7 +552,7 @@ state:
       生命释放: {step: 50, type: "int" }
       先祖迅捷: {step: 51, type: "int" }
       涌动图腾: {step: 52, type: "int" }
-      灵魂链接: {step: 53, type: "int" }
+      灵魂链接图腾: {step: 53, type: "int" }
       升腾: {step: 54, type: "int" }
       治疗之潮图腾: {step: 55, type: "int" }
     group:

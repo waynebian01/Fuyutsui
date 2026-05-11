@@ -14,7 +14,7 @@ Fuyutsui/__pycache__/
 # 本地 GUI 窗口状态（geometry 等），不纳入版本库
 Fuyutsui/gui_window_state.json
 
-# 忽略 Fuyutsui_C#
+# 忽略 C#
 cs/
 
 # 忽略 macOS 或 Windows 的系统文件
