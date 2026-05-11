@@ -53,7 +53,18 @@ function fu.updateSpecInfo()
             ["目标生命值"] = 21,
             ["敌人人数"] = 22,
             auras = {
-
+                ["漩涡武器"] = {
+                    index = 23,
+                    auraRef = fu.auras["漩涡武器"],
+                    showKey = "count",
+                    playerAuraSpellId = 344179,
+                },
+                ["溢流漩涡"] = {
+                    index = 24,
+                    auraRef = fu.auras["溢流漩涡"],
+                    showKey = "count",
+                    playerAuraSpellId = 410681,
+                },
             },
         }
 

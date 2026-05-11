@@ -914,7 +914,7 @@ fu.auras = {
     },
     ["溢流漩涡"] = {
         name = "溢流漩涡",
-        spellId = 384143,
+        spellId = 410681,
         remaining = 0,
         duration = 30,
         count = 0,

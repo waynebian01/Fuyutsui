@@ -636,11 +636,17 @@ local function updatePlayerAuraBlocks()
         if info.playerAuraSpellId and info.auraRef then
             local aura = C_UnitAuras.GetUnitAuraBySpellID("player", info.playerAuraSpellId)
             if aura then
+                info.auraRef.expirationTime = aura.expirationTime or (aura.duration and (GetTime() + aura.duration)) or nil
                 info.auraRef.remaining = 1
+                if info.auraRef.count ~= nil then
+                    local applications = aura.applications or 0
+                    if applications <= 0 then applications = 1 end
+                    info.auraRef.count = math.min(info.auraRef.countMax or applications, applications)
+                end
             else
                 info.auraRef.expirationTime = nil
                 info.auraRef.remaining = 0
-                if info.auraRef.count then info.auraRef.count = info.auraRef.countMin end
+                if info.auraRef.count ~= nil then info.auraRef.count = info.auraRef.countMin or 0 end
             end
         end
     end
