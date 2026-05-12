@@ -69,7 +69,6 @@ function fu.updateSpecInfo()
                     index = 25,
                     auraRef = fu.auras["升腾增强"],
                     showKey = "remaining",
-                    playerAuraSpellId = 114051,
                 },
             },
         }
