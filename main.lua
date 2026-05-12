@@ -441,12 +441,19 @@ local function updateAuraBySpellCooldown(spellID)
     for _, info in pairs(updateAura) do
         local aura = fu.auras[info.name]
         if not aura then return end
+        local currentTime = GetTime()
+        if info.ignoreWithin and aura.lastTriggeredTime and currentTime - aura.lastTriggeredTime < info.ignoreWithin then
+            return
+        end
+        if info.ignoreWithin then
+            aura.lastTriggeredTime = currentTime
+        end
         if aura.duration then
-            aura.expirationTime = GetTime() + aura.duration
+            aura.expirationTime = currentTime + aura.duration
         end
         if aura.count and info.step then
             if info.step > 0 then
-                aura.expirationTime = GetTime() + aura.duration
+                aura.expirationTime = currentTime + aura.duration
                 aura.count = math.min(aura.countMax, aura.count + info.step)
             else
                 aura.count = math.max(aura.countMin, aura.count + info.step)
