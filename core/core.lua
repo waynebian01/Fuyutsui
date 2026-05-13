@@ -94,12 +94,15 @@ local function CharCfg()
     return Fuyutsui.db and Fuyutsui.db.char
 end
 
+local fuDelayEndTimer = nil
+
 local function SaveConfig()
     local c = CharCfg()
     if not c then return end
     c.aoeMode = c.aoeMode or 0
     c.cooldowns = c.cooldowns or 0
     c.dpsMode = c.dpsMode or 0
+    c.delay = c.delay or 0
 end
 
 --- 与斜杠 / 配置界面一致：print、同步顶部像素、规范化 db.char
@@ -155,6 +158,21 @@ function Fuyutsui:SwitchDpsMode()
     if self.RefreshQuickToggleAppearance then
         self:RefreshQuickToggleAppearance()
     end
+end
+
+function Fuyutsui:SwitchDelay()
+    local c = self.db and self.db.char
+    if not c then return end
+    if c.delay == 0 then
+        print("|cff00ff00[Fuyutsui]|r 延迟已关闭")
+    else
+        print("|cff00ff00[Fuyutsui]|r 延迟已开启")
+    end
+    local st = self.blocks and self.blocks.state
+    if st and st["延迟"] then
+        self:CreatTexture(st["延迟"], c.delay / 255 or 0)
+    end
+    SaveConfig()
 end
 
 --- AceConsole：由 RegisterChatCommand("fu"|"fuyutsui", "SlashCommand") 分发，勿再手写 SlashCmdList
@@ -221,6 +239,38 @@ function Fuyutsui:SlashCommand(input, editbox)
         if not c then return end
         c.dpsMode = 0
         self:SwitchDpsMode()
+    elseif command:match("^delay") then
+        if not c then return end
+        local secStr = command:match("^delay%s+(.+)$")
+        local sec = 1
+        if secStr then
+            local trimmed = secStr:match("^%s*(.-)%s*$") or ""
+            if trimmed ~= "" then
+                local parsed = tonumber(trimmed)
+                if parsed and parsed > 0 then
+                    sec = parsed
+                else
+                    print("|cff00ff00[Fuyutsui]|r 无效秒数；请输入正数（例如 /fu delay 5），或不写秒数使用默认 1 秒。")
+                    return
+                end
+            end
+        end
+        if fuDelayEndTimer then
+            fuDelayEndTimer:Cancel()
+            fuDelayEndTimer = nil
+        end
+        c.delay = 1
+        self:SwitchDelay()
+        fuDelayEndTimer = C_Timer.NewTimer(sec, function()
+            fuDelayEndTimer = nil
+            local cc = Fuyutsui.db and Fuyutsui.db.char
+            if cc then
+                cc.delay = 0
+                print("|cff00ff00[Fuyutsui]|r db.char.delay 已恢复为 0。")
+                self:SwitchDelay()
+            end
+        end)
+        print("|cff00ff00[Fuyutsui]|r db.char.delay 已设为 1，" .. sec .. " 秒后恢复为 0。")
     elseif command == "help" then
         print("|cff00ff00Fuyutsui|r 命令列表:")
         print("爆发开关: /fu cd")
@@ -232,6 +282,7 @@ function Fuyutsui:SlashCommand(input, editbox)
         print("切换输出模式: /fu dpsmode")
         print("切换输出模式为|cff00ff00手写逻辑|r: /fu dpsmode manual")
         print("切换输出模式为|cff00ff00一键辅助|r: /fu dpsmode assistant")
+        print("临时 delay 标志（db.char.delay 置 1 持续 x 秒后归零）: /fu delay [秒]，省略秒数则为 1 秒")
         print("界面设置(Ace): /fu options")
     elseif command == "gui" then
         if self.OpenInfoGUI then
@@ -305,6 +356,7 @@ Fuyutsui.defaults = {
         aoeMode = 0,
         cooldowns = 0,
         dpsMode = 0,
+        delay = 0,
         quickButtonCX = 180,
         quickButtonCY = -100,
         quickButtonShow = true,

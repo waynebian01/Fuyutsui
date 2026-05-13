@@ -517,6 +517,7 @@ state:
       毁灭闪电: {step: 53, type: "int" }
       流电炽焰: {step: 54, type: "int" }
   3:
+    延迟: {step: 21, type: "int" }
     施法技能: {step: 22, type: "int" }
     施法目标: {step: 23, type: "int" }
 

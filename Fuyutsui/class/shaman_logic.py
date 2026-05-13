@@ -172,7 +172,7 @@ def run_shaman_logic(state_dict, spec_name):
 
         激流单位 = None
         if 无激流最低 is not None and 无激流最低血量 is not None:
-            if 激流 == 0 and (无激流最低血量 <= 90 or 激流充能 <= 1):
+            if 激流 == 0 and (无激流最低血量 <= 90 or 激流充能 == 0):
                 激流单位 = 无激流最低
         
         插治疗之泉 = False
@@ -187,6 +187,7 @@ def run_shaman_logic(state_dict, spec_name):
         unit_info = { 
             "需要驱散魔法单位": 需要驱散魔法单位,
             "需要驱散诅咒单位": 需要驱散诅咒单位,
+            "无激流最低血量": 无激流最低血量,
         }
 
         if 引导 > 0:
@@ -262,7 +263,7 @@ def run_shaman_logic(state_dict, spec_name):
                     if count70 >=3 and (生命释放buff > 0 or 自然迅捷 == 254):
                         current_step = f"施放 治疗链 on {最低单位}, 释放治疗链"
                         action_hotkey = get_hotkey(int(最低单位), "治疗链")
-                    elif 生命释放 == 0 and 最低生命值 <= 90:
+                    elif 生命释放 == 0:
                         current_step = f"施放 生命释放 on {最低单位}, 释放生命释放"
                         action_hotkey = get_hotkey(int(最低单位), "生命释放")
                     elif 最低生命值 <= 60:
@@ -275,7 +276,7 @@ def run_shaman_logic(state_dict, spec_name):
                         else :
                             current_step = f"施放 治疗波 on {最低单位}, 释放治疗波"
                             action_hotkey = get_hotkey(int(最低单位), "治疗波")
-                    elif count80 >= 3 :
+                    elif count90 >= 3:
                         current_step = f"施放 治疗链 on {最低单位}, 释放治疗链"
                         action_hotkey = get_hotkey(int(最低单位), "治疗链")
                     else:
