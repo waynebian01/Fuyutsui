@@ -922,6 +922,12 @@ fu.auras = {
         countMax = 20,
         expirationTime = nil,
     },
+    ["狂风怒号"] = {
+        name = "狂风怒号",
+        spellId = 454015,
+        remaining = 0,
+        expirationTime = nil,
+    },
     ["风暴涌流图腾"] = {
         name = "风暴涌流图腾",
         spellId = 1267089,

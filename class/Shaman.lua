@@ -70,6 +70,12 @@ function fu.updateSpecInfo()
                     auraRef = fu.auras["升腾增强"],
                     showKey = "remaining",
                 },
+                ["狂风怒号"] = {
+                    index = 50,
+                    auraRef = fu.auras["狂风怒号"],
+                    showKey = "remaining",
+                    playerAuraSpellId = 454015,
+                },
             },
         }
 
@@ -80,7 +86,6 @@ function fu.updateSpecInfo()
         fu.spellCooldown[1218090] = { index = 46, name = "始源风暴" }
         fu.spellCooldown[33757] = { index = 47, name = "风怒武器" }
         fu.spellCooldown[17364] = { index = 48, name = "风暴打击", charge = 49 }
-        fu.spellCooldown[452201] = { index = 50, name = "狂风怒号" }
         fu.spellCooldown[115356] = { index = 51, name = "风切" }
         fu.spellCooldown[114051] = { index = 52, name = "升腾" }
         fu.spellCooldown[187874] = { index = 53, name = "毁灭闪电" }

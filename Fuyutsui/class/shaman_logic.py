@@ -82,7 +82,7 @@ def _unit_hotkey(unit, spell):
 
 def _pick_enhancement_finisher(spells, enemy_count):
     狂风怒号 = spells.get("狂风怒号", -1)
-    if _ready(狂风怒号):
+    if _active(狂风怒号):
         return "狂风怒号", "闪电箭"
     if enemy_count >= 2:
         return "闪电链", "闪电链"
