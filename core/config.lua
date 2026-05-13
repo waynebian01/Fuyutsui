@@ -928,6 +928,13 @@ fu.auras = {
         remaining = 0,
         expirationTime = nil,
     },
+    ["毁灭之风"] = {
+        name = "毁灭之风",
+        spellId = 466772,
+        remaining = 0,
+        duration = 10,
+        expirationTime = nil,
+    },
     ["风暴涌流图腾"] = {
         name = "风暴涌流图腾",
         spellId = 1267089,
@@ -1030,6 +1037,7 @@ fu.updateAuras = {
         [73685] = { { name = "生命释放", step = 2 } },
         [114052] = { { name = "升腾", } },
         [114051] = { { name = "升腾增强", ignoreWithin = 20 } },
+        [384352] = { { name = "毁灭之风", extendDuration = true } },
     },
     -- COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED
     -- 法术覆盖事件, 检测参数: 基本法术ID, 覆盖法术ID
@@ -1157,6 +1165,13 @@ fu.updateAuras = {
             auraID = nil,
             spellId = 116,
             overrideSpellID = 199786,
+            isIcon = 1,
+        },
+        [188196] = { -- 闪电箭 -> 狂风怒号
+            name = "狂风怒号",
+            auraID = nil,
+            spellId = 188196,
+            overrideSpellID = 452201,
             isIcon = 1,
         },
         [432459] = {

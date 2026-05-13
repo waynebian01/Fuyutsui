@@ -70,11 +70,15 @@ function fu.updateSpecInfo()
                     auraRef = fu.auras["升腾增强"],
                     showKey = "remaining",
                 },
+                ["毁灭之风"] = {
+                    index = 26,
+                    auraRef = fu.auras["毁灭之风"],
+                    showKey = "remaining",
+                },
                 ["狂风怒号"] = {
                     index = 50,
-                    auraRef = fu.auras["狂风怒号"],
-                    showKey = "remaining",
-                    playerAuraSpellId = 454015,
+                    auraRef = fu.updateAuras.byIcon[188196],
+                    showKey = "isIcon",
                 },
             },
         }

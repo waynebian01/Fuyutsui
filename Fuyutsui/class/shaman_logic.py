@@ -82,7 +82,7 @@ def _unit_hotkey(unit, spell):
 
 def _pick_enhancement_finisher(spells, enemy_count):
     狂风怒号 = spells.get("狂风怒号", -1)
-    if _active(狂风怒号):
+    if _as_int(狂风怒号) >= 2:
         return "狂风怒号", "闪电箭"
     if enemy_count >= 2:
         return "闪电链", "闪电链"
@@ -293,6 +293,7 @@ def run_shaman_logic(state_dict, spec_name):
         漩涡武器 = _as_int(state_dict.get("漩涡武器", 0))
         溢流漩涡 = _as_int(state_dict.get("溢流漩涡", 0))
         升腾buff = _active(state_dict.get("升腾", 0))
+        毁灭之风buff = _active(state_dict.get("毁灭之风", 0))
         敌人人数 = _as_int(state_dict.get("敌人人数", 0))
         if 1 <= 目标类型 <= 3:
             敌人人数 = max(1, 敌人人数)
@@ -307,6 +308,7 @@ def run_shaman_logic(state_dict, spec_name):
             "漩涡武器": 漩涡武器,
             "溢流漩涡": 溢流漩涡,
             "升腾": 升腾buff,
+            "毁灭之风": 毁灭之风buff,
             "敌人人数": 敌人人数,
             "生命值": 生命值,
             "治疗之涌": 治疗之涌,
@@ -320,7 +322,7 @@ def run_shaman_logic(state_dict, spec_name):
         elif 溢流漩涡 >= 10 and _as_int(生命值) <= 40 and _ready(治疗之涌):
             current_step = "增强-自保: 10层溢流漩涡治疗之涌"
             action_hotkey = get_hotkey(0, "治疗之涌")
-        elif 升腾buff and 战斗 and 1 <= 目标类型 <= 3:
+        elif (升腾buff or 毁灭之风buff) and 战斗 and 1 <= 目标类型 <= 3:
             if _ready(毁灭闪电):
                 current_step = "增强-升腾期: 毁灭闪电"
                 action_hotkey = get_hotkey(0, "毁灭闪电")

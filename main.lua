@@ -449,11 +449,18 @@ local function updateAuraBySpellCooldown(spellID)
             aura.lastTriggeredTime = currentTime
         end
         if aura.duration then
-            aura.expirationTime = currentTime + aura.duration
+            if info.extendDuration then
+                local baseTime = aura.expirationTime and aura.expirationTime > currentTime and aura.expirationTime or currentTime
+                aura.expirationTime = baseTime + aura.duration
+            else
+                aura.expirationTime = currentTime + aura.duration
+            end
         end
         if aura.count and info.step then
             if info.step > 0 then
-                aura.expirationTime = currentTime + aura.duration
+                if aura.duration and not info.extendDuration then
+                    aura.expirationTime = currentTime + aura.duration
+                end
                 aura.count = math.min(aura.countMax, aura.count + info.step)
             else
                 aura.count = math.max(aura.countMin, aura.count + info.step)

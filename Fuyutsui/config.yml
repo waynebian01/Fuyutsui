@@ -486,6 +486,7 @@ state:
     漩涡武器: {step: 23, type: "int" }
     溢流漩涡: {step: 24, type: "int" }
     升腾: {step: 25, type: "int" }
+    毁灭之风: {step: 26, type: "int" }
     spells:
       风剪: {step: 31, type: "int" }
       土元素: {step: 32, type: "int" }
