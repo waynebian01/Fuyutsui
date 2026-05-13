@@ -1,0 +1,5 @@
+<Bindings>
+    <Binding name="FUBG_TOGGLE_LOGIC">
+        Fuyutsui_ToggleLogic()
+    </Binding>
+</Bindings>

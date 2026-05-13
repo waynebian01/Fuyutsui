@@ -26,6 +26,7 @@
 
 embeds.xml
 Libs/LibRangeCheck-3.0/LibRangeCheck-3.0.lua
+bindings/BurstGuard-bindings.xml
 
 core/core.lua
 core/quickbutton.lua
@@ -34,6 +35,7 @@ core/block.lua
 core/macro.lua
 core/keybinds.lua
 core/auras.lua
+core/burstguard.lua
 
 class/Warrior.lua
 class/Paladin.lua
