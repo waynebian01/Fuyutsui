@@ -130,9 +130,10 @@ def run_deathknight_logic(state_dict, spec_name):
         禁断知识 = state_dict.get("禁断知识", 0)
         脓疮毒镰 = state_dict.get("脓疮毒镰", 0)
         脓疮毒镰2 = state_dict.get("脓疮毒镰2", 0)
-        枯萎凋零 = state_dict.get("枯萎凋零", 0)
+        凋零_buff = state_dict.get("枯萎凋零", 0)
         疾病判断 = state_dict.get("疾病判断", 0)
         腐化层数 = state_dict.get("腐化层数", 0)
+        凋零层数 = state_dict.get("凋零层数", 0)
 
         亡者复生 = spells.get("亡者复生", -1)
         亡者大军 = spells.get("亡者大军", -1)
@@ -140,8 +141,8 @@ def run_deathknight_logic(state_dict, spec_name):
         腐化充能 = spells.get("腐化充能", -1)
         黑暗突变 = spells.get("黑暗突变", -1)
         灵魂收割 = spells.get("灵魂收割", -1)
-        凋零冷却 = spells.get("凋零冷却", -1)
-        凋零充能 = spells.get("凋零充能", -1)
+        凋零_cd = spells.get("凋零冷却", -1)
+        凋零_charge = spells.get("凋零充能", -1)
 
         if 引导 > 0:
             current_step = "在引导,不执行任何操作"
@@ -197,7 +198,12 @@ def run_deathknight_logic(state_dict, spec_name):
                     current_step = "施放 脓疮毒镰"
                     action_hotkey = get_hotkey(0, "脓疮打击")
                     # AOE 时, 施放"枯萎凋零"
-                elif 敌人人数 >= 3 and 移动 == False and 凋零冷却 == 0 and 黑暗突变 > 15 and (枯萎凋零 == 0 or 凋零充能 <= 15):
+                    # 当"枯萎凋零"只有一层时, 只有"黑暗突变"CD 大于15秒才施放 , 确保"黑暗突变"时有个凋零.
+                elif 敌人人数 >= 3 and 移动 == False and 凋零_buff == 0 and 凋零层数 == 1 and 黑暗突变 > 15:
+                    current_step = "施放 枯萎凋零"
+                    action_hotkey = get_hotkey(0, "枯萎凋零")
+                    # 当"枯萎凋零"有两层时, 直接施放.
+                elif 敌人人数 >= 3 and 移动 == False and 凋零_buff == 0 and 凋零层数 == 2:
                     current_step = "施放 枯萎凋零"
                     action_hotkey = get_hotkey(0, "枯萎凋零")
                     # "末日突降" 或 "能量大于80" , 根据敌人数量消耗符能

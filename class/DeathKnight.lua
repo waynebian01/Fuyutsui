@@ -77,7 +77,8 @@ Fuyutsui.ClassBlocks = {
     [3] = {
         ["countBars"] = {
             { valueType = "castCount", name = "天灾打击", minValue = 0, maxValue = 20, spellId = 55090 },
-            { valueType = "charge", name = "腐化", minValue = 0, maxValue = 3, spellId = 1247378 }
+            { valueType = "charge", name = "腐化", minValue = 0, maxValue = 3, spellId = 1247378 },
+            { valueType = "charge", name = "枯萎凋零", minValue = 0, maxValue = 2, spellId = 43265 }
         },
 
         [1] = { type = "block", name = "锚点" },
