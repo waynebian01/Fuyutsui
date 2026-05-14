@@ -89,6 +89,17 @@ local function printSuccSpell(spellID)
     succIndex = succIndex + 1
 end
 
+local function getSpellChargesInfo()
+    local charges = C_Spell.GetSpellCharges(1247378)
+    for k, v in pairs(charges) do
+        print(k, v, issecretvalue(v))
+    end
+end
+
+function Fuyutsui:SPELL_UPDATE_CHARGES(_)
+    -- getSpellChargesInfo()
+end
+
 -- 驱散能力映射
 local dispelAbilities = {
     [1] = { 527, 360823, 4987, 115450, 88423, 77130 },              -- 魔法驱散
@@ -217,7 +228,7 @@ function Fuyutsui:updatePlayerBlocks()
     self:updateTargetHealth()                       -- 目标生命值
     self:updateEnemyCount()                         -- 敌人数量
     self:updateGroup()                              -- 更新队伍
-
+    self:GetItemCount()                             -- 获取物品数量
     C_Timer.After(1, function()
         self:updatePlayerConfig()
         self.Initialize = true
@@ -238,6 +249,12 @@ function Fuyutsui:loadPlayerBlocks(specIndex)
         countBars = {},
     }
     for k, v in pairs(t) do
+        if k == "countBars" then
+            for key, value in pairs(v) do
+                blocks.countBars[key] = value
+            end
+        end
+
         if type(v) ~= "table" or not v.type then
             -- 跳过 powerType 等非条目字段
         elseif v.type == "block" then
@@ -267,8 +284,6 @@ function Fuyutsui:loadPlayerBlocks(specIndex)
                     blocks.spells[v.spellId].inSpellBook = v.inSpellBook
                 end
             end
-        elseif v.type == "countBar" then
-            blocks.countBars[k] = v
         elseif v.type == "group" then
             blocks.groups = {}
             blocks.groups.start = k
@@ -320,6 +335,7 @@ function Fuyutsui:GetCharacterSpecInfo()
     self:updateGroup()
     self:loadPlayerMacros() -- 载入玩家宏
     self:updateAuraIconByEnteringWorld()
+    self:GetItemCount()     -- 获取物品数量
     self:CreatTexture(blocks.state["职业"], self.state.classId / 255)
     self:CreatTexture(blocks.state["专精"], self.state.specIndex / 255)
 end
@@ -618,7 +634,7 @@ end
 function Fuyutsui:updatePlayerBarInfo()
     if blocks.countBars then
         for k, v in pairs(blocks.countBars) do
-            self:CreateAutoLayoutBar(v.minValue, v.maxValue, v.spellId)
+            self:CreateAutoLayoutBar(v.valueType, v.minValue, v.maxValue, v.spellId)
         end
     end
 end
@@ -1248,10 +1264,14 @@ end
 
 -- 施法状态
 function Fuyutsui:UNIT_SPELLCAST_START(_, unitTarget, castGUID, spellID, castBarID)
-    if unitTarget ~= "player" then return end
-    state.casting = true
-    updateUnitIncomingHealsCurve(spellID)
-    self:updatePlayerCasting(spellID)
+    if unitTarget == "player" then
+        state.casting = true
+        updateUnitIncomingHealsCurve(spellID)
+        self:updatePlayerCasting(spellID)
+    end
+    if unitTarget == "target" then
+        target.casting = true
+    end
 end
 
 function Fuyutsui:UNIT_SPELLCAST_STOP(_, unitTarget, castGUID, spellID, castBarID)

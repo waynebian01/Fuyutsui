@@ -74,11 +74,11 @@ local createdBars = {}
 local spellIdToBar = {} -- 新增：用于根据 spellId 查找已存在的条
 local nextAvailableIndex = 2
 
-local events = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD" }
+local events = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD", "SPELL_UPDATE_CHARGES" }
 ---@param minValue number 最小值
 ---@param maxValue number 最大值
 ---@param spellId number 法术ID
-function Fuyutsui:CreateAutoLayoutBar(minValue, maxValue, spellId)
+function Fuyutsui:CreateAutoLayoutBar(valueType, minValue, maxValue, spellId)
     -- 重复性检查
     if spellIdToBar[spellId] then
         return spellIdToBar[spellId]
@@ -115,8 +115,16 @@ function Fuyutsui:CreateAutoLayoutBar(minValue, maxValue, spellId)
 
     -- 3. 刷新逻辑
     local function Refresh()
-        local val = C_Spell.GetSpellCastCount(spellId) or 0
-        bar:SetMinMaxValues(minValue, maxValue)
+        local val = 0
+        if valueType == "castCount" then
+            val = C_Spell.GetSpellCastCount(spellId) or 0
+            bar:SetMinMaxValues(minValue, maxValue)
+        elseif valueType == "charge" then
+            local charges = C_Spell.GetSpellCharges(spellId)
+            if not charges then return end
+            bar:SetMinMaxValues(0, charges.maxCharges)
+            val = charges.currentCharges or 0
+        end
         bar:SetValue(val)
     end
 
@@ -124,7 +132,6 @@ function Fuyutsui:CreateAutoLayoutBar(minValue, maxValue, spellId)
         bar:RegisterEvent(event)
     end
     bar:SetScript("OnEvent", Refresh)
-
 
     Refresh()
 

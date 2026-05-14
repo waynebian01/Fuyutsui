@@ -441,7 +441,8 @@ state:
     脓疮毒镰: {step: 33, type: "int" }
     脓疮毒镰2: {step: 34, type: "int" }
     枯萎凋零: {step: 35, type: "int" }
-
+    腐化层数: {step: bar, bar: 2, type: "int"}
+    
     spells:
       死亡之握: {step: 40, type: "int" }
       反魔法领域: {step: 41, type: "int" }
