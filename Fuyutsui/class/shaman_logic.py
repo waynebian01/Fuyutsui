@@ -125,7 +125,9 @@ def run_shaman_logic(state_dict, spec_name):
         涌流层数 = state_dict.get("涌流层数", 0)
         生命释放buff = state_dict.get("生命释放", 0)
         升腾buff = state_dict.get("升腾", 0)
-        
+        # 奶萨充能技能层数
+        激流层数 = state_dict.get("激流层数", 0)
+        治泉层数 = state_dict.get("治疗之泉图腾层数", 0)
          # 奶萨技能cd
         自然迅捷 = spells.get("自然迅捷", -1)
         熔岩爆裂 = spells.get("熔岩爆裂", -1)
@@ -172,7 +174,7 @@ def run_shaman_logic(state_dict, spec_name):
 
         激流单位 = None
         if 无激流最低 is not None and 无激流最低血量 is not None:
-            if 激流 == 0 and (无激流最低血量 <= 90 or 激流充能 == 0):
+            if (激流层数 == 1 and 无激流最低血量 <= 90) or 激流层数 == 2:
                 激流单位 = 无激流最低
         
         插治疗之泉 = False
@@ -257,8 +259,8 @@ def run_shaman_logic(state_dict, spec_name):
                     current_step = f"施放 激流 on {激流单位}"
                     action_hotkey = get_hotkey(int(激流单位), "激流")
                 elif 插治疗之泉:
-                        current_step = f"施放 治疗之泉图腾"
-                        action_hotkey = get_hotkey(0, "治疗之泉图腾")
+                    current_step = f"施放 治疗之泉图腾"
+                    action_hotkey = get_hotkey(0, "治疗之泉图腾")
                 elif 最低单位 is not None and 最低生命值 is not None and 最低生命值 <= 85:
                     if count70 >=3 and (生命释放buff > 0 or 自然迅捷 == 254):
                         current_step = f"施放 治疗链 on {最低单位}, 释放治疗链"

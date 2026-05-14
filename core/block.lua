@@ -79,6 +79,8 @@ local events = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD", "SPELL_UPDATE_CHA
 ---@param maxValue number 最大值
 ---@param spellId number 法术ID
 function Fuyutsui:CreateAutoLayoutBar(valueType, minValue, maxValue, spellId)
+    maxValue = maxValue or 0
+    minValue = minValue or 0
     -- 重复性检查
     if spellIdToBar[spellId] then
         return spellIdToBar[spellId]
@@ -89,7 +91,7 @@ function Fuyutsui:CreateAutoLayoutBar(valueType, minValue, maxValue, spellId)
     nextAvailableIndex = startIndex + maxValue + 2
 
     if nextAvailableIndex > BAR_CONFIG.count then
-        print("警告: FuyutsuiCountBars 空间不足!")
+        print("警告: Fuyutsui_CountBars 空间不足!")
         return nil
     end
 
@@ -118,13 +120,12 @@ function Fuyutsui:CreateAutoLayoutBar(valueType, minValue, maxValue, spellId)
         local val = 0
         if valueType == "castCount" then
             val = C_Spell.GetSpellCastCount(spellId) or 0
-            bar:SetMinMaxValues(minValue, maxValue)
         elseif valueType == "charge" then
             local charges = C_Spell.GetSpellCharges(spellId)
             if not charges then return end
-            bar:SetMinMaxValues(0, charges.maxCharges)
             val = charges.currentCharges or 0
         end
+        bar:SetMinMaxValues(minValue, maxValue)
         bar:SetValue(val)
     end
 
