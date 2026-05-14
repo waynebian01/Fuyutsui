@@ -100,6 +100,7 @@ state:
       神圣棱镜: {step: 43, type: "int" }
       光环掌握: {step: 44, type: "int" }
       美德道标: {step: 45, type: "int" }
+      大红冷却: {step: 46, type: "int" }
     group:
       start: 70
       num: 6
@@ -122,23 +123,24 @@ state:
     圣光之锤: {step: 30, type: "int" }
     目标距离: {step: 31, type: "int" }
     spells:
-      盲目之光: {step: 31, type: "int" }
-      制裁之锤: {step: 32, type: "int" }
-      圣盾术: {step: 33, type: "int" }
-      牺牲祝福: {step: 34, type: "int" }
-      自由祝福: {step: 35, type: "int" }
-      保护祝福: {step: 36, type: "int" }
-      圣疗术: {step: 37, type: "int" }
-      神圣壁垒: {step: 38, type: "int" }
-      壁垒充能: {step: 39, type: "int" }
-      清毒术: {step: 40, type: "int" }
-      审判: {step: 41, type: "int" }
-      圣洁鸣钟: {step: 42, type: "int" }
-      复仇者之盾: {step: 43, type: "int" }
-      奉献: {step: 44, type: "int" }
-      正义盾击: {step: 45, type: "int" }
-      祝福之锤: {step: 46, type: "int" }
-      正义之锤: {step: 47, type: "int" }
+      盲目之光: {step: 32, type: "int" }
+      制裁之锤: {step: 33, type: "int" }
+      圣盾术: {step: 34, type: "int" }
+      牺牲祝福: {step: 35, type: "int" }
+      自由祝福: {step: 36, type: "int" }
+      保护祝福: {step: 37, type: "int" }
+      圣疗术: {step: 38, type: "int" }
+      神圣壁垒: {step: 39, type: "int" }
+      壁垒充能: {step: 40, type: "int" }
+      清毒术: {step: 41, type: "int" }
+      审判: {step: 42, type: "int" }
+      圣洁鸣钟: {step: 43, type: "int" }
+      复仇者之盾: {step: 44, type: "int" }
+      奉献: {step: 45, type: "int" }
+      正义盾击: {step: 46, type: "int" }
+      祝福之锤: {step: 47, type: "int" }
+      正义之锤: {step: 48, type: "int" }
+      大红冷却: {step: 49, type: "int" }
   3:
     神圣能量: {step: 21, type: "int" }
     爆发开关: {step: 22, type: "int" }
@@ -164,6 +166,7 @@ state:
       处决宣判: {step: 43, type: "int" }
       灰烬觉醒: {step: 44, type: "int" }
       复仇之怒: {step: 45, type: "int" }
+      大红冷却: {step: 46, type: "int" }
     group:
       start: 70
       num: 3

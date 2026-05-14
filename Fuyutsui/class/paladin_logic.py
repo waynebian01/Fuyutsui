@@ -81,7 +81,6 @@ def _get_failed_spell(state_dict, spec_name=""):
 #direct_key_map = {
 #    "制裁之锤": "x",
 #}
-
 #def get_action_hotkey(skill_name, unit=0):
 #    """获取技能按键，特殊技能直接返回固定按键"""
 #    if skill_name in direct_key_map:
@@ -130,6 +129,7 @@ def run_paladin_logic(state_dict, spec_name):
     审判CD = spells.get("审判", -1)
     圣洁鸣钟CD = spells.get("圣洁鸣钟", -1)
     复仇之怒CD = spells.get("复仇之怒", -1)
+    大红冷却CD = spells.get("大红冷却", -1)
 
     # ==================== 神圣专精变量 ====================
     # --- BUFF ---
@@ -238,7 +238,12 @@ def run_paladin_logic(state_dict, spec_name):
         # ==================== 队伍/大秘/单人逻辑 ====================
         elif 队伍类型 == 0 or 队伍类型 == 46:
             # ---- 优先级 1: 重要 ----
-            if 圣疗术CD == 0 and 生命值 < 20:
+            # 大红(银月城生命药水)
+            if 大红冷却CD == 0 and 生命值 < 30:
+                current_step = "使用 生命药水"
+                action_hotkey = get_hotkey(0, "银月城生命药水")
+            # 圣疗术
+            elif 圣疗术CD == 0 and 大红冷却CD > 1 and 生命值 < 25:
                 current_step = "施放 圣疗术"
                 action_hotkey = get_hotkey(1, "圣疗术")
             # 美德道标
@@ -280,7 +285,7 @@ def run_paladin_logic(state_dict, spec_name):
             # ---- 优先级 3: 常规 ----
             elif 神圣能量 <= 4:
                 # 圣光术站桩
-                if not 施法 and not 移动 and 最低生命值 < 50 and 能量值 >= 50 and (神圣能量 <= 1 or (神圣能量 == 2  and 审判CD >= 1)) :
+                if not 施法 and not 移动 and 最低生命值 < 50 and 能量值 >= 60 and (神圣能量 <= 1 or (神圣能量 == 2  and 审判CD >= 1)) :
                     current_step = "站桩 圣光术"
                     action_hotkey = get_hotkey(int(最低单位), "圣光术")
                 # 灌注圣光闪现
@@ -292,7 +297,7 @@ def run_paladin_logic(state_dict, spec_name):
                     current_step = "施放 神圣震击"
                     action_hotkey = get_hotkey(int(最低单位), "神圣震击")
                 # 圣光术站桩
-                elif not 施法 and not 移动 and 最低生命值 < 50 and 能量值 >= 50:
+                elif not 施法 and not 移动 and 最低生命值 < 50 and 能量值 >= 60:
                     current_step = "站桩 圣光术"
                     action_hotkey = get_hotkey(int(最低单位), "圣光术")
                 # 审判补能量
@@ -324,7 +329,12 @@ def run_paladin_logic(state_dict, spec_name):
         # ==================== 团本逻辑 ====================
         elif 队伍类型 >= 1 and 队伍类型 <= 40:
             # ---- 优先级 1: 重要 ----
-            if 圣疗术CD == 0 and 生命值 < 20:
+            # 大红(银月城生命药水)
+            if 大红冷却CD == 0 and 生命值 < 30:
+                current_step = "使用 生命药水"
+                action_hotkey = get_hotkey(0, "银月城生命药水")
+            # 圣疗术
+            elif 圣疗术CD == 0 and 大红冷却CD > 1 and 生命值 < 20:
                 current_step = "施放 圣疗术"
                 action_hotkey = get_hotkey(1, "圣疗术")
             # 美德道标
@@ -476,8 +486,12 @@ def run_paladin_logic(state_dict, spec_name):
 
         # ---- 优先级 2: 生存/自保 ----
         elif 战斗 and 1 <= 目标类型 <= 3:
-            # 圣疗术自救
-            if 圣疗术CD == 0 and 生命值 < 20:
+            # 大红(银月城生命药水)
+            if 大红冷却CD == 0 and 生命值 < 30:
+                current_step = "使用 生命药水"
+                action_hotkey = get_hotkey(0, "银月城生命药水")
+            # 圣疗术
+            elif 圣疗术CD == 0 and 大红冷却CD > 1 and 生命值 < 20:
                 current_step = "施放 圣疗术"
                 action_hotkey = get_hotkey(1, "圣疗术")
             # 驱散
