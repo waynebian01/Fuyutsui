@@ -426,6 +426,7 @@ local auras = {
             expirationTime = nil,
             addAuras = {
                 [43265] = { event = e["施法成功"] },
+                [444505] = { event = e["法术冷却"], duration = 14 }, -- 莫格莱尼的力量
             },
             updateAuras = nil,
             removeAuras = nil,
@@ -896,7 +897,9 @@ local function applyAuraMapForSpellEvent(auraMap, castBarID)
     for auraName, info in pairs(auraMap) do
         local aura = Fuyutsui.Auras[auraName]
         if aura and ((not info.castBar) or castBarID) then
-            if aura.duration then
+            if info.duration then
+                aura.expirationTime = now + info.duration
+            elseif aura.duration then
                 aura.expirationTime = now + aura.duration
             end
             if aura.count and info.step then

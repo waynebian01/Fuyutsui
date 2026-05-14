@@ -1560,8 +1560,8 @@ function Fuyutsui:UNIT_AURA(_, unit, info)
     end
     if info.addedAuras then
         for k, v in pairs(info.addedAuras) do
+            -- print("|cnGREEN_FONT_COLOR:新增光环: |r", v.auraInstanceID, v.spellId, v.name, v.duration)
             if not isSec(v.spellId) and v.sourceUnit == "player" then
-                -- print("|cnGREEN_FONT_COLOR:新增光环: |r", v.auraInstanceID, v.spellId, v.name)
                 obj.aura[v.auraInstanceID] = v
             end
         end
