@@ -1617,3 +1617,95 @@ function Fuyutsui:OnUpdate(elapsed)
         self.timeElapsed = 0
     end
 end
+
+-- ============================================================================
+-- 逻辑控制功能 (由 FuyutsuiBurstGuard 迁移)
+-- ============================================================================
+
+-- 逻辑开关数据库
+FuyutsuiLogicDB = FuyutsuiLogicDB or { enabled = false }
+
+-- 检查逻辑是否开启
+function Fuyutsui:IsLogicEnabled()
+    return FuyutsuiLogicDB.enabled == true
+end
+
+-- 强制有效性为 0（当逻辑关闭时）
+function Fuyutsui:ForceValidOff()
+    if not self.blocks or not self.blocks.state then
+        return false
+    end
+    local validIndex = self.blocks.state["有效性"]
+    if not validIndex or type(self.CreatTexture) ~= "function" then
+        return false
+    end
+    self.state.valid = 0
+    self:CreatTexture(validIndex, 0)
+    return true
+end
+
+-- 刷新有效性（逻辑控制）
+function Fuyutsui:RefreshLogicValid()
+    if self:IsLogicEnabled() then
+        self:updatePlayerValid()
+    else
+        self:ForceValidOff()
+    end
+end
+
+-- 设置逻辑开关
+function Fuyutsui:SetLogicEnabled(enabled)
+    FuyutsuiLogicDB.enabled = enabled and true or false
+    self:RefreshLogicValid()
+    print("|cff00ff00[Fuyutsui]|r 逻辑已" .. (FuyutsuiLogicDB.enabled and "|cff00ff00开启|r" or "|cffffd100关闭|r"))
+end
+
+-- 切换逻辑开关
+function Fuyutsui:ToggleLogic()
+    self:SetLogicEnabled(not self:IsLogicEnabled())
+end
+
+-- Slash 命令处理
+SLASH_FUYUTSUILOGIC1 = "/fbg"
+SlashCmdList.FUYUTSUILOGIC = function(msg)
+    local cmd = tostring(msg or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " "):lower()
+    
+    if cmd == "logic" or cmd == "logic toggle" then
+        Fuyutsui:ToggleLogic()
+    elseif cmd == "logic on" then
+        Fuyutsui:SetLogicEnabled(true)
+    elseif cmd == "logic off" then
+        Fuyutsui:SetLogicEnabled(false)
+    else
+        print("|cff00ff00[Fuyutsui]|r 命令:")
+        print("/fbg logic - 切换逻辑开关")
+        print("/fbg logic on - 开启逻辑")
+        print("/fbg logic off - 关闭逻辑")
+    end
+end
+
+-- 安装逻辑钩子：在 updatePlayerValid 后强制处理有效性
+local logicHookInstalled = false
+function Fuyutsui:InstallLogicHook()
+    if logicHookInstalled then return end
+    if not self.updatePlayerValid then return end
+    hooksecurefunc(self, "updatePlayerValid", function()
+        if not Fuyutsui:IsLogicEnabled() then
+            Fuyutsui:ForceValidOff()
+        end
+    end)
+    logicHookInstalled = true
+    self:RefreshLogicValid()
+end
+
+-- 初始化逻辑控制
+local logicInitFrame = CreateFrame("Frame")
+logicInitFrame:RegisterEvent("PLAYER_LOGIN")
+logicInitFrame:SetScript("OnEvent", function()
+    if Fuyutsui and Fuyutsui.InstallLogicHook then
+        C_Timer.After(1, function()
+            Fuyutsui:InstallLogicHook()
+            Fuyutsui:RefreshLogicValid()
+        end)
+    end
+end)

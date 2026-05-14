@@ -1,32 +1,167 @@
 # -*- coding: utf-8 -*-
 """
-通用 GUI：根据职业/专精自动适配显示。
-使用 CustomTkinter，背景半透明，文字保持清晰。
+Fuyutsui 统一入口：支持 GUI 模式和无界面模式。
+GUI 模式: python logic_gui.py
+无界面模式: python logic_gui.py --headless [--window-title "魔兽世界"] [--interval 0.05] [--debug]
 """
+
+import argparse
+import importlib
 import json
 import re
+import sys
 import threading
 import time
 import ctypes
 from pathlib import Path
 
-import customtkinter as ctk
-
-import importlib
-
-from utils import *
 from GetPixels import get_info
+from utils import (
+    get_class_and_spec_name,
+    load_config,
+    select_keymap_for_class,
+    send_key_to_wow,
+)
+
+# =============================================================================
+# 公共配置和辅助函数
+# =============================================================================
 
 title = "冬月"
 
-# 主窗口默认尺寸（未保存过位置/记录损坏时使用）
+# GUI 相关常量
 DEFAULT_MAIN_GEOMETRY = "400x110"
 DEFAULT_TEAM_GEOMETRY = "550x600"
 DEFAULT_LIVE_INFO_GEOMETRY = "420x540"
-_GUI_GEOMETRY_STATE = Path(__file__).resolve().parent / "gui_window_state.json"
-# 允许的 geometry 字符串：WxH 或 WxH+X+Y（Tk 支持正负偏移）
-_RE_TK_GEOMETRY = re.compile(r"^\d+x\d+([+-]\d+){2}$|^\d+x\d+$")
 
+# 加载逻辑模块
+def _load_logic_module(module_name: str):
+    """Load a class-specific logic module from the `class/` package."""
+    m = importlib.import_module(f"class.{module_name}")
+    return getattr(m, f"run_{module_name.replace('_logic', '')}_logic")
+
+LOGIC_FUNCS_BY_CLASS = {
+    1: _load_logic_module("warrior_logic"),
+    2: _load_logic_module("paladin_logic"),
+    3: _load_logic_module("hunter_logic"),
+    4: _load_logic_module("rogue_logic"),
+    5: _load_logic_module("priest_logic"),
+    6: _load_logic_module("deathknight_logic"),
+    7: _load_logic_module("shaman_logic"),
+    8: _load_logic_module("mage_logic"),
+    9: _load_logic_module("warlock_logic"),
+    10: _load_logic_module("monk_logic"),
+    11: _load_logic_module("druid_logic"),
+    12: _load_logic_module("demonhunter_logic"),
+    13: _load_logic_module("evoker_logic"),
+}
+
+def _default_logic(state_dict, spec_name):
+    return None, "无逻辑定义", {}
+
+# =============================================================================
+# Headless 模式相关代码
+# =============================================================================
+
+DEFAULT_WINDOW_TITLE = "魔兽世界"
+DEFAULT_INTERVAL = 0.05
+LOG_PATH = Path(__file__).resolve().parent / "logic_headless.log"
+
+def _log(message: str):
+    line = f"{time.strftime('%Y-%m-%d %H:%M:%S')} {message}"
+    print(line, flush=True)
+    try:
+        with LOG_PATH.open("a", encoding="utf-8") as f:
+            f.write(line + "\n")
+    except OSError:
+        pass
+
+_headless_logic_enabled = True  # 默认为 True，由 Lua 端控制
+
+def run_headless(window_title: str, interval: float, debug: bool = False):
+    """运行无界面模式主循环。逻辑开关由有效性像素控制（由 Lua 端设置）。"""
+    config = load_config()
+    last_identity = None
+    last_valid = None
+    last_status = None
+
+    _log("Fuyutsui headless runtime started.")
+    _log("Use /fbg logic on/off in game to control logic.")
+
+    global _headless_logic_enabled
+    _headless_logic_enabled = True  # 初始状态
+
+    while True:
+        loop_start = time.perf_counter()
+        state_dict = get_info()
+
+        if not state_dict:
+            status = "等待游戏窗口或像素数据"
+            if status != last_status:
+                _log(status)
+                last_status = status
+            _sleep_remaining(loop_start, interval)
+            continue
+
+        class_id = state_dict.get("职业")
+        spec_id = state_dict.get("专精")
+        identity = (class_id, spec_id)
+        if identity != last_identity:
+            select_keymap_for_class(class_id)
+            class_name, spec_name = get_class_and_spec_name(config, class_id, spec_id)
+            _log(f"检测到职业: {class_name or '-'} / 专精: {spec_name or '-'}")
+            last_identity = identity
+        else:
+            _, spec_name = get_class_and_spec_name(config, class_id, spec_id)
+
+        valid = bool(state_dict.get("有效性"))
+        if valid != last_valid:
+            _log("有效性: " + ("开启" if valid else "关闭"))
+            last_valid = valid
+
+        if not valid:
+            status = "有效性为 0，暂停发键"
+            if status != last_status:
+                _log(status)
+                last_status = status
+            _sleep_remaining(loop_start, interval)
+            continue
+
+        logic_func = LOGIC_FUNCS_BY_CLASS.get(class_id, _default_logic)
+        action_hotkey, current_step, unit_info = logic_func(state_dict, spec_name)
+
+        extra_delay = 0.0
+        if action_hotkey:
+            send_key_to_wow(action_hotkey, window_title=window_title)
+            if isinstance(unit_info, dict):
+                extra_delay = float(unit_info.get("_delay", 0.0) or 0.0)
+            if debug:
+                _log(f"{current_step} -> {action_hotkey}")
+        elif debug and current_step != last_status:
+            _log(current_step)
+            last_status = current_step
+
+        _sleep_remaining(loop_start, interval, extra_delay)
+
+def _sleep_remaining(start_time: float, interval: float, extra_delay: float = 0.0):
+    if extra_delay > 0:
+        time.sleep(extra_delay)
+        return
+    sleep_time = interval - (time.perf_counter() - start_time)
+    if sleep_time > 0:
+        time.sleep(sleep_time)
+
+# =============================================================================
+# GUI 模式相关代码
+# =============================================================================
+
+import customtkinter as ctk
+
+GUI_UPDATE_MS = 200
+_TOGGLE_DEBOUNCE_SEC = 0.12
+
+_GUI_GEOMETRY_STATE = Path(__file__).resolve().parent / "gui_window_state.json"
+_RE_TK_GEOMETRY = re.compile(r"^\d+x\d+([+-]\d+){2}$|^\d+x\d+$")
 
 def _read_gui_state_dict() -> dict:
     try:
@@ -38,135 +173,88 @@ def _read_gui_state_dict() -> dict:
         pass
     return {}
 
-
 def _write_gui_state_dict(data: dict) -> None:
     try:
         _GUI_GEOMETRY_STATE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     except Exception:
         pass
 
-
 def _load_main_window_geometry() -> str:
     g = _read_gui_state_dict().get("geometry")
-    if isinstance(g, str):
-        g = g.strip()
-        if _RE_TK_GEOMETRY.match(g):
-            return g
+    if isinstance(g, str) and _RE_TK_GEOMETRY.match(g.strip()):
+        return g.strip()
     return DEFAULT_MAIN_GEOMETRY
-
 
 def _load_subwindow_geometry(state_key: str, default: str) -> str:
     g = _read_gui_state_dict().get(state_key)
-    if isinstance(g, str):
-        g = g.strip()
-        if _RE_TK_GEOMETRY.match(g):
-            return g
+    if isinstance(g, str) and _RE_TK_GEOMETRY.match(g.strip()):
+        return g.strip()
     return default
-
 
 def _save_main_window_geometry(root: ctk.CTk) -> None:
     try:
         root.update_idletasks()
         g = root.geometry()
-        if not _RE_TK_GEOMETRY.match(g):
-            return
-        data = _read_gui_state_dict()
-        data["geometry"] = g
-        _write_gui_state_dict(data)
+        if _RE_TK_GEOMETRY.match(g):
+            data = _read_gui_state_dict()
+            data["geometry"] = g
+            _write_gui_state_dict(data)
     except Exception:
         pass
 
-
 def _save_toplevel_geometry(win, state_key: str) -> None:
-    """将 Toplevel 当前 geometry 合并写入 gui_window_state.json（不覆盖其它键）。"""
     try:
         win.update_idletasks()
         g = win.geometry()
-        if not _RE_TK_GEOMETRY.match(g):
-            return
-        data = _read_gui_state_dict()
-        data[state_key] = g
-        _write_gui_state_dict(data)
+        if _RE_TK_GEOMETRY.match(g):
+            data = _read_gui_state_dict()
+            data[state_key] = g
+            _write_gui_state_dict(data)
     except Exception:
         pass
 
+# GUI 状态
+_gui_state_lock = threading.Lock()
+_gui_logic_enabled = False
+_gui_send_mode = "switch"
+_gui_click_pending = False
+_gui_state_dict = {}
+_gui_class_name = None
+_gui_class_id = None
+_gui_spec_name = None
+_gui_spec_id = None
+_gui_current_step = ""
+_gui_unit_info = {}
+_gui_scan_ms = 0.0
 
-def _load_logic_module(module_name: str):
-    """Load a class-specific logic module from the `class/` package."""
-    m = importlib.import_module(f"class.{module_name}")
-    # Expected API: run_<class>_logic
-    return getattr(m, f"run_{module_name.replace('_logic', '')}_logic")
-
-run_priest_logic = _load_logic_module("priest_logic")
-run_druid_logic = _load_logic_module("druid_logic")
-run_paladin_logic = _load_logic_module("paladin_logic")
-run_deathknight_logic = _load_logic_module("deathknight_logic")
-run_warrior_logic = _load_logic_module("warrior_logic")
-run_hunter_logic = _load_logic_module("hunter_logic")
-run_rogue_logic = _load_logic_module("rogue_logic")
-run_shaman_logic = _load_logic_module("shaman_logic")
-run_mage_logic = _load_logic_module("mage_logic")
-run_warlock_logic = _load_logic_module("warlock_logic")
-run_monk_logic = _load_logic_module("monk_logic")
-run_demonhunter_logic = _load_logic_module("demonhunter_logic")
-run_evoker_logic = _load_logic_module("evoker_logic")
-
-TOGGLE_INTERVAL = 0.1
-LOGIC_INTERVAL = 0.2
-GUI_UPDATE_MS = 200
-TOGGLE_DEBOUNCE_SEC = 0.12
-
-LOGIC_FUNCS_BY_CLASS = {
-    1: run_warrior_logic,
-    2: run_paladin_logic,
-    3: run_hunter_logic,
-    4: run_rogue_logic,
-    5: run_priest_logic,
-    6: run_deathknight_logic,
-    7: run_shaman_logic,
-    8: run_mage_logic,
-    9: run_warlock_logic,
-    10: run_monk_logic,
-    11: run_druid_logic,
-    12: run_demonhunter_logic,
-    13: run_evoker_logic,
-}
-
-def _default_logic(state_dict, spec_name):
-    return None, "无逻辑定义", {}
-
-
-_toggle_lock = threading.Lock()
+# 鼠标钩子相关
 _toggle_key_str = "XBUTTON2"
-_toggle_vk = get_vk(_toggle_key_str)
+_toggle_vk = None
 _binding_key_mode = False
-
-# 鼠标侧键钩子：避免 GetAsyncKeyState 轮询 XBUTTON 导致光标闪烁
-_MOUSE_XBUTTON_VKS = {0x05, 0x06}  # VK_XBUTTON1, VK_XBUTTON2
-_xbutton_pressed = False   # 钩子维护的当前按下状态
-_xbutton_hook = None       # 钩子句柄
+_MOUSE_XBUTTON_VKS = {0x05, 0x06}
+_xbutton_pressed = False
+_xbutton_hook = None
 
 WH_MOUSE_LL = 14
 WM_XBUTTONDOWN = 0x020B
-WM_XBUTTONUP   = 0x020C
-XBUTTON1_FLAG  = 0x0001
-XBUTTON2_FLAG  = 0x0002
+WM_XBUTTONUP = 0x020C
+XBUTTON1_FLAG = 0x0001
+XBUTTON2_FLAG = 0x0002
+_toggle_lock = threading.Lock()
+_mouse_hook_proc_ref = None
 
-_LowLevelMouseProc = ctypes.WINFUNCTYPE(
-    ctypes.c_long, ctypes.c_int, ctypes.c_ulong, ctypes.POINTER(ctypes.c_ulong)
-)
+def _get_vk_for_gui(key_str):
+    """从 utils 导入 get_vk"""
+    from utils import get_vk
+    return get_vk(key_str)
 
 def _make_mouse_hook_proc():
+    global _toggle_vk
     class MSLLHOOKSTRUCT(ctypes.Structure):
         _fields_ = [
-            ("pt_x",      ctypes.c_long),
-            ("pt_y",      ctypes.c_long),
-            ("mouseData", ctypes.c_ulong),
-            ("flags",     ctypes.c_ulong),
-            ("time",      ctypes.c_ulong),
-            ("dwExtraInfo", ctypes.POINTER(ctypes.c_ulong)),
+            ("pt_x", ctypes.c_long), ("pt_y", ctypes.c_long), ("mouseData", ctypes.c_ulong),
+            ("flags", ctypes.c_ulong), ("time", ctypes.c_ulong), ("dwExtraInfo", ctypes.POINTER(ctypes.c_ulong)),
         ]
-
     def _proc(nCode, wParam, lParam):
         global _xbutton_pressed
         if nCode >= 0 and wParam in (WM_XBUTTONDOWN, WM_XBUTTONUP):
@@ -179,28 +267,16 @@ def _make_mouse_hook_proc():
                 if want_xb2 == is_xb2:
                     _xbutton_pressed = (wParam == WM_XBUTTONDOWN)
         return ctypes.windll.user32.CallNextHookEx(None, nCode, wParam, lParam)
-    return _LowLevelMouseProc(_proc)
-
-_mouse_hook_proc_ref = None  # 防止被 GC
+    return ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_int, ctypes.c_ulong, ctypes.POINTER(ctypes.c_ulong))(_proc)
 
 def _install_mouse_hook():
     global _xbutton_hook, _mouse_hook_proc_ref
     if _xbutton_hook is not None:
         return
     _mouse_hook_proc_ref = _make_mouse_hook_proc()
-    _xbutton_hook = ctypes.windll.user32.SetWindowsHookExW(
-        WH_MOUSE_LL, _mouse_hook_proc_ref, None, 0
-    )
-
-def _uninstall_mouse_hook():
-    global _xbutton_hook, _xbutton_pressed
-    if _xbutton_hook is not None:
-        ctypes.windll.user32.UnhookWindowsHookEx(_xbutton_hook)
-        _xbutton_hook = None
-    _xbutton_pressed = False
+    _xbutton_hook = ctypes.windll.user32.SetWindowsHookExW(WH_MOUSE_LL, _mouse_hook_proc_ref, None, 0)
 
 def _start_mouse_hook_thread():
-    """在独立线程中安装钩子并持续抽取消息（低级钩子必须在有消息循环的线程中运行）。"""
     def _hook_thread():
         _install_mouse_hook()
         msg = ctypes.wintypes.MSG()
@@ -213,147 +289,64 @@ def _start_mouse_hook_thread():
     t = threading.Thread(target=_hook_thread, daemon=True)
     t.start()
 
-# 发送按键模式：switch=开关(持续) / click=单击(一次) / hold=按住(按住持续)
-_send_mode = "switch"
-_click_pending = False
+BG_DARK = "#1e1e1e"
+BG_FRAME = "#2d2d2d"
+FG_LIGHT = "#eaeaea"
+GREEN = "#00d9a5"
+RED = "#ff6b6b"
+FG_DIM = "#94a3b8"
+WINDOW_ALPHA = 1.0
 
-_state_lock = threading.Lock()
-_logic_enabled = False
-_state_dict = {}
-_class_name = None
-_class_id = None
-_spec_name = None
-_spec_id = None
-_current_step = ""  # 当前步骤，每次逻辑循环都会更新
-_unit_info = {}  # 单位信息，供 GUI 显示
-_scan_ms = 0.0   # 上一次 get_info() 的扫描耗时（毫秒）
+CLASS_NAME_COLORS = {
+    "战士": "#C79C6E", "圣骑士": "#F58CBA", "猎人": "#ABD473", "盗贼": "#FFF569",
+    "潜行者": "#FFF569", "牧师": "#FFFFFF", "萨满": "#0070DE", "法师": "#69CCF0",
+    "术士": "#9482C9", "武僧": "#00FF96", "德鲁伊": "#FF7D0A", "死亡骑士": "#C41F3B",
+    "恶魔猎手": "#A330C9", "唤魔师": "#33937F",
+}
 
-_CONFIG_CACHE = None
-_DEFAULT_STATUS_KEYS = ["生命值", "能量值", "有效性", "战斗", "移动", "施法", "引导"]
-
-# 不在「实时状态」中展示的键（锚点/职业/专精在 YAML 中与 state 分列，仍不显示）
-_GUI_SKIP_STATE_KEYS = frozenset({"锚点", "职业", "专精"})
-
-
-def _get_global_state_display_keys():
-    """
-    从 config 顶层 state 生成固定展示列名：按 step 升序，排除 group/spells 及 _GUI_SKIP_STATE_KEYS。
-    若未配置 state，则退回 _DEFAULT_STATUS_KEYS。
-    """
-    config = _get_config_cached()
-    raw = config.get("state")
-    if not isinstance(raw, dict):
-        return list(_DEFAULT_STATUS_KEYS)
-    items = []
-    for k, v in raw.items():
-        if k in ("group", "spells") or k in _GUI_SKIP_STATE_KEYS:
-            continue
-        if not isinstance(v, dict) or "step" not in v:
-            continue
-        try:
-            step = int(v["step"])
-        except (TypeError, ValueError):
-            step = 0
-        items.append((step, k))
-    if not items:
-        return list(_DEFAULT_STATUS_KEYS)
-    items.sort(key=lambda x: x[0])
-    return [k for _, k in items]
-
-
-def _get_config_cached():
-    """config.yml 缓存：避免 GUI 每帧都重复解析 YAML。"""
-    global _CONFIG_CACHE
-    if _CONFIG_CACHE is None:
-        _CONFIG_CACHE = load_config()
-    return _CONFIG_CACHE
-
-
-def _get_class_spec_cfg(class_id, spec_id):
-    """获取 config.yml 里指定 (class_id, spec_id) 的 spec 配置块。"""
-    if class_id is None or spec_id is None:
-        return {}
-    config = _get_config_cached()
-    class_dict = config.get(class_id) or config.get(str(class_id)) or {}
-    if not isinstance(class_dict, dict):
-        return {}
-    return class_dict.get(spec_id) or class_dict.get(str(spec_id)) or {}
-
-
-def get_group_config_for_class_spec(class_id, spec_id):
-    """根据 config.yml 生成队伍字段表格配置 (num_units, fields)。"""
-    spec_cfg = _get_class_spec_cfg(class_id, spec_id)
-    group_cfg = spec_cfg.get("group") if isinstance(spec_cfg, dict) else None
-    if not isinstance(group_cfg, dict):
-        return (0, [])
+def _disable_ime_for_hwnd(hwnd: int):
     try:
-        num_units = int(group_cfg.get("num", 0))
-    except (TypeError, ValueError):
-        num_units = 0
-    fields = [k for k in group_cfg.keys() if k not in ("start", "num")]
-    return (num_units, fields)
+        imm32 = ctypes.windll.imm32
+        hIMC = imm32.ImmGetContext(hwnd)
+        if hIMC:
+            imm32.ImmSetOpenStatus(hIMC, 0)
+            imm32.ImmReleaseContext(hwnd, hIMC)
+            return True
+    except Exception:
+        pass
+    try:
+        ctypes.windll.imm32.ImmDisableIME(0)
+        return True
+    except Exception:
+        return False
 
+def _run_gui_background_loop():
+    """GUI 模式下的后台逻辑循环"""
+    global _gui_logic_enabled, _gui_state_dict, _gui_class_name, _gui_class_id
+    global _gui_spec_name, _gui_spec_id, _gui_current_step, _gui_unit_info, _gui_send_mode, _gui_click_pending, _gui_scan_ms
 
-def get_class_spec_view_data(class_id, spec_id):
-    """
-    聚合生成 GUI 所需数据，避免同一 spec_cfg 被重复解析三次：
-    返回 (status_keys, (num_units, fields), spells_list)
-    实时状态列：先固定展示 config 顶层 state（按 step），再追加当前专精独有字段（去重）。
-    """
-    fixed = _get_global_state_display_keys()
-    spec_cfg = _get_class_spec_cfg(class_id, spec_id)
-    if not isinstance(spec_cfg, dict) or not spec_cfg:
-        return fixed, (0, []), []
-
-    extra_keys = [k for k in spec_cfg.keys() if k not in ("spells", "group", "keymap")]
-    status_keys = list(fixed)
-    seen = set(fixed)
-    for k in extra_keys:
-        if k not in seen and k not in _GUI_SKIP_STATE_KEYS:
-            status_keys.append(k)
-            seen.add(k)
-
-    spells_cfg = spec_cfg.get("spells")
-    spells_list = list(spells_cfg.keys()) if isinstance(spells_cfg, dict) else []
-
-    group_cfg = spec_cfg.get("group")
-    if not isinstance(group_cfg, dict):
-        group_num = 0
-        fields = []
-    else:
-        try:
-            group_num = int(group_cfg.get("num", 0))
-        except (TypeError, ValueError):
-            group_num = 0
-        fields = [k for k in group_cfg.keys() if k not in ("start", "num")]
-
-    return status_keys, (group_num, fields), spells_list
-
-
-def _run_priest_loop():
-    """后台运行的全职业主循环（根据职业/专精自动适配）"""
-    global _logic_enabled, _state_dict, _class_name, _class_id, _spec_name, _spec_id, _current_step, _unit_info, _send_mode, _click_pending, _scan_ms
+    from utils import get_vk
     prev_pressed = False
-    prev_vk = _toggle_vk
+    prev_vk = _get_vk_for_gui(_toggle_key_str)
     last_logic_time = 0.0
     last_toggle_time = 0.0
+    global _toggle_vk
+    _toggle_vk = prev_vk
 
     while True:
         if _binding_key_mode:
-            time.sleep(TOGGLE_INTERVAL)
+            time.sleep(0.1)
             continue
 
         vk_now = _toggle_vk
         if vk_now is None:
-            time.sleep(TOGGLE_INTERVAL)
+            time.sleep(0.1)
             continue
 
-        # 如果用户在运行中修改了“开启逻辑”的按键，重置边沿状态，避免误触发
         if vk_now != prev_vk:
             prev_pressed = False
             prev_vk = vk_now
 
-        # 鼠标侧键用钩子状态，避免 GetAsyncKeyState 轮询 XBUTTON 导致光标闪烁
         if vk_now in _MOUSE_XBUTTON_VKS:
             current_pressed = _xbutton_pressed
             rising_raw = current_pressed and not prev_pressed
@@ -362,166 +355,98 @@ def _run_priest_loop():
             current_pressed = (key_state & 0x8000) != 0
             rising_raw = (current_pressed and not prev_pressed) or ((key_state & 0x0001) != 0)
         now = time.time()
-        # Mouse side buttons can jitter; debounce avoids rapid false toggles/flicker.
-        rising = rising_raw and (now - last_toggle_time >= TOGGLE_DEBOUNCE_SEC)
+        rising = rising_raw and (now - last_toggle_time >= _TOGGLE_DEBOUNCE_SEC)
         if rising:
             last_toggle_time = now
         falling = (not current_pressed) and prev_pressed
 
-        # 根据“发送模式”决定何时启用逻辑与何时只发送一次
-        mode = _send_mode
+        mode = _gui_send_mode
         if mode == "switch":
             if rising:
-                with _state_lock:
-                    _logic_enabled = not _logic_enabled
-                    _click_pending = False
-                _current_step = "逻辑 " + ("开启" if _logic_enabled else "关闭")
+                with _gui_state_lock:
+                    _gui_logic_enabled = not _gui_logic_enabled
+                    _gui_click_pending = False
+                _gui_current_step = "逻辑 " + ("开启" if _gui_logic_enabled else "关闭")
         elif mode == "click":
-            # 单击：按一次发送一次
             if rising:
-                with _state_lock:
-                    _logic_enabled = True
-                    _click_pending = True
-                _current_step = "单击触发"
-            # 松开不改变状态，由 pending 的“一次”发送逻辑决定何时关闭
+                with _gui_state_lock:
+                    _gui_logic_enabled = True
+                    _gui_click_pending = True
+                _gui_current_step = "单击触发"
         elif mode == "hold":
-            # 按住：持续发送，松开停止
-            with _state_lock:
-                _logic_enabled = current_pressed
-                _click_pending = False
+            with _gui_state_lock:
+                _gui_logic_enabled = current_pressed
+                _gui_click_pending = False
             if falling:
-                _current_step = "按住结束"
-        else:
-            # 兜底：不支持的模式按开关逻辑处理
-            if rising:
-                with _state_lock:
-                    _logic_enabled = not _logic_enabled
-                    _click_pending = False
-                _current_step = "逻辑 " + ("开启" if _logic_enabled else "关闭")
+                _gui_current_step = "按住结束"
 
         prev_pressed = current_pressed
 
-        if now - last_logic_time >= LOGIC_INTERVAL:
+        if now - last_logic_time >= 0.2:
             last_logic_time = now
             _t0 = time.perf_counter()
             state_dict = get_info()
-            _scan_ms = (time.perf_counter() - _t0) * 1000
-            class_name, spec_name = None, None
-            class_id, spec_id = None, None
+            _gui_scan_ms = (time.perf_counter() - _t0) * 1000
             if state_dict:
                 class_id = state_dict.get("职业")
                 spec_id = state_dict.get("专精")
-                config = _get_config_cached()
+                config = load_config()
                 class_name, spec_name = get_class_and_spec_name(config, class_id, spec_id)
                 select_keymap_for_class(class_id)
+                with _gui_state_lock:
+                    _gui_state_dict = state_dict
+                    _gui_class_name = class_name
+                    _gui_class_id = class_id
+                    _gui_spec_name = spec_name
+                    _gui_spec_id = spec_id
 
-            with _state_lock:
-                _state_dict = state_dict or {}
-                _class_name = class_name
-                _class_id = class_id
-                _spec_name = spec_name
-                _spec_id = spec_id
-
-        if not _logic_enabled:
-            time.sleep(TOGGLE_INTERVAL)
+        if not _gui_logic_enabled:
+            time.sleep(0.1)
             continue
 
-        sd = _state_dict
+        sd = _gui_state_dict
         if not sd or not sd.get("有效性"):
-            _current_step = "等待游戏状态"
-            time.sleep(TOGGLE_INTERVAL)
+            _gui_current_step = "等待游戏状态"
+            time.sleep(0.1)
             continue
 
-        state_dict = sd
-        class_id = _class_id
-        spec_name = _spec_name
+        class_id = _gui_class_id
+        spec_name = _gui_spec_name
         action_hotkey = None
-        _current_step = "无操作"  # 每轮重置，确保显示本轮决策
+        _gui_current_step = "无操作"
 
         logic_func = LOGIC_FUNCS_BY_CLASS.get(class_id, _default_logic)
-        action_hotkey, _current_step, unit_info_update = logic_func(state_dict, spec_name)
+        action_hotkey, _gui_current_step, unit_info_update = logic_func(sd, spec_name)
         if unit_info_update:
-            with _state_lock:
-                _unit_info = unit_info_update
+            with _gui_state_lock:
+                _gui_unit_info = unit_info_update
 
-        # 根据发送模式处理发送逻辑
         delay_after_send = 0.0
         if mode == "click":
-            with _state_lock:
-                pending = _click_pending
+            with _gui_state_lock:
+                pending = _gui_click_pending
             if pending:
-                # 只发送一次：无论是否命中 action_hotkey，都结束本次单击
                 if action_hotkey:
                     send_key_to_wow(action_hotkey)
-                    # 检查是否需要延迟
                     delay_after_send = unit_info_update.get("_delay", 0.0) if unit_info_update else 0.0
-                with _state_lock:
-                    _logic_enabled = False
-                    _click_pending = False
+                with _gui_state_lock:
+                    _gui_logic_enabled = False
+                    _gui_click_pending = False
         else:
             if action_hotkey:
                 send_key_to_wow(action_hotkey)
-                # 检查是否需要延迟
                 delay_after_send = unit_info_update.get("_delay", 0.0) if unit_info_update else 0.0
-        
-        # 如果有延迟需求，则延迟后再继续
+
         if delay_after_send > 0:
             time.sleep(delay_after_send)
         else:
-            time.sleep(TOGGLE_INTERVAL)
-
-# CustomTkinter 配色：深灰主题，文字高对比度
-BG_DARK = "#1e1e1e"
-BG_FRAME = "#2d2d2d"
-FG_LIGHT = "#eaeaea"
-GREEN = "#00d9a5"
-RED = "#ff6b6b"
-FG_DIM = "#94a3b8"
-WINDOW_ALPHA = 1.0   # 1.0=文字不透明；若需背景半透明可调低（整窗同透明度）
-
-# 职业名称颜色（用于 GUI 顶部“职业”显示）
-CLASS_NAME_COLORS = {
-    "战士": "#C79C6E",
-    "圣骑士": "#F58CBA",
-    "猎人": "#ABD473",
-    "盗贼": "#FFF569",
-    "潜行者": "#FFF569",
-    "牧师": "#FFFFFF",
-    "萨满": "#0070DE",
-    "法师": "#69CCF0",
-    "术士": "#9482C9",
-    "武僧": "#00FF96",
-    "德鲁伊": "#FF7D0A",
-    "死亡骑士": "#C41F3B",
-    "恶魔猎手": "#A330C9",
-    "唤魔师": "#33937F",
-}
-
-def _disable_ime_for_hwnd(hwnd: int):
-    """
-    尽量关闭指定窗口的 IME，避免窗口获取焦点后弹出输入法候选/输入窗口。
-    Windows IME 相关接口有兼容性差异，所以做了多种 best-effort。
-    """
-    try:
-        imm32 = ctypes.windll.imm32
-        hIMC = imm32.ImmGetContext(hwnd)
-        if hIMC:
-            # 0=关闭 IME 打开状态
-            imm32.ImmSetOpenStatus(hIMC, 0)
-            imm32.ImmReleaseContext(hwnd, hIMC)
-            return True
-    except Exception:
-        pass
-
-    # 兜底：不同系统/签名可能导致 ImmDisableIME 行为不一致
-    try:
-        ctypes.windll.imm32.ImmDisableIME(0)
-        return True
-    except Exception:
-        return False
-
+            time.sleep(0.1)
 
 def create_gui():
+    """创建并运行 GUI 窗口"""
+    global _toggle_vk
+    _toggle_vk = _get_vk_for_gui(_toggle_key_str)
+
     _start_mouse_hook_thread()
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
@@ -530,7 +455,6 @@ def create_gui():
     try:
         hwnd = root.winfo_id()
         _disable_ime_for_hwnd(hwnd)
-        # 再延迟一次，避免窗口刚创建/获得焦点后 IME 状态又被系统恢复
         root.after(200, lambda: _disable_ime_for_hwnd(root.winfo_id()))
     except Exception:
         pass
@@ -539,19 +463,16 @@ def create_gui():
     root.resizable(True, True)
     root.attributes("-topmost", True)
     root.configure(fg_color=BG_DARK)
-    # 背景半透明，文字使用高对比度颜色保持清晰
     root.attributes("-alpha", WINDOW_ALPHA)
 
     main_frame = ctk.CTkFrame(root, fg_color="transparent")
     main_frame.pack(fill="both", expand=True, padx=12, pady=12)
 
-    # ---- 1. 职业/专精 + 开关 ----
-    # 顶栏两行共用水平内边距，与右侧「信息」等按钮的 pack 边距一致，避免与第二行「按住」列右缘错位
     TOP_BAR_PADX = 14
     TOP_BAR_RIGHT_BTN_PADX = (0, 8)
-    # 「职业:」与「按键」首列左缘对齐（相对 inner_top / toggle_row 内容区）
     TOP_BAR_LEFT_INDENT = 14
     TOP_BAR_SIZE = 13
+
     top_frame = ctk.CTkFrame(main_frame, fg_color=BG_FRAME, corner_radius=8)
     top_frame.pack(fill="x", pady=(0, 6))
 
@@ -565,32 +486,22 @@ def create_gui():
     spec_label = ctk.CTkLabel(inner_top, text="专精: -", font=("Microsoft YaHei", TOP_BAR_SIZE, "bold"), text_color=FG_LIGHT)
     spec_label.pack(side="left", padx=(12, 0))
 
-    status_label = ctk.CTkLabel(
-        inner_top,
-        text="状态: 关闭",
-        font=("Microsoft YaHei", TOP_BAR_SIZE, "bold"),
-        text_color=RED,
-    )
+    status_label = ctk.CTkLabel(inner_top, text="状态: 关闭", font=("Microsoft YaHei", TOP_BAR_SIZE, "bold"), text_color=RED)
     status_label.pack(side="left", padx=(12, 0))
 
     toggle_row = ctk.CTkFrame(top_frame, fg_color="transparent")
     toggle_row.pack(fill="x", padx=TOP_BAR_PADX, pady=(0, 10))
 
     mode_btn_frame = ctk.CTkFrame(toggle_row, fg_color="transparent", border_width=0)
-    toggle_row_spacer = ctk.CTkFrame(toggle_row, fg_color="transparent", border_width=0)
     mode_btn_frame.pack(side="right", padx=TOP_BAR_RIGHT_BTN_PADX)
 
-    binding_in_progress = False
+    binding_in_progress = [False]
 
     def _display_key_str(key_str: str) -> str:
-        # 让空格等字符更友好显示
-        if key_str == " ":
-            return "SPACE"
-        return str(key_str)
+        return "SPACE" if key_str == " " else str(key_str)
 
     def _stop_binding():
-        nonlocal binding_in_progress
-        binding_in_progress = False
+        binding_in_progress[0] = False
         global _binding_key_mode
         _binding_key_mode = False
         bind_btn.configure(state="normal")
@@ -602,7 +513,7 @@ def create_gui():
 
     def _set_bound_key(key_str: str):
         global _toggle_key_str, _toggle_vk
-        vk = get_vk(key_str)
+        vk = _get_vk_for_gui(key_str)
         if vk is None:
             return False
         with _toggle_lock:
@@ -611,16 +522,12 @@ def create_gui():
         return True
 
     def on_key_press(event):
-        nonlocal binding_in_progress
-        if not binding_in_progress:
+        if not binding_in_progress[0]:
             return
-        # 防止某些输入法在检测 KeyPress 前后重新打开
         try:
             _disable_ime_for_hwnd(root.winfo_id())
         except Exception:
             pass
-
-        # Tk 的 event.char 在输入字符时更可靠；功能键通常 event.keysym 可用
         candidate = None
         ch = getattr(event, "char", "")
         if ch and isinstance(ch, str) and len(ch) == 1:
@@ -632,523 +539,111 @@ def create_gui():
                 candidate = " "
             else:
                 candidate = keysym.upper() if len(keysym) > 1 else keysym
-
         if not candidate:
             return
-
         if not _set_bound_key(candidate):
             bound_key_label.configure(text=f"已绑定:（不支持 {candidate}，请重试）")
             return
-
         bound_key_label.configure(text=f"已绑定: {_display_key_str(candidate)}")
         _stop_binding()
 
     def on_button_press(event):
-        nonlocal binding_in_progress
-        if not binding_in_progress:
+        if not binding_in_progress[0]:
             return
         try:
             _disable_ime_for_hwnd(root.winfo_id())
         except Exception:
             pass
-
-        # Tk 通常把额外鼠标键映射为 ButtonPress-4 / ButtonPress-5
         num = getattr(event, "num", None)
         candidate = None
         if num == 4:
             candidate = "XBUTTON1"
         elif num == 5:
             candidate = "XBUTTON2"
-
         if not candidate:
             bound_key_label.configure(text="已绑定:（不支持该鼠标键，请重试）")
             return
-
         if not _set_bound_key(candidate):
             bound_key_label.configure(text=f"已绑定:（不支持 {candidate}，请重试）")
             return
-
         bound_key_label.configure(text=f"已绑定: {_display_key_str(candidate)}")
         _stop_binding()
 
     def start_binding_key():
-        nonlocal binding_in_progress
-        if binding_in_progress:
+        if binding_in_progress[0]:
             return
-
-        binding_in_progress = True
+        binding_in_progress[0] = True
         global _binding_key_mode
         _binding_key_mode = True
         bind_btn.configure(state="disabled")
         bound_key_label.configure(text="已绑定:（请按下按键）")
-
-        # 让当前窗口获得焦点，尽量保证 KeyPress 能进来
         try:
             root.focus_force()
-            # focus 后立即再关一次 IME，避免候选/输入窗口被重新弹出
             _disable_ime_for_hwnd(root.winfo_id())
             root.after(100, lambda: _disable_ime_for_hwnd(root.winfo_id()))
         except Exception:
             pass
-
         root.bind("<KeyPress>", on_key_press)
         root.bind("<ButtonPress>", on_button_press)
 
-    bind_btn = ctk.CTkButton(
-        toggle_row,
-        text="按键",
-        command=start_binding_key,
-        font=("Microsoft YaHei", 12),
-        fg_color=BG_DARK,
-        text_color=FG_LIGHT,
-        hover_color="#3d3d3d",
-        corner_radius=8,
-        width=50,
-    )
-    bind_btn.pack(side="left", padx=(10, 8))
-
-    bound_key_label = ctk.CTkLabel(
-        toggle_row,
-        text=f"已绑定: {_display_key_str(_toggle_key_str)}",
-        font=("Microsoft YaHei", 12),
-        text_color=FG_DIM,
-    )
-    bound_key_label.pack(side="left", padx=(0, 8))
-
-    # 使用 GUI 按钮控制全局发送模式，并在切换时立即停止当前发送
     def set_send_mode(mode: str):
-        global _send_mode, _logic_enabled, _click_pending
-        with _state_lock:
-            _send_mode = mode
-            _click_pending = False
-            _logic_enabled = False
+        global _gui_send_mode, _gui_logic_enabled, _gui_click_pending
+        with _gui_state_lock:
+            _gui_send_mode = mode
+            _gui_click_pending = False
+            _gui_logic_enabled = False
         update_mode_buttons()
 
     def update_mode_buttons():
-        # 当前模式按钮绿色，其余白色
-        active = _send_mode
+        active = _gui_send_mode
         switch_btn.configure(text_color=GREEN if active == "switch" else FG_LIGHT)
         click_btn.configure(text_color=GREEN if active == "click" else FG_LIGHT)
         hold_btn.configure(text_color=GREEN if active == "hold" else FG_LIGHT)
 
-    switch_btn = ctk.CTkButton(
-        mode_btn_frame,
-        text="开关",
-        command=lambda: set_send_mode("switch"),
-        font=("Microsoft YaHei", 12),
-        width=50,
-        fg_color=BG_DARK,
-        text_color=GREEN if _send_mode == "switch" else FG_LIGHT,
-        hover_color="#3d3d3d",
-        corner_radius=8,
-    )
+    switch_btn = ctk.CTkButton(mode_btn_frame, text="开关", command=lambda: set_send_mode("switch"),
+                              font=("Microsoft YaHei", 12), width=50, fg_color=BG_DARK,
+                              text_color=GREEN if _gui_send_mode == "switch" else FG_LIGHT, hover_color="#3d3d3d", corner_radius=8)
     switch_btn.pack(side="left", padx=(0, 2))
 
-    click_btn = ctk.CTkButton(
-        mode_btn_frame,
-        text="单击",
-        command=lambda: set_send_mode("click"),
-        font=("Microsoft YaHei", 12),
-        width=50,
-        fg_color=BG_DARK,
-        text_color=GREEN if _send_mode == "click" else FG_LIGHT,
-        hover_color="#3d3d3d",
-        corner_radius=8,
-    )
+    click_btn = ctk.CTkButton(mode_btn_frame, text="单击", command=lambda: set_send_mode("click"),
+                             font=("Microsoft YaHei", 12), width=50, fg_color=BG_DARK,
+                             text_color=GREEN if _gui_send_mode == "click" else FG_LIGHT, hover_color="#3d3d3d", corner_radius=8)
     click_btn.pack(side="left", padx=(2, 2))
 
-    hold_btn = ctk.CTkButton(
-        mode_btn_frame,
-        text="按住",
-        command=lambda: set_send_mode("hold"),
-        font=("Microsoft YaHei", 12),
-        width=50,
-        fg_color=BG_DARK,
-        text_color=GREEN if _send_mode == "hold" else FG_LIGHT,
-        hover_color="#3d3d3d",
-        corner_radius=8,
-    )
+    hold_btn = ctk.CTkButton(mode_btn_frame, text="按住", command=lambda: set_send_mode("hold"),
+                            font=("Microsoft YaHei", 12), width=50, fg_color=BG_DARK,
+                            text_color=GREEN if _gui_send_mode == "hold" else FG_LIGHT, hover_color="#3d3d3d", corner_radius=8)
     hold_btn.pack(side="left", padx=(2, 0))
 
-    toggle_row_spacer.pack(side="left", fill="x", expand=True)
+    bind_btn = ctk.CTkButton(toggle_row, text="按键", command=start_binding_key,
+                            font=("Microsoft YaHei", 12), fg_color=BG_DARK,
+                            text_color=FG_LIGHT, hover_color="#3d3d3d", corner_radius=8, width=50)
+    bind_btn.pack(side="left", padx=(10, 8))
 
-    # ---- 3. 显示队伍（弹窗）----
-    def open_team_window():
-        with _state_lock:
-            spec_snapshot = _spec_name
-            class_snapshot = _class_name
-            spec_id_snapshot = _spec_id
-            class_id_snapshot = _class_id
-
-        # 专精未知时不显示弹窗内容（也不弹窗）
-        if spec_snapshot is None:
-            return
-
-        team_window = ctk.CTkToplevel(root)
-        team_window.title("队伍信息")
-        team_window.geometry(_load_subwindow_geometry("team_geometry", DEFAULT_TEAM_GEOMETRY))
-        team_window.resizable(True, True)
-        team_window.attributes("-topmost", True)
-        try:
-            team_window.attributes("-alpha", WINDOW_ALPHA)
-        except Exception:
-            pass
-
-        def _close_team_window():
-            _save_toplevel_geometry(team_window, "team_geometry")
-            try:
-                team_window.destroy()
-            except Exception:
-                pass
-
-        team_window.protocol("WM_DELETE_WINDOW", _close_team_window)
-
-        header_frame = ctk.CTkFrame(team_window, fg_color=BG_FRAME, corner_radius=8)
-        header_frame.pack(fill="x", padx=12, pady=(12, 8))
-        header_label = ctk.CTkLabel(
-            header_frame,
-            text=f"队伍信息（职业: {class_snapshot or '-'} / 专精: {spec_snapshot or '-'})",
-            font=("Microsoft YaHei", 12, "bold"),
-            text_color=FG_LIGHT,
-            anchor="w",
-        )
-        header_label.pack(fill="x", padx=12, pady=10)
-
-        body_frame = ctk.CTkFrame(team_window, fg_color="transparent")
-        body_frame.pack(fill="both", expand=True, padx=12, pady=(0, 12))
-
-        team_text = ctk.CTkTextbox(
-            body_frame,
-            wrap="none",
-            font=("Consolas", 11),
-            corner_radius=8,
-        )
-        team_text.pack(fill="both", expand=True)
-        team_text.configure(state="disabled")
-
-        def format_value(v):
-            if v is None:
-                return "-"
-            if isinstance(v, bool):
-                return "是" if v else "否"
-            return str(v)
-
-        def build_team_text(sd, spec_name, class_id, spec_id, unit_info):
-            if spec_name is None:
-                return ""
-
-            group = sd.get("group") or {}
-            if not group:
-                return "未检测到队伍数据（请确认游戏窗口存在且扫描成功）。\n"
-
-            # group keys 理论上是 "1".."30"
-            unit_keys = sorted(
-                group.keys(),
-                key=lambda x: int(x) if str(x).isdigit() else 10**9,
-            )
-
-            # 字段排序：优先使用当前专精在主界面显示的字段顺序，其余字段按字母排序补齐
-            ordered_fields = []
-            if spec_name and class_id is not None and spec_id is not None:
-                try:
-                    _, fields_for_spec = get_group_config_for_class_spec(class_id, spec_id)
-                    ordered_fields.extend([f for f in fields_for_spec if f not in ordered_fields])
-                except Exception:
-                    pass
-
-            rest_fields = set()
-            for uk in unit_keys:
-                unit_data = group.get(uk) or {}
-                for f in unit_data.keys():
-                    if f not in ordered_fields:
-                        rest_fields.add(f)
-
-            ordered_fields.extend(sorted(rest_fields))
-
-            lines = []
-            lines.append(f"单位总数: {len(unit_keys)}")
-            lines.append(f"字段数: {len(ordered_fields)}")
-            lines.append("")
-
-            for uk in unit_keys:
-                unit_data = group.get(uk) or {}
-                # 每个单位严格一行：字段之间用分隔符拼接，避免多行导致滚动成本过高
-                field_parts = []
-                for f in ordered_fields:
-                    field_parts.append(f"{f}={format_value(unit_data.get(f))}")
-                lines.append(f"Unit {uk}: " + " | ".join(field_parts))
-
-            if unit_info:
-                lines.append("")
-                lines.append("逻辑推荐/目标单位（unit_info）")
-                for k in sorted(unit_info.keys()):
-                    lines.append(f"  {k}: {format_value(unit_info.get(k))}")
-
-            return "\n".join(lines) + "\n"
-
-        # 自动刷新：让弹窗能跟随实时状态变化
-        def refresh():
-            if not team_window.winfo_exists():
-                return
-
-            with _state_lock:
-                sd_now = dict(_state_dict)
-                spec_now = _spec_name
-                class_now = _class_name
-                spec_id_now = _spec_id
-                class_id_now = _class_id
-                unit_info_now = dict(_unit_info)
-
-            # 更新顶部标题（职业/专精可能在首次打开后发生变化）
-            if spec_now is None:
-                header_label.configure(
-                    text=f"队伍信息（职业: {class_now or '-'} / 专精: -）"
-                )
-                team_text.configure(state="normal")
-                team_text.delete("1.0", "end")
-                team_text.configure(state="disabled")
-            else:
-                header_label.configure(
-                    text=f"队伍信息（职业: {class_now or '-'} / 专精: {spec_now or '-'})"
-                )
-
-                team_text.configure(state="normal")
-                team_text.delete("1.0", "end")
-                team_text.insert("end", build_team_text(sd_now, spec_now, class_id_now, spec_id_now, unit_info_now))
-                team_text.configure(state="disabled")
-
-            TEAM_WINDOW_REFRESH_MS = 500
-            team_window.after(TEAM_WINDOW_REFRESH_MS, refresh)
-
-        refresh()
-
-    _live_info_win = [None]
-    _live_info_btn_ref = [None]
-
-    def open_live_info_window():
-        with _state_lock:
-            spec_snapshot = _spec_name
-
-        if spec_snapshot is None:
-            return
-
-        existing = _live_info_win[0]
-        if existing is not None:
-            try:
-                if existing.winfo_exists():
-                    existing.lift()
-                    try:
-                        existing.focus_force()
-                    except Exception:
-                        pass
-                    return
-            except Exception:
-                pass
-
-        live_win = ctk.CTkToplevel(root)
-        _live_info_win[0] = live_win
-        live_win.title("实时信息")
-        live_win.geometry(_load_subwindow_geometry("live_info_geometry", DEFAULT_LIVE_INFO_GEOMETRY))
-        live_win.resizable(True, True)
-        live_win.attributes("-topmost", True)
-        try:
-            live_win.attributes("-alpha", WINDOW_ALPHA)
-        except Exception:
-            pass
-
-        def on_close():
-            _save_toplevel_geometry(live_win, "live_info_geometry")
-            _live_info_win[0] = None
-            b = _live_info_btn_ref[0]
-            if b is not None:
-                try:
-                    b.configure(text_color=FG_LIGHT)
-                except Exception:
-                    pass
-            try:
-                live_win.destroy()
-            except Exception:
-                pass
-
-        live_win.protocol("WM_DELETE_WINDOW", on_close)
-
-        body = ctk.CTkFrame(live_win, fg_color="transparent")
-        body.pack(fill="both", expand=True, padx=12, pady=12)
-
-        status_frame = ctk.CTkFrame(body, fg_color=BG_FRAME, corner_radius=8)
-        status_frame.pack(fill="both", expand=True, pady=(0, 6))
-
-        status_header = ctk.CTkFrame(status_frame, fg_color="transparent")
-        status_header.pack(fill="x", padx=12, pady=(10, 2))
-        ctk.CTkLabel(status_header, text="实时状态", font=("Microsoft YaHei", 13, "bold"), text_color=FG_LIGHT).pack(
-            side="left"
-        )
-        scan_ms_label = ctk.CTkLabel(status_header, text="扫描: - ms", font=("Microsoft YaHei", 11), text_color=FG_DIM)
-        scan_ms_label.pack(side="right")
-
-        status_grid = ctk.CTkFrame(status_frame, fg_color="transparent")
-        status_grid.pack(fill="x", padx=12, pady=4)
-
-        status_vars = {}
-
-        def update_status_display(keys):
-            for w in status_grid.winfo_children():
-                w.destroy()
-            status_vars.clear()
-            for i, k in enumerate(keys):
-                row, col = i // 3, (i % 3) * 2
-                ctk.CTkLabel(status_grid, text=k + ":", font=("Microsoft YaHei", 12), text_color=FG_DIM).grid(
-                    row=row, column=col, sticky="w", padx=(0, 4), pady=1
-                )
-                lbl = ctk.CTkLabel(status_grid, text="-", font=("Microsoft YaHei", 12), text_color=FG_LIGHT)
-                lbl.grid(row=row, column=col + 1, sticky="w", padx=(0, 16), pady=1)
-                status_vars[k] = lbl
-
-        action_label = ctk.CTkLabel(status_frame, text="当前步骤: -", font=("Microsoft YaHei", 12), text_color=FG_LIGHT)
-        action_label.pack(anchor="w", padx=12, pady=(8, 10))
-
-        cooldown_frame = ctk.CTkFrame(body, fg_color=BG_FRAME, corner_radius=8)
-        cooldown_frame.pack(fill="x", pady=(0, 6))
-        cooldown_header = ctk.CTkFrame(cooldown_frame, fg_color="transparent")
-        cooldown_header.pack(fill="x", padx=12, pady=(10, 2))
-        ctk.CTkLabel(cooldown_header, text="技能冷却", font=("Microsoft YaHei", 13, "bold"), text_color=FG_LIGHT).pack(
-            side="left"
-        )
-        cooldown_grid = ctk.CTkFrame(cooldown_frame, fg_color="transparent")
-        cooldown_grid.pack(fill="x", padx=12, pady=(4, 10))
-        cooldown_vars = {}
-
-        cooldown_per_row = 3
-
-        def update_cooldown_display(spell_list):
-            """根据专精技能列表重建冷却显示，每行 3 个技能"""
-            for w in cooldown_grid.winfo_children():
-                w.destroy()
-            cooldown_vars.clear()
-            if not spell_list:
-                return
-            for i, name in enumerate(spell_list):
-                row = i // cooldown_per_row
-                col = (i % cooldown_per_row) * 2
-                ctk.CTkLabel(cooldown_grid, text=name + ":", font=("Microsoft YaHei", 11), text_color=FG_DIM).grid(
-                    row=row, column=col, sticky="w", padx=(0, 4), pady=1
-                )
-                lbl = ctk.CTkLabel(cooldown_grid, text="-", font=("Microsoft YaHei", 11), text_color=FG_LIGHT)
-                lbl.grid(row=row, column=col + 1, sticky="w", padx=(0, 16), pady=1)
-                cooldown_vars[name] = lbl
-
-        last_cooldown_spells = [None]
-        last_status_keys = [None]
-
-        def refresh_live():
-            if not live_win.winfo_exists():
-                return
-
-            with _state_lock:
-                sd = dict(_state_dict)
-                spec = _spec_name
-                class_id = _class_id
-                spec_id = _spec_id
-
-            if spec is None:
-                scan_ms_label.configure(text="扫描: -")
-                action_label.configure(text="当前步骤: 专精未知")
-                live_win.after(GUI_UPDATE_MS, refresh_live)
-                return
-
-            current_status_keys, _, current_cooldown_spells = get_class_spec_view_data(class_id, spec_id)
-            if last_status_keys[0] != current_status_keys:
-                last_status_keys[0] = current_status_keys
-                update_status_display(current_status_keys)
-
-            if last_cooldown_spells[0] != current_cooldown_spells:
-                last_cooldown_spells[0] = current_cooldown_spells
-                update_cooldown_display(current_cooldown_spells)
-
-            spells_data = sd.get("spells") or {}
-            for name, lbl in cooldown_vars.items():
-                val = spells_data.get(name)
-                if val is None:
-                    lbl.configure(text="-", text_color=FG_DIM)
-                else:
-                    lbl.configure(text=str(int(val)), text_color=FG_LIGHT)
-
-            for k in status_vars:
-                v = sd.get(k)
-                txt = str(v) if v is not None else "-"
-                status_vars[k].configure(text=txt, text_color=GREEN if v is True else (RED if v is False else FG_LIGHT))
-
-            action_label.configure(text=f"当前步骤: {_current_step}")
-            scan_ms_label.configure(text=f"扫描: {_scan_ms:.1f} ms")
-
-            live_win.after(GUI_UPDATE_MS, refresh_live)
-
-        b = _live_info_btn_ref[0]
-        if b is not None:
-            b.configure(text_color=GREEN)
-
-        refresh_live()
-
-    # 顶部：实时信息、显示队伍
-    live_info_btn = ctk.CTkButton(
-        inner_top,
-        text="信息",
-        command=open_live_info_window,
-        font=("Microsoft YaHei", 12),
-        width=50,
-        fg_color=BG_DARK,
-        text_color=FG_LIGHT,
-        hover_color="#3d3d3d",
-        corner_radius=8,
-    )
-    live_info_btn.pack(side="right", padx=TOP_BAR_RIGHT_BTN_PADX)
-    _live_info_btn_ref[0] = live_info_btn
-
-    ctk.CTkButton(
-        inner_top,
-        text="队伍",
-        command=open_team_window,
-        font=("Microsoft YaHei", 12),
-        width=50,
-        fg_color=BG_DARK,
-        text_color=FG_LIGHT,
-        hover_color="#3d3d3d",
-        corner_radius=8,
-    ).pack(side="right", padx=(8, 0))
+    bound_key_label = ctk.CTkLabel(toggle_row, text=f"已绑定: {_display_key_str(_toggle_key_str)}",
+                                  font=("Microsoft YaHei", 12), text_color=FG_DIM)
+    bound_key_label.pack(side="left", padx=(0, 8))
 
     def update_display():
-        with _state_lock:
-            enabled = _logic_enabled
-            mode = _send_mode
-            class_name = _class_name
-            spec = _spec_name
+        with _gui_state_lock:
+            enabled = _gui_logic_enabled
+            mode = _gui_send_mode
+            class_name = _gui_class_name
+            spec = _gui_spec_name
 
-        class_name_label.configure(
-            text=class_name or "-",
-            text_color=CLASS_NAME_COLORS.get(class_name, FG_LIGHT),
-        )
+        class_name_label.configure(text=class_name or "-", text_color=CLASS_NAME_COLORS.get(class_name, FG_LIGHT))
         spec_label.configure(text=f"专精: {spec or '-'}")
 
-        # 发送模式显示：单击模式固定显示“状态: 单击”并高亮
         if mode == "click":
             status_label.configure(text="状态: 单击", text_color=GREEN)
         else:
-            status_label.configure(
-                text=f"状态: {'开启' if enabled else '关闭'}",
-                text_color=GREEN if enabled else RED,
-            )
+            status_label.configure(text=f"状态: {'开启' if enabled else '关闭'}", text_color=GREEN if enabled else RED)
 
         root.after(GUI_UPDATE_MS, update_display)
 
     root.after(0, update_display)
 
-    def start_worker():
-        try:
-            _run_priest_loop()
-        except Exception as e:
-            print("Worker error:", e)
-
-    worker = threading.Thread(target=start_worker, daemon=True)
+    worker = threading.Thread(target=_run_gui_background_loop, daemon=True)
     worker.start()
 
     def on_main_window_close():
@@ -1156,9 +651,30 @@ def create_gui():
         root.destroy()
 
     root.protocol("WM_DELETE_WINDOW", on_main_window_close)
-
     root.mainloop()
 
+# =============================================================================
+# 主入口
+# =============================================================================
+
+def main():
+    parser = argparse.ArgumentParser(description="Fuyutsui - Unify GUI and headless runtime")
+    parser.add_argument("--headless", action="store_true", help="Run without GUI")
+    parser.add_argument("--window-title", default=DEFAULT_WINDOW_TITLE, help="Window title for pixel capture")
+    parser.add_argument("--interval", type=float, default=DEFAULT_INTERVAL, help="Scan interval in seconds")
+    parser.add_argument("--debug", action="store_true", help="Enable debug logging")
+    args = parser.parse_args()
+
+    if args.headless:
+        try:
+            run_headless(args.window_title, max(0.01, args.interval), args.debug)
+        except KeyboardInterrupt:
+            _log("Fuyutsui headless runtime stopped.")
+        except Exception as exc:
+            _log(f"Fuyutsui headless runtime crashed: {exc!r}")
+            raise
+    else:
+        create_gui()
 
 if __name__ == "__main__":
-    create_gui()
+    main()
