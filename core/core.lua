@@ -81,6 +81,7 @@ function Fuyutsui:OnEnable()
     self:RegisterEvent("SPELLS_CHANGED")
     self:RegisterEvent("ACTIONBAR_HIDEGRID")
     self:RegisterEvent("ACTIONBAR_SHOWGRID")
+    self:RegisterEvent("SPELL_UPDATE_CHARGES")
     if self.StartFrameUpdates then
         self:StartFrameUpdates()
     end

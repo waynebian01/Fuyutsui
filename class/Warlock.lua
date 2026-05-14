@@ -46,7 +46,9 @@ Fuyutsui.ClassBlocks = {
     },
     [2] = {
 
-        ["countBars1"] = { type = "countBar", name = "内爆", minValue = 0, maxValue = 20, spellId = 196277 },
+        ["countBars"] = {
+            { valueType = "castCount", name = "内爆", minValue = 0, maxValue = 20, spellId = 196277 }
+        },
 
         [1] = { type = "block", name = "锚点" },
         [2] = { type = "block", name = "职业" },

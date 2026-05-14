@@ -164,46 +164,43 @@ def run_druid_logic(state_dict, spec_name):
             elif 生命值 < 60 and 能量值 > 10 and 狂暴回复_cd < 1:
                 current_step = "施放 狂暴回复"
                 action_hotkey = get_hotkey(0, "狂暴回复")
-            elif 碎甲咆哮_cd == 0 and 能量值 > 70 and 痛击_cd > 0:
-                current_step = "施放 碎甲咆哮"
-                action_hotkey = get_hotkey(0, "碎甲咆哮")
-            elif 铁鬃 < 2 and 能量值 > 40 :
+            #elif 碎甲咆哮_cd == 0 and 能量值 > 70 and 痛击_cd > 0:
+            #    current_step = "施放 碎甲咆哮"
+            #    action_hotkey = get_hotkey(0, "碎甲咆哮")
+            elif 铁鬃 < 5 and 能量值 > 40 :
                 current_step = "施放 铁鬃"
                 action_hotkey = get_hotkey(0, "铁鬃")
-            elif 能量值 > 70 and 生命值 < 60:
-                current_step = "施放 铁鬃"
-                action_hotkey = get_hotkey(0, "铁鬃")
-            elif 重殴_cd == 0 and 能量值 > 70 :
-                current_step = "施放 重殴"
-                action_hotkey = get_hotkey(0, "重殴")
-            elif 梦境层数 > 0 and 狂暴回复_cd > 15:
-                current_step = "施放 愈合"
-                action_hotkey = get_hotkey(1, "愈合")
+            #elif 能量值 > 70 and 生命值 < 60:
+            #    current_step = "施放 铁鬃"
+            #    action_hotkey = get_hotkey(0, "铁鬃")
+            #elif 重殴_cd == 0 and 能量值 > 70 :
+            #    current_step = "施放 重殴"
+            #    action_hotkey = get_hotkey(0, "重殴")
+            #elif 梦境层数 > 0 and 狂暴回复_cd > 15:
+            #    current_step = "施放 愈合"
+            #    action_hotkey = get_hotkey(1, "愈合")
             elif 赤红之月_cd == 0:
                 current_step = "施放 赤红之月"
                 action_hotkey = get_hotkey(0, "月火术")
             elif 星河守护者 > 0:
                 current_step = "施放 月火术"
                 action_hotkey = get_hotkey(0, "月火术")
-            elif 淤血 > 0:
-                current_step = "施放 裂伤"
-                action_hotkey = get_hotkey(0, "裂伤")
-            
-            elif tup:
-                current_step = f"施放 {tup[0]}"
-                action_hotkey = get_hotkey(0, tup[1])
+            #elif 淤血 > 0:
+            #    current_step = "施放 裂伤"
+            #    action_hotkey = get_hotkey(0, "裂伤")
+            elif 0 <= 痛击_cd <= 1:
+                current_step = "施放 痛击"
+                action_hotkey = get_hotkey(0, "痛击")
             else:
-                current_step = "战斗中-无匹配技能"
+                current_step = "施放 月火术"
+                action_hotkey = get_hotkey(0, "月火术")
+            # elif tup:
+            #     current_step = f"施放 {tup[0]}"
+            #     action_hotkey = get_hotkey(0, tup[1])
+            # else:
+            #     current_step = "战斗中-无匹配技能"
         else:
             current_step = "不执行任何操作"
-
-    elif spec_name == "平衡":
-        current_step = "平衡专精,不执行任何操作"
-        return None, current_step, unit_info
-
-    elif spec_name == "野性":
-        current_step = "野性专精,不执行任何操作"
-        return None, current_step, unit_info
 
     elif spec_name == "奶德":
         目标距离 = state_dict.get("目标距离", 0)

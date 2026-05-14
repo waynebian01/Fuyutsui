@@ -2,9 +2,9 @@ if UnitClassBase("player") ~= "MONK" then return end
 local addon, ns = ...
 Fuyutsui.ClassBlocks = {
     [1] = {
-
-        ["countBars1"] = { type = "countBar", name = "疗伤珠", minValue = 0, maxValue = 10, spellId = 322101 },
-
+        ["countBars"] = {
+            { valueType = "castCount", name = "疗伤珠", minValue = 0, maxValue = 10, spellId = 322101 },
+        },
         [1] = { type = "block", name = "锚点" },
         [2] = { type = "block", name = "职业" },
         [3] = { type = "block", name = "专精" },
@@ -60,9 +60,10 @@ Fuyutsui.ClassBlocks = {
 
     },
     [2] = {
-        ["countBars1"] = { type = "countBar", name = "法力茶", minValue = 0, maxValue = 20, spellId = 115294 },
-        ["countBars2"] = { type = "countBar", name = "神龙之赐", minValue = 0, maxValue = 10, spellId = 399491 },
-
+        ["countBars"] = {
+            { valueType = "castCount", name = "法力茶", minValue = 0, maxValue = 20, spellId = 115294 },
+            { valueType = "castCount", name = "神龙之赐", minValue = 0, maxValue = 10, spellId = 399491 },
+        },
         [1] = { type = "block", name = "锚点" },
         [2] = { type = "block", name = "职业" },
         [3] = { type = "block", name = "专精" },
