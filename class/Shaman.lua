@@ -78,6 +78,12 @@ Fuyutsui.ClassBlocks = {
 
     },
     [3] = {
+
+        ["countBars"] = {
+            { valueType = "charge", name = "激流", minValue = 0, maxValue = 2, spellId = 61295 },
+            { valueType = "charge", name = "治疗之泉图腾", minValue = 0, maxValue = 4, spellId = 5394 }
+        },
+
         [1] = { type = "block", name = "锚点" },
         [2] = { type = "block", name = "职业" },
         [3] = { type = "block", name = "专精" },

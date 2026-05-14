@@ -79,6 +79,9 @@ def _priest_discipline_logic(state_dict):
     祸福相依 = int(state_dict.get("祸福相依", 0))
     祸福层数 = int(state_dict.get("祸福层数", 0))
 
+    苦修层数 = int(state_dict.get("苦修层数", 0))
+    耀层数 = int(state_dict.get("耀层数", 0))
+
     心灵尖啸 = spells.get("心灵尖啸", -1)
     群体驱散 = spells.get("群体驱散", -1)
     纯净术 = spells.get("纯净术", -1)
@@ -95,10 +98,11 @@ def _priest_discipline_logic(state_dict):
     灭 = spells.get("暗言术：灭", -1)
     
     失败法术 = _get_failed_spell(state_dict)
-
-    耀阈值 = 90
-    if 耀 == 0: 耀阈值 = int(90 - (耀充能 * 0.6))
-    elif 耀 > 0: 耀阈值 = int(80 - (耀充能 * 0.6))
+    
+    if 施法技能 == 30: # 耀
+       耀层数 = int(耀层数 - 1)
+    
+    耀阈值 = int(66 + (耀层数 * 12))
     
     dispel_unit_magic, _ = get_unit_with_dispel_type(state_dict, 1)
     dispel_unit_disease, _ = get_unit_with_dispel_type(state_dict, 3)
@@ -222,7 +226,7 @@ def _priest_discipline_logic(state_dict):
                 elif not 移动 and 心灵震爆 == 0:
                     current_step = "施放 心灵震爆"
                     action_hotkey = get_hotkey(0, "心灵震爆")
-                elif 苦修 == 0 and 苦修充能 < 1:
+                elif 苦修 == 0 and 苦修层数 == 2:
                     current_step = "施放 苦修"
                     action_hotkey = get_hotkey(0, "苦修")
                 elif not 移动:
@@ -348,7 +352,10 @@ def _priest_holy_logic(state_dict):
     织光层数 = int(state_dict.get("织光层数", 0) or 0)
     圣光涌动 = int(state_dict.get("圣光涌动", 0) or 0)
     祈福 = int(state_dict.get("祈福", 0) or 0)
-    
+    # 技能充能层数
+    愈合祷言层数 = int(state_dict.get("愈合祷言层数", 0) or 0)
+    静层数 = int(state_dict.get("静层数", 0) or 0)
+
     愈合祷言_cd = spells.get("愈合祷言", -1)
     静_cd = spells.get("圣言术：静", -1)
     静_charge = spells.get("静充能", -1)
@@ -395,20 +402,14 @@ def _priest_holy_logic(state_dict):
             current_step = "战斗中-无匹配技能"
 
     # 愈合祷言逻辑
-    def _mending_filler():
-        nonlocal current_step, action_hotkey
-        if 愈合祷言_cd == 0 and no_mend_u is not None and no_mend_p is not None and no_mend_p < 95:
-            current_step = f"施放 愈合祷言 on {no_mend_u}, 无愈合祷言生命低于95%的单位"
-            action_hotkey = get_hotkey(int(no_mend_u), "愈合祷言")
-        elif 愈合祷言_cd == 0 and no_mend_tank is not None:
-            current_step = f"施放 愈合祷言 on {no_mend_tank}, 无愈合祷言坦克"
-            action_hotkey = get_hotkey(int(no_mend_tank), "愈合祷言")
-        elif 愈合祷言_cd == 0 and no_mend_u is not None:
-            current_step = f"施放 愈合祷言 on {no_mend_u}, 无愈合祷言的单位"
-            action_hotkey = get_hotkey(int(no_mend_u), "愈合祷言")
-        else:
-            current_step = f"施放 愈合祷言 on 玩家"
-            action_hotkey = get_hotkey(1, "愈合祷言")
+    愈合祷言单位 = None
+    if 愈合祷言_cd == 0 :
+        if no_mend_u is not None and no_mend_p is not None and no_mend_p < 95:
+            愈合祷言单位 = no_mend_u
+        elif no_mend_tank is not None:
+            愈合祷言单位 = no_mend_tank 
+        elif no_mend_u is not None:
+            愈合祷言单位 = no_mend_u
 
     驱散单位 = None
     if dispel_magic_unit is not None:
@@ -443,8 +444,9 @@ def _priest_holy_logic(state_dict):
                 current_step = f"施放 纯净术 on 目标"
                 action_hotkey = get_hotkey(0, "纯净术")
             # 愈合祷言
-            elif 愈合祷言_cd == 0:
-                _mending_filler()
+            elif 愈合祷言单位 is not None:
+                current_step = f"施放 愈合祷言 on {愈合祷言单位}"
+                action_hotkey = get_hotkey(int(愈合祷言单位), "愈合祷言")
              # 光晕
             elif 施法技能 != 17 and count90 >= 2 and 光晕_cd == 0:
                 current_step = "施放 光晕"
@@ -490,8 +492,9 @@ def _priest_holy_logic(state_dict):
                 current_step = f"施放 纯净术 on 目标"
                 action_hotkey = get_hotkey(0, "纯净术")
             # 愈合祷言
-            elif 愈合祷言_cd == 0:
-                _mending_filler()
+            elif 愈合祷言单位 is not None:
+                current_step = f"施放 愈合祷言 on {愈合祷言单位}"
+                action_hotkey = get_hotkey(int(愈合祷言单位), "愈合祷言")
             # 治疗逻辑
             elif lowest_u is not None and lowest_p is not None and lowest_p < 90:
                 # 圣言术：静

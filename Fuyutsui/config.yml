@@ -317,6 +317,8 @@ state:
     福音层数: {step: 30, type: "int" }
     祸福相依: {step: 46, type: "int" }
     祸福层数: {step: 47, type: "int" }
+    苦修层数: {step: bar, bar: 1, type: "int"}
+    耀层数: {step: bar, bar: 2, type: "int"}
     spells:
       心灵尖啸: {step: 31, type: "int" }
       群体驱散: {step: 32, type: "int" }
@@ -350,6 +352,9 @@ state:
     织光层数: {step: 26, type: "int" }
     圣光涌动: {step: 27, type: "int" }
     祈福: {step: 28, type: "int" }
+
+    愈合祷言层数: {step: bar, bar: 1, type: "int"}
+    静层数: {step: bar, bar: 2, type: "int"}
 
     spells:
       心灵尖啸: {step: 31, type: "int" }
@@ -529,6 +534,9 @@ state:
     生命释放: {step: 28, type: "int" }
     升腾: {step: 29, type: "int" }
     
+    激流层数: {step: bar, bar: 1, type: "int"}
+    治疗之泉图腾层数: {step: bar, bar: 2, type: "int"}
+
     spells:
       风剪: {step: 31, type: "int" }
       土元素: {step: 32, type: "int" }

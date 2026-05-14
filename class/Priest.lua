@@ -3,15 +3,21 @@ local addon, ns = ...
 
 Fuyutsui.ClassBlocks = {
     [1] = {
-        [1]  = { type = "block", name = "锚点" },
-        [2]  = { type = "block", name = "职业" },
-        [3]  = { type = "block", name = "专精" },
-        [4]  = { type = "block", name = "有效性" },
-        [5]  = { type = "block", name = "战斗" },
-        [6]  = { type = "block", name = "移动" },
-        [7]  = { type = "block", name = "施法" },
-        [8]  = { type = "block", name = "引导" },
-        [9]  = { type = "block", name = "蓄力" },
+
+        ["countBars"] = {
+            { valueType = "charge", name = "苦修", minValue = 0, maxValue = 2, spellId = 47540 },
+            { valueType = "charge", name = "真言术：耀", minValue = 0, maxValue = 2, spellId = 194509 }
+        },
+
+        [1] = { type = "block", name = "锚点" },
+        [2] = { type = "block", name = "职业" },
+        [3] = { type = "block", name = "专精" },
+        [4] = { type = "block", name = "有效性" },
+        [5] = { type = "block", name = "战斗" },
+        [6] = { type = "block", name = "移动" },
+        [7] = { type = "block", name = "施法" },
+        [8] = { type = "block", name = "引导" },
+        [9] = { type = "block", name = "蓄力" },
         [10] = { type = "block", name = "蓄力层数" },
         [11] = { type = "block", name = "生命值" },
         [12] = { type = "block", name = "能量值" },
@@ -68,15 +74,20 @@ Fuyutsui.ClassBlocks = {
         },
     },
     [2] = {
-        [1]  = { type = "block", name = "锚点" },
-        [2]  = { type = "block", name = "职业" },
-        [3]  = { type = "block", name = "专精" },
-        [4]  = { type = "block", name = "有效性" },
-        [5]  = { type = "block", name = "战斗" },
-        [6]  = { type = "block", name = "移动" },
-        [7]  = { type = "block", name = "施法" },
-        [8]  = { type = "block", name = "引导" },
-        [9]  = { type = "block", name = "蓄力" },
+        ["countBars"] = {
+            { valueType = "charge", name = "愈合祷言", minValue = 0, maxValue = 2, spellId = 33076 },
+            { valueType = "charge", name = "圣言术：静", minValue = 0, maxValue = 2, spellId = 2050 }
+        },
+
+        [1] = { type = "block", name = "锚点" },
+        [2] = { type = "block", name = "职业" },
+        [3] = { type = "block", name = "专精" },
+        [4] = { type = "block", name = "有效性" },
+        [5] = { type = "block", name = "战斗" },
+        [6] = { type = "block", name = "移动" },
+        [7] = { type = "block", name = "施法" },
+        [8] = { type = "block", name = "引导" },
+        [9] = { type = "block", name = "蓄力" },
         [10] = { type = "block", name = "蓄力层数" },
         [11] = { type = "block", name = "生命值" },
         [12] = { type = "block", name = "能量值" },
