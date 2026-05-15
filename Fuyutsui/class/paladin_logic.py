@@ -278,7 +278,7 @@ def run_paladin_logic(state_dict, spec_name):
                     current_step = f"{神圣能量}豆 黎明之光"
                     action_hotkey = get_hotkey(0, "黎明之光")
                 # 进攻: 正义盾击
-                elif 神圣能量 == 5 and 战斗 and 1 <= 目标类型 <= 3 and 目标距离 is not None and 目标距离 <= 5:
+                elif 神圣能量 == 5 and 战斗 and 1 <= 目标类型 <= 3 and 目标距离 is not None and 目标距离 <= 5 and ( 圣光灌注BUFF > 0 or 神圣意志BUFF > 0 or ( 神圣震击CD == 0 and 震击充能CD == 0)):
                     current_step = "5豆 正义盾击"
                     action_hotkey = get_hotkey(0, "正义盾击")
 
@@ -373,7 +373,7 @@ def run_paladin_logic(state_dict, spec_name):
                     current_step = f"{神圣能量}豆 荣耀圣令"
                     action_hotkey = get_hotkey(int(最低单位), "荣耀圣令")
                 # 进攻: 正义盾击
-                elif 神圣能量 == 5 and 战斗 and 1 <= 目标类型 <= 3 and 目标距离 is not None and 目标距离 <= 5:
+                elif 神圣能量 == 5 and 战斗 and 1 <= 目标类型 <= 3 and 目标距离 is not None and 目标距离 <= 5 and ( 圣光灌注BUFF > 0 or 神圣意志BUFF > 0 or ( 神圣震击CD == 0 and 震击充能CD == 0)):
                     current_step = "5豆 正义盾击"
                     action_hotkey = get_hotkey(0, "正义盾击")
 
