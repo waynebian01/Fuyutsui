@@ -78,6 +78,11 @@ def _is_rgb_green_marker(b, g, r):
     return r == 0 and g == 1 and b == 0
 
 
+def _is_rgb_gray_end_marker(b, g, r):
+    """RGB (200, 200, 200)；与 Lua 中 count bar 行末终点色块一致，遇则终止该行扫描。"""
+    return r == 200 and g == 200 and b == 200
+
+
 def scan_screen_data(window_title="魔兽世界"):
     """
     两次窄截图分别扫描顶部长条和左边界标记，大幅减少截图数据量。
@@ -163,6 +168,8 @@ def scan_screen_data(window_title="魔兽世界"):
                 if offset + 2 >= total_bytes:
                     break
                 b2, g2, r2 = raw_data[offset], raw_data[offset + 1], raw_data[offset + 2]
+                if _is_rgb_gray_end_marker(b2, g2, r2):
+                    return 0, width
                 if _is_rgb_red_marker(b2, g2, r2):
                     return 0, sx
                 if need_white:
@@ -191,6 +198,9 @@ def scan_screen_data(window_title="魔兽世界"):
             if offset + 2 >= total_bytes:
                 break
             b, g, r = raw_data[offset], raw_data[offset + 1], raw_data[offset + 2]
+
+            if _is_rgb_gray_end_marker(b, g, r):
+                break
 
             if pending_1_0_0 and _is_rgb_red_green_marker(b, g, r):
                 pending_1_0_0 = False

@@ -114,6 +114,9 @@ Fuyutsui.ClassBlocks = {
         [27] = { type = "aura", name = "风暴涌流图腾层数", auraName = "风暴涌流图腾", showKey = "count" },
         [28] = { type = "aura", name = "生命释放", auraName = "生命释放", showKey = "remaining" },
         [29] = { type = "aura", name = "升腾", auraName = "升腾", showKey = "remaining" },
+        [30] = { type = "aura", name = "风暴涌流图腾-持续时间", auraName = "风暴涌流图腾-持续时间", showKey = "remaining" },
+        [56] = { type = "aura", name = "倾盆大雨", auraName = "倾盆大雨", showKey = "remaining" },
+        [57] = { type = "aura", name = "倾盆大雨层数", auraName = "倾盆大雨", showKey = "count" },
 
         [31] = { type = "spell", spellId = 57994, name = "风剪" },
         [32] = { type = "spell", spellId = 198103, name = "土元素" },

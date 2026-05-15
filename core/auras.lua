@@ -521,6 +521,26 @@ local auras = {
                 },
             },
         },
+        ["风暴涌流图腾-持续时间"] = {
+            remaining = 0,
+            duration = 18,
+            expirationTime = nil,
+            addAuras = {
+                [1267068] = { event = e["施法成功"] },
+            },
+            updateAuras = nil,
+            removeAuras = nil,
+        },
+        ["治疗之泉图腾-持续时间"] = {
+            remaining = 0,
+            duration = 18,
+            expirationTime = nil,
+            addAuras = {
+                [5394] = { event = e["施法成功"] },
+            },
+            updateAuras = nil,
+            removeAuras = nil,
+        },
         ["生命释放"] = {
             name = "生命释放",
             spellId = 73685,
@@ -550,6 +570,23 @@ local auras = {
                 [114052] = { event = e["法术冷却"] },
             },
             updateAuras = nil,
+            removeAuras = nil,
+        },
+        ["倾盆大雨"] = {
+            name = "倾盆大雨",
+            spellId = 462488,
+            remaining = 0,
+            duration = 24,
+            count = 0,
+            countMin = 0,
+            countMax = 2,
+            expirationTime = nil,
+            addAuras = {
+                [462488] = { event = e["法术冷却"], step = 2 },
+            },
+            updateAuras = {
+                [462603] = { event = e["施法成功"], step = -1 }, -- 激流
+            },
             removeAuras = nil,
         },
     },

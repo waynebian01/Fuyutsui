@@ -514,6 +514,7 @@ Fuyutsui.spellsList = {
     [73685]   = { index = 43, },               -- 生命释放
     [1267068] = { index = 44, },               -- 风暴涌流图腾
     [73920]   = { index = 45, failed = true }, -- 治疗之雨
+    [462603]  = { index = 46, failed = true }, -- 倾盆大雨
     -- 唤魔师
     [365585]  = { index = 1, },                -- 净除
     [382266]  = { index = 2, },                -- 火焰吐息

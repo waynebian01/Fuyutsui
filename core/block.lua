@@ -63,16 +63,17 @@ local BAR_CONFIG = {
     point = "TOPLEFT",
 }
 
-
 -- 创建"色条"的容器
 local countBars = CreateFrame("Frame", "FuyutsuiCountBars", UIParent)
 countBars:SetSize(screenWidth, 20)
-countBars:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, -3)
+countBars:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, -2)
 countBars:SetFrameStrata("TOOLTIP") -- 确保在最上层
 countBars:SetFrameLevel(1)
 local createdBars = {}
 local spellIdToBar = {} -- 新增：用于根据 spellId 查找已存在的条
 local nextAvailableIndex = 2
+-- 多条 bar 共用一个终点色块，始终画在当前序列里最后创建的那条末尾
+local countBarEndTexture = nil
 
 local events = { "SPELL_UPDATE_USES", "PLAYER_ENTERING_WORLD", "SPELL_UPDATE_CHARGES" }
 ---@param minValue number 最小值
@@ -88,7 +89,8 @@ function Fuyutsui:CreateAutoLayoutBar(valueType, minValue, maxValue, spellId)
 
     local startIndex = nextAvailableIndex
     local barWidth = maxValue * BAR_CONFIG.width
-    nextAvailableIndex = startIndex + maxValue + 2
+    -- +1 为末尾灰色终点色块，再 +2 为与下一条 bar 的间隔（与原逻辑一致）
+    nextAvailableIndex = startIndex + maxValue + 3
 
     if nextAvailableIndex > BAR_CONFIG.count then
         print("警告: Fuyutsui_CountBars 空间不足!")
@@ -114,6 +116,17 @@ function Fuyutsui:CreateAutoLayoutBar(valueType, minValue, maxValue, spellId)
         tex:SetPoint("TOPLEFT", countBars, "TOPLEFT", (absolutePos - 1) * BAR_CONFIG.width, 0)
         tex:SetColorTexture(1 / 255, currentRelativeIndex / 255, 0, 1)
     end
+
+    -- 2b. 末尾终点色块 (200, 200, 200)：仅显示在最后一次创建的 bar 上（复用同一纹理并改锚点）
+    local endPos = startIndex + maxValue + 1
+    if not countBarEndTexture then
+        countBarEndTexture = countBars:CreateTexture(nil, "BACKGROUND")
+        countBarEndTexture:SetSize(BAR_CONFIG.width, BAR_CONFIG.height)
+    end
+    countBarEndTexture:ClearAllPoints()
+    countBarEndTexture:SetPoint("TOPLEFT", countBars, "TOPLEFT", (endPos - 1) * BAR_CONFIG.width, 0)
+    countBarEndTexture:SetColorTexture(200 / 255, 200 / 255, 200 / 255, 1)
+    countBarEndTexture:Show()
 
     -- 3. 刷新逻辑
     local function Refresh()

@@ -533,6 +533,9 @@ state:
     涌流层数: {step: 27, type: "int" }
     生命释放: {step: 28, type: "int" }
     升腾: {step: 29, type: "int" }
+    涌流图腾时间: {step: 30, type: "int" }
+    倾盆大雨: {step: 56, type: "int" }
+    倾盆大雨层数: {step: 57, type: "int" }
     
     激流层数: {step: bar, bar: 1, type: "int"}
     治疗之泉图腾层数: {step: bar, bar: 2, type: "int"}
