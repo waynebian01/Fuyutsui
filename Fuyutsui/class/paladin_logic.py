@@ -1,37 +1,9 @@
 # -*- coding: utf-8 -*-
 """圣骑士职业的逻辑决策（神圣/防护/惩戒）。"""
 from utils import *
-import time
 
 need_dispel_bosses = {4, 5} # 需要驱散的首领 ID
 no_dispel_bosses = {64} # 不需要驱散的首领 ID
-
-_death_history = []  # [(timestamp, health_pct), ...]
-
-
-def _calc_death_countdown(state_dict):
-    """按照平缓方式：保留从受伤开始的所有记录，计算整体平均掉血速率"""
-    global _death_history
-    hp = state_dict.get("目标生命值")
-    now = time.time()
-    if hp is None or hp <= 0 or hp >= 255:
-        _death_history.clear()
-        return -1
-    if len(_death_history) == 0 or _death_history[-1][1] != hp:
-        _death_history.append((now, hp))
-    if len(_death_history) >= 2:
-        _, prev_h = _death_history[-2]
-        if hp > prev_h + 5:
-            _death_history = _death_history[-1:]
-    if len(_death_history) < 2:
-        return -1
-    oldest_t, oldest_h = _death_history[0]
-    hp_lost = oldest_h - hp
-    elapsed = now - oldest_t
-    if hp_lost <= 0 or elapsed < 3:
-        return -1
-    avg_loss_per_sec = hp_lost / elapsed
-    return hp / avg_loss_per_sec
 
 # 技能映射
 action_map = {
@@ -77,22 +49,8 @@ def _get_failed_spell(state_dict, spec_name=""):
     if spell_name and spells.get(spell_name, -1) == 0 and (spell_name not in failed_spell_spec or failed_spell_spec[spell_name] == spec_name):
         return spell_name
     return None
-# 特殊技能按键（不走keymap，直接按指定键）
-#direct_key_map = {
-#    "制裁之锤": "x",
-#}
-#def get_action_hotkey(skill_name, unit=0):
-#    """获取技能按键，特殊技能直接返回固定按键"""
-#    if skill_name in direct_key_map:
-#        return direct_key_map[skill_name]
-#    return get_hotkey(unit, skill_name)
 
 def run_paladin_logic(state_dict, spec_name):
-    # 目标死亡倒计时
-    if "目标死亡" in state_dict:
-        countdown = _calc_death_countdown(state_dict)
-        state_dict["目标死亡"] = int(countdown) if countdown >= 0 else 0
-
     spells = state_dict.get("spells") or {}
 
 
@@ -108,7 +66,6 @@ def run_paladin_logic(state_dict, spec_name):
     目标类型 = state_dict.get("目标类型", 0)
     目标距离 = state_dict.get("目标距离")
     目标生命值 = state_dict.get("目标生命值", 0)
-    目标死亡 = state_dict.get("目标死亡", 0)
     爆发 = state_dict.get("爆发开关", 0)
     敌人人数 = state_dict.get("敌人人数", 0)
     队伍类型 = int(state_dict.get("队伍类型", 0) or 0)
@@ -231,7 +188,7 @@ def run_paladin_logic(state_dict, spec_name):
         elif 清洁术CD == 0 and 驱散单位 is not None:
             current_step = f"施放 清毒术 on {驱散单位}"
             action_hotkey = get_hotkey(int(驱散单位), "清毒术")
-        elif 清洁术CD == 0 and 目标类型 == 12:
+        elif 清洁术CD == 0 and 目标类型 in (12, 13, 15):
             current_step = "施放 清毒术 on 目标"
             action_hotkey = get_hotkey(0, "清毒术")
 
