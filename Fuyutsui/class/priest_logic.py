@@ -555,6 +555,14 @@ def _priest_shadow_logic(state_dict):
     难度 = int(state_dict.get("难度", 0) or 0)
     英雄天赋 = int(state_dict.get("英雄天赋", 0) or 0)
 
+    爆发开关 = int(state_dict.get("爆发开关", 0) or 0)
+    输出模式 = int(state_dict.get("输出模式", 0) or 0)
+    AOE开关 = int(state_dict.get("AOE开关", 0) or 0)
+    敌人人数 = int(state_dict.get("敌人人数", 0) or 0)
+    目标距离 = int(state_dict.get("目标距离", 0) or 0)
+    目标生命值 = int(state_dict.get("目标生命值", 0) or 0)
+    施法技能 = int(state_dict.get("施法技能", 0) or 0)
+
     绝望祷言 = spells.get("绝望祷言", -1)
     心灵震爆 = spells.get("心灵震爆", -1)
     灭 = spells.get("暗言术：灭", -1)
@@ -566,13 +574,12 @@ def _priest_shadow_logic(state_dict):
     虚空齐射 = spells.get("虚空齐射", -1)
     
     失败法术 = _get_failed_spell(state_dict)
-
+    tup = action_map.get(一键辅助)
     action_hotkey = None
     current_step = "无匹配技能"
     unit_info = {}
     if 引导 > 0:
         if 战斗 and 1 <= 目标类型 <= 3 and 一键辅助 !=22:
-            tup = action_map.get(一键辅助)
             if tup:
                 current_step = f"施放 {tup[0]}"
                 action_hotkey = get_hotkey(0, tup[1])
@@ -584,15 +591,17 @@ def _priest_shadow_logic(state_dict):
     elif 一键辅助 == 20:
         current_step = "施放 暗影形态"
         action_hotkey = get_hotkey(0, "暗影形态")
-    elif 战斗 and 1 <= 目标类型 <= 3 and 虚空形态 == 0:
-        current_step = "施放 虚空形态"
-        action_hotkey = get_hotkey(0, "虚空形态")
     elif 法术失败 != 0 and 失败法术 is not None:
         current_step = f"施放 {失败法术}"
         action_hotkey = get_hotkey(0, 失败法术)
     elif 战斗 and 1 <= 目标类型 <= 3:
-        tup = action_map.get(一键辅助)
-        if tup:
+        if 施法技能 == 8:
+            current_step = "施放 虚空齐射"
+            action_hotkey = get_hotkey(0, "虚空齐射")
+        elif 爆发开关 == 1 and 虚空形态 == 0:
+            current_step = "施放 虚空形态"
+            action_hotkey = get_hotkey(0, "虚空形态")
+        elif tup:
             current_step = f"施放 {tup[0]}"
             action_hotkey = get_hotkey(0, tup[1])
         else:

@@ -159,6 +159,14 @@ Fuyutsui.ClassBlocks = {
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
 
+        [21] = { type = "block", name = "爆发开关" },
+        [22] = { type = "block", name = "输出模式" },
+        [23] = { type = "block", name = "AOE开关" },
+        [24] = { type = "block", name = "敌人人数" },
+        [25] = { type = "block", name = "目标距离" },
+        [26] = { type = "block", name = "目标生命值" },
+        [27] = { type = "block", name = "施法技能" },
+
         [36] = { type = "spell", spellId = 8092, name = "心灵震爆" },
         [37] = { type = "spell", spellId = 32379, name = "暗言术：灭" },
         [38] = { type = "spell", spellId = 263165, name = "虚空洪流" },

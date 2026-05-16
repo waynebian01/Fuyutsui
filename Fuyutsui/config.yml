@@ -385,6 +385,14 @@ state:
       愈合祷言: {step: 4, type: "int" }
       恢复: {step: 5, type: "int" }
   3:
+    爆发开关: {step: 21, type: "int" }
+    输出模式: {step: 22, type: "int" }
+    AOE开关: {step: 23, type: "int" }
+    敌人人数: {step: 24, type: "int" }
+    目标距离: {step: 25, type: "int" }
+    目标生命值: {step: 26, type: "int" }
+    施法技能: {step: 27, type: "int" }
+    
     spells:
       心灵尖啸: {step: 31, type: "int" }
       群体驱散: {step: 32, type: "int" }
