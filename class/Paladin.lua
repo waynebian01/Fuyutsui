@@ -51,6 +51,7 @@ Fuyutsui.ClassBlocks = {
         [44] = { type = "spell", spellId = 31821, name = "光环掌握" },
         [45] = { type = "spell", spellId = 200025, name = "美德道标" },
         [46] = { type = "block", name = "大红冷却" },
+        [47] = { type = "block", name = "延迟" },
         [70] = {
             type = "group",
             num = 6,
@@ -115,6 +116,7 @@ Fuyutsui.ClassBlocks = {
         [47] = { type = "spell", spellId = 204019, name = "祝福之锤" },
         [48] = { type = "spell", spellId = 24275, name = "正义之锤" },
         [49] = { type = "block", name = "大红冷却" },
+        [50] = { type = "block", name = "延迟" },
 
         [70] = {
             type = "group",
@@ -175,6 +177,7 @@ Fuyutsui.ClassBlocks = {
         [44] = { type = "spell", spellId = 255937, name = "灰烬觉醒" },
         [45] = { type = "spell", spellId = 31884, name = "复仇之怒" },
         [46] = { type = "block", name = "大红冷却" },
+        [47] = { type = "block", name = "延迟" },
 
         [70] = {
             type = "group",

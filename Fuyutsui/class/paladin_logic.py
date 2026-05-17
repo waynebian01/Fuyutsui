@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """圣骑士职业的逻辑决策（神圣/防护/惩戒）。"""
+#延迟说明
+#创建一个宏，内容为
+#/fu delay 1
+#/cast 技能名字
+#对于非插入技能，可以狂按这个宏,按一次会让逻辑延迟1秒再继续判断,达到插入技能的目的.
+
 from utils import *
 
 need_dispel_bosses = {4, 5} # 需要驱散的首领 ID
@@ -77,6 +83,7 @@ def run_paladin_logic(state_dict, spec_name):
     施法技能 = state_dict.get("施法技能", 0)
     施法目标 = state_dict.get("施法目标", 0)
     失败法术 = _get_failed_spell(state_dict, spec_name)
+    延迟 = state_dict.get("延迟", 0)
 
     # ==================== 公共变量（多专精共享） ====================
     # --- BUFF ---
@@ -176,7 +183,7 @@ def run_paladin_logic(state_dict, spec_name):
             驱散单位 = dispel_unit_poison
 
         # ---- 优先级 0: 引导中 ----
-        if 引导 > 0:
+        if 引导 > 0 or 延迟 > 0:
             current_step = "在引导,不执行任何操作"
 
         # ---- 优先级 1: 法术失败重试 ----

@@ -210,7 +210,7 @@
 210: {unit: 0, 技能: "荣耀圣令", 热键: "CTRL-SHIFT-NUMPADDIVIDE"}
 211: {unit: 0, 技能: "美德道标", 热键: "CTRL-SHIFT-F1"}
 212: {unit: 0, 技能: "银月城生命药水", 热键: "CTRL-SHIFT-F2"}
-213: {unit: 0, 技能: "", 热键: "CTRL-SHIFT-F3"}
+213: {unit: 0, 技能: "清毒术", 热键: "CTRL-SHIFT-F3"}
 214: {unit: 0, 技能: "", 热键: "CTRL-SHIFT-F5"}
 215: {unit: 0, 技能: "", 热键: "CTRL-SHIFT-F6"}
 216: {unit: 0, 技能: "", 热键: "CTRL-SHIFT-F7"}
