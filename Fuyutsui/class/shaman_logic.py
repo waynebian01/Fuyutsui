@@ -80,7 +80,9 @@ def _unit_hotkey(unit, spell):
         return None
     return get_hotkey(int(unit), spell)
 
-def _pick_enhancement_finisher(spells, enemy_count):
+def _pick_enhancement_finisher(spells, enemy_count, aoe_mode=0):
+    if aoe_mode == 1:
+        return "闪电箭", "闪电箭"
     狂风怒号 = spells.get("狂风怒号", -1)
     if _as_int(狂风怒号) >= 2:
         return "狂风怒号", "闪电箭"
@@ -295,6 +297,8 @@ def run_shaman_logic(state_dict, spec_name):
         升腾buff = _active(state_dict.get("升腾", 0))
         毁灭之风buff = _active(state_dict.get("毁灭之风", 0))
         敌人人数 = _as_int(state_dict.get("敌人人数", 0))
+        AOE开关 = _as_int(state_dict.get("AOE开关", 0))
+        目标距离 = _as_int(state_dict.get("目标距离", 255), 255)
         if 1 <= 目标类型 <= 3:
             敌人人数 = max(1, 敌人人数)
 
@@ -310,6 +314,8 @@ def run_shaman_logic(state_dict, spec_name):
             "升腾": 升腾buff,
             "毁灭之风": 毁灭之风buff,
             "敌人人数": 敌人人数,
+            "AOE开关": AOE开关,
+            "目标距离": 目标距离,
             "生命值": 生命值,
             "治疗之涌": 治疗之涌,
         }
@@ -323,7 +329,7 @@ def run_shaman_logic(state_dict, spec_name):
             current_step = "增强-自保: 10层溢流漩涡治疗之涌"
             action_hotkey = get_hotkey(0, "治疗之涌")
         elif (升腾buff or 毁灭之风buff) and 战斗 and 1 <= 目标类型 <= 3:
-            if _ready(毁灭闪电):
+            if 目标距离 <= 5 and _ready(毁灭闪电):
                 current_step = "增强-升腾期: 毁灭闪电"
                 action_hotkey = get_hotkey(0, "毁灭闪电")
             elif _ready(风暴打击):
@@ -332,13 +338,13 @@ def run_shaman_logic(state_dict, spec_name):
             else:
                 current_step = "增强-升腾期: 无匹配技能"
         elif 战斗 and 1 <= 目标类型 <= 3:
-            if _ready(毁灭闪电):
+            if 漩涡武器 >= 8:
+                shown_name, cast_name = _pick_enhancement_finisher(spells, 敌人人数, AOE开关)
+                current_step = f"增强-8层漩涡武器终结技: {shown_name}"
+                action_hotkey = get_hotkey(0, cast_name)
+            elif 目标距离 <= 5 and _ready(毁灭闪电):
                 current_step = "增强-最高优先级: 毁灭闪电"
                 action_hotkey = get_hotkey(0, "毁灭闪电")
-            elif 漩涡武器 >= 9:
-                shown_name, cast_name = _pick_enhancement_finisher(spells, 敌人人数)
-                current_step = f"增强-9层漩涡武器终结技: {shown_name}"
-                action_hotkey = get_hotkey(0, cast_name)
             elif _ready(风暴打击):
                 current_step = "增强-风打: 风暴打击"
                 action_hotkey = get_hotkey(0, "风暴打击")

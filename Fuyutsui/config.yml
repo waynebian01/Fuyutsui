@@ -487,6 +487,8 @@ state:
     溢流漩涡: {step: 24, type: "int" }
     升腾: {step: 25, type: "int" }
     毁灭之风: {step: 26, type: "int" }
+    AOE开关: {step: 27, type: "int" }
+    目标距离: {step: 28, type: "int" }
     spells:
       风剪: {step: 31, type: "int" }
       土元素: {step: 32, type: "int" }

@@ -52,6 +52,8 @@ function fu.updateSpecInfo()
         fu.blocks = {
             ["目标生命值"] = 21,
             ["敌人人数"] = 22,
+            ["AOE开关"] = 27,
+            ["目标距离"] = 28,
             auras = {
                 ["漩涡武器"] = {
                     index = 23,
