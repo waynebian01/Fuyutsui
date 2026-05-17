@@ -101,6 +101,7 @@ state:
       光环掌握: {step: 44, type: "int" }
       美德道标: {step: 45, type: "int" }
       大红冷却: {step: 46, type: "int" }
+      延迟: {step: 47, type: "int" }
     group:
       start: 70
       num: 6
@@ -141,6 +142,7 @@ state:
       祝福之锤: {step: 47, type: "int" }
       正义之锤: {step: 48, type: "int" }
       大红冷却: {step: 49, type: "int" }
+      延迟: {step: 50, type: "int" }
   3:
     神圣能量: {step: 21, type: "int" }
     爆发开关: {step: 22, type: "int" }
@@ -167,6 +169,7 @@ state:
       灰烬觉醒: {step: 44, type: "int" }
       复仇之怒: {step: 45, type: "int" }
       大红冷却: {step: 46, type: "int" }
+      延迟: {step: 47, type: "int" }
     group:
       start: 70
       num: 3
