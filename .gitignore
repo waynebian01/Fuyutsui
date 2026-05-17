@@ -24,5 +24,3 @@ Thumbs.db
 # 如果你的插件包含私密测试数据，可以忽略特定文件夹
 # /Test/
 test/
-Fuyutsui/logic_gui_laoer.py
-Fuyutsui/other/icon.ico
