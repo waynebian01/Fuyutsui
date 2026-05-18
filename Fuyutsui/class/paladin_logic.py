@@ -226,6 +226,10 @@ def run_paladin_logic(state_dict, spec_name):
             elif 美德道标BUFF == 0 and 圣洁鸣钟CD == 0 and 神圣能量 <= 2 and HP75 >= 3:
                 current_step = "群奶 圣洁鸣钟"
                 action_hotkey = get_hotkey(1, "圣洁鸣钟")
+            # 圣洁鸣钟救急
+            elif 圣洁鸣钟CD == 0 and 神圣能量 < 2 and HP60 >= 2:
+                current_step = "群奶 圣洁鸣钟"
+                action_hotkey = get_hotkey(1, "圣洁鸣钟")
 
             # ---- 优先级 2: 豆消耗 ----
             elif 神圣能量 >= 3 or 神圣意志BUFF > 0:
