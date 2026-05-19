@@ -74,9 +74,7 @@ def run_monk_logic(state_dict, spec_name):
     current_step = "无匹配技能"
     unit_info = {}
     
-    if 引导 > 0:
-        current_step = "在引导,不执行任何操作"
-    elif 法术失败 != 0 and 失败法术 is not None:
+    if 法术失败 != 0 and 失败法术 is not None:
         current_step = f"施放 {失败法术}"
         action_hotkey = get_hotkey(0, 失败法术)
     elif spec_name == "酒仙":
@@ -153,7 +151,7 @@ def run_monk_logic(state_dict, spec_name):
         敌人人数 = state_dict.get("敌人人数", 0)
         施法技能 = state_dict.get("施法技能", 0)
         施法目标 = state_dict.get("施法目标", 0)
-
+        目标距离 = state_dict.get("目标距离")
         法力茶层数 = state_dict.get("法力茶层数", 0)
         生生不息1 = state_dict.get("生生不息1", 0)
         生生不息2 = state_dict.get("生生不息2", 0)
@@ -161,7 +159,7 @@ def run_monk_logic(state_dict, spec_name):
         灵泉 = state_dict.get("灵泉", 0)
         玄牛之力 = state_dict.get("玄牛之力", 0)
         青龙之心 = state_dict.get("青龙之心", 0)
-
+        活力苏醒 = state_dict.get("活力苏醒", 0)
         雷光茶 = spells.get("雷光茶", -1)
         雷光充能 = spells.get("雷光充能", -1)
         复苏之雾 = spells.get("复苏之雾", -1)
@@ -226,84 +224,151 @@ def run_monk_logic(state_dict, spec_name):
             "玄牛之力": 玄牛之力,
         }
 
-        if 引导 > 0:
-            if 施法技能 == 31 and 能量值 >= 95: # 法力茶
-                current_step = "施放 复苏之雾"
-                action_hotkey = get_hotkey(1, "复苏之雾")
-            elif 施法技能 == 31 and 战斗 and count80 >= 3 and 神龙层数 >= 8: # 法力茶
+        if 队伍类型 == 46 or 队伍类型 == 0:
+            if 引导 > 0:
+                if 施法技能 == 31 and 能量值 >= 90: # 法力茶
+                    current_step = "施放 复苏之雾"
+                    action_hotkey = get_hotkey(1, "复苏之雾")
+                elif 施法技能 == 28 and 生命值最低单位 is not None and count80 >= 3: # 毛线神龙1
+                    current_step = f"施放 活血术 on {生命值最低单位}"
+                    action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
+                elif 施法技能 == 28 and 生命值最低单位 is not None and 最低生命值 <= 60: # 毛线神龙2
+                    current_step = f"施放 活血术 on {生命值最低单位}"
+                    action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
+                elif 施法技能 == 28 and 1 <= 目标类型 <= 3 and 目标距离<=5: # 打断
+                    current_step = "施放 复苏之雾"
+                    action_hotkey = get_hotkey(1, "复苏之雾")
+                elif 清创生血 == 0 and 驱散单位 is not None:
+                    current_step = f"施放 清创生血 on {驱散单位}"
+                    action_hotkey = get_hotkey(int(驱散单位), "清创生血")                
+                else:
+                    current_step = "在引导,不执行任何操作"
+            elif 清创生血 == 0 and 驱散单位 is not None:
+                current_step = f"施放 清创生血 on {驱散单位}"
+                action_hotkey = get_hotkey(int(驱散单位), "清创生血")
+            elif 活力苏醒 > 0 and 生命值最低单位 is not None and 最低生命值 <= 60:
                 current_step = f"施放 活血术 on {生命值最低单位}"
                 action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
-            else:
-                current_step = "在引导,不执行任何操作"
-        elif 清创生血 == 0 and 驱散单位 is not None:
-            current_step = f"施放 清创生血 on {驱散单位}"
-            action_hotkey = get_hotkey(int(驱散单位), "清创生血")
-        elif 神龙层数 >= 8 and 生命值最低单位 is not None and count80 >= 2 :
-            current_step = f"施放 活血术 on {生命值最低单位}"
-            action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
-        elif 神龙层数 >= 8 and 生命值最低单位 is not None and 最低生命值 < 50:
-            current_step = f"施放 活血术 on {生命值最低单位}"
-            action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
-        elif 生生不息2 >= 1 and 生命值最低单位 is not None and 最低生命值 < 90:
-            current_step = f"施放 活血术 on {生命值最低单位}"
-            action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
-        elif not 战斗:
-            if 复苏之雾 == 0 and 无复苏单位 is not None:
-                current_step = f"施放 复苏之雾 on {无复苏单位}"
-                action_hotkey = get_hotkey(int(无复苏单位), "复苏之雾")
-            elif 生生不息1 >= 1 and 无氤氲单位 is not None and 无氤氲生命值 < 90:
-                current_step = f"施放 活血术 on {无氤氲单位}"
-                action_hotkey = get_hotkey(int(无氤氲单位), "活血术")
-            elif 法力茶层数 >= 15 and 能量值 <= 60:
-                current_step = "施放 法力茶"
-                action_hotkey = get_hotkey(0, "法力茶")
-        elif 战斗:
-            # 复苏之雾
-            if 复苏之雾 == 0 and 复苏充能 <= 1 and 无复苏单位 is not None:
-                current_step = f"施放 复苏之雾 on {无复苏单位}"
-                action_hotkey = get_hotkey(int(无复苏单位), "复苏之雾")
-            # 法力茶
-            elif 法力茶层数 >= 15 and 能量值 <= 20:
-                current_step = "施放 法力茶"
-                action_hotkey = get_hotkey(0, "法力茶")
-            elif 宁神茶 == 0 and 神龙层数 < 10 and 法力茶层数 + 神龙层数 >= 10:
-                current_step = "施放 法力茶"
-                action_hotkey = get_hotkey(0, "法力茶")
-            # 雷光聚神茶
-            elif 1 <= 目标类型 <= 3 and 旭日东升踢 == 0 and 雷光茶 == 0:
-                current_step = "施放 雷光聚神茶"
-                action_hotkey = get_hotkey(0, "雷光聚神茶")
-            # 旭日东升踢
-            elif 1 <= 目标类型 <= 3 and 旭日东升踢 == 0:
-                current_step = "施放 旭日东升踢"
-                action_hotkey = get_hotkey(0, "旭日东升踢")
-            # 天神御身
-            elif 1 <= 目标类型 <= 3 and count80 >= 3 and 天神御身 == 0:
-                current_step = "施放 天神御身"
-                action_hotkey = get_hotkey(0, "天神御身")
-            # 复苏之雾
-            elif 复苏之雾 == 0 and 无复苏单位 is not None:
-                current_step = f"施放 复苏之雾 on {无复苏单位}"
-                action_hotkey = get_hotkey(int(无复苏单位), "复苏之雾")
-            # 氤氲之雾
-            elif 玄牛之力 > 0 and 施法技能 != 30 and 无氤氲单位 is not None:
-                current_step = f"施放 氤氲之雾 on {无氤氲单位}"
-                action_hotkey = get_hotkey(int(无氤氲单位), "氤氲之雾")
-            # 神鹤引项踢
-            elif 1 <= 目标类型 <= 3 and 敌人人数 >= 5:
-                current_step = "施放 神鹤引项踢"
-                action_hotkey = get_hotkey(0, "神鹤引项踢")
-            # 幻灭踢
-            elif 1 <= 目标类型 <= 3 and 幻灭踢 == 0:
-                current_step = "施放 幻灭踢"
-                action_hotkey = get_hotkey(0, "幻灭踢")
-            # 猛虎掌
-            elif 1 <= 目标类型 <= 3:
-                current_step = "施放 猛虎掌"
-                action_hotkey = get_hotkey(0, "猛虎掌")
+            elif 活力苏醒 > 0 and 生命值最低单位 is not None and count80 >= 3 and 一键辅助 != 19:
+                current_step = f"施放 活血术 on {生命值最低单位}"
+                action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
+            elif 活力苏醒 <= 0 and 生命值最低单位 is not None and 最低生命值 <= 80 and 1 <= 目标类型 <= 3 and 目标距离>5 :
+                current_step = f"施放 抚慰之雾 on {生命值最低单位}"
+                action_hotkey = get_hotkey(int(生命值最低单位), "抚慰之雾")
+            elif not 战斗:
+                if 复苏之雾 == 0 and 无复苏单位 is not None:
+                    current_step = f"施放 复苏之雾 on {无复苏单位}"
+                    action_hotkey = get_hotkey(int(无复苏单位), "复苏之雾")
+                elif 生生不息1 >= 1 and 无氤氲单位 is not None and 无氤氲生命值 < 90:
+                    current_step = f"施放 活血术 on {无氤氲单位}"
+                    action_hotkey = get_hotkey(int(无氤氲单位), "活血术")
+                elif 法力茶层数 >= 15 and 能量值 <= 60:
+                    current_step = "施放 法力茶"
+                    action_hotkey = get_hotkey(0, "法力茶")
+                else:
+                    current_step = "不执行任何操作"
+                    return None, current_step, unit_info
+            elif 战斗:
+                #if 作茧缚命 == 0 and 生命值最低单位 is not None and 最低生命值 <= 25 :
+                    #current_step = f"施放 作茧缚命 on {生命值最低单位}"
+                    #action_hotkey = get_hotkey(int(生命值最低单位), "作茧缚命")
+                # 复苏之雾
+                if 复苏之雾 == 0 and 复苏充能 <= 1 and 无复苏单位 is not None and 一键辅助 != 22 and 一键辅助 != 19:
+                    current_step = f"施放 复苏之雾 on {无复苏单位}"
+                    action_hotkey = get_hotkey(int(无复苏单位), "复苏之雾")
+                elif 1 <= 目标类型 <= 3 and tup:
+                    current_step = f"施放 {tup[0]}"
+                    action_hotkey = get_hotkey(0, tup[1])
+                else:
+                    current_step = "不执行任何操作"
+                    return None, current_step, unit_info
             else:
                 current_step = "不执行任何操作"
                 return None, current_step, unit_info
+
+        elif 队伍类型 <= 40:  # 团队
+            if 引导 > 0:
+                if 施法技能 == 31 and 能量值 >= 95: # 法力茶
+                    current_step = "施放 复苏之雾"
+                    action_hotkey = get_hotkey(1, "复苏之雾")
+                elif 施法技能 == 31 and 战斗 and count80 >= 3 and 神龙层数 >= 8: # 法力茶
+                    current_step = f"施放 活血术 on {生命值最低单位}"
+                    action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
+                else:
+                    current_step = "在引导,不执行任何操作"
+            elif 清创生血 == 0 and 驱散单位 is not None:
+                current_step = f"施放 清创生血 on {驱散单位}"
+                action_hotkey = get_hotkey(int(驱散单位), "清创生血")
+            elif 神龙层数 >= 8 and 生命值最低单位 is not None and count80 >= 2 :
+                current_step = f"施放 活血术 on {生命值最低单位}"
+                action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
+            elif 神龙层数 >= 8 and 生命值最低单位 is not None and 最低生命值 < 50:
+                current_step = f"施放 活血术 on {生命值最低单位}"
+                action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
+            elif 生生不息2 >= 1 and 生命值最低单位 is not None and 最低生命值 < 90:
+                current_step = f"施放 活血术 on {生命值最低单位}"
+                action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
+            elif not 战斗:
+                if 复苏之雾 == 0 and 无复苏单位 is not None:
+                    current_step = f"施放 复苏之雾 on {无复苏单位}"
+                    action_hotkey = get_hotkey(int(无复苏单位), "复苏之雾")
+                elif 生生不息1 >= 1 and 无氤氲单位 is not None and 无氤氲生命值 < 90:
+                    current_step = f"施放 活血术 on {无氤氲单位}"
+                    action_hotkey = get_hotkey(int(无氤氲单位), "活血术")
+                elif 法力茶层数 >= 15 and 能量值 <= 60:
+                    current_step = "施放 法力茶"
+                    action_hotkey = get_hotkey(0, "法力茶")
+            elif 战斗:
+                # 复苏之雾
+                if 复苏之雾 == 0 and 复苏充能 <= 1 and 无复苏单位 is not None:
+                    current_step = f"施放 复苏之雾 on {无复苏单位}"
+                    action_hotkey = get_hotkey(int(无复苏单位), "复苏之雾")
+                # 法力茶
+                elif 法力茶层数 >= 15 and 能量值 <= 20:
+                    current_step = "施放 法力茶"
+                    action_hotkey = get_hotkey(0, "法力茶")
+                elif 宁神茶 == 0 and 神龙层数 < 10 and 法力茶层数 + 神龙层数 >= 10:
+                    current_step = "施放 法力茶"
+                    action_hotkey = get_hotkey(0, "法力茶")
+                # 雷光聚神茶
+                elif 1 <= 目标类型 <= 3 and 旭日东升踢 == 0 and 雷光茶 == 0:
+                    current_step = "施放 雷光聚神茶"
+                    action_hotkey = get_hotkey(0, "雷光聚神茶")
+                # 旭日东升踢
+                elif 1 <= 目标类型 <= 3 and 旭日东升踢 == 0:
+                    current_step = "施放 旭日东升踢"
+                    action_hotkey = get_hotkey(0, "旭日东升踢")
+                # 复苏之雾
+                elif 复苏之雾 == 0 and 无复苏单位 is not None:
+                    current_step = f"施放 复苏之雾 on {无复苏单位}"
+                    action_hotkey = get_hotkey(int(无复苏单位), "复苏之雾")
+                # 氤氲之雾
+                elif 玄牛之力 > 0 and 施法技能 != 30 and 无氤氲单位 is not None:
+                    current_step = f"施放 氤氲之雾 on {无氤氲单位}"
+                    action_hotkey = get_hotkey(int(无氤氲单位), "氤氲之雾")
+                # 神鹤引项踢
+                elif 1 <= 目标类型 <= 3 and 敌人人数 >= 5:
+                    current_step = "施放 神鹤引项踢"
+                    action_hotkey = get_hotkey(0, "神鹤引项踢")
+                # 幻灭踢
+                elif 1 <= 目标类型 <= 3 and 幻灭踢 == 0:
+                    current_step = "施放 幻灭踢"
+                    action_hotkey = get_hotkey(0, "幻灭踢")
+                # 猛虎掌
+                elif 1 <= 目标类型 <= 3:
+                    current_step = "施放 猛虎掌"
+                    action_hotkey = get_hotkey(0, "猛虎掌")
+                else:
+                    current_step = "不执行任何操作"
+                    return None, current_step, unit_info
+        else:
+            if 引导 > 0:
+                current_step = "在引导,不执行任何操作"
+            elif 战斗 and 1 <= 目标类型 <= 3 and tup:
+                current_step = f"施放 {tup[0]}"
+                action_hotkey = get_hotkey(0, tup[1])
+            else:
+                current_step = "战斗中-无匹配技能"
 
     elif spec_name == "踏风":
         目标生命值 = state_dict.get("目标生命值", 0)

@@ -88,12 +88,14 @@ Fuyutsui.ClassBlocks = {
         [21] = { type = "block", name = "敌人人数" },
         [22] = { type = "block", name = "施法技能" },
         [23] = { type = "block", name = "施法目标" },
+        [49] = { type = "block", name = "目标距离" },
 
         [25] = { type = "aura", name = "生生不息1", auraName = "生生不息1", showKey = "remaining" },
         [26] = { type = "aura", name = "生生不息2", auraName = "生生不息2", showKey = "remaining" },
         [28] = { type = "aura", name = "灵泉", auraName = "灵泉", showKey = "remaining" },
         [29] = { type = "aura", name = "玄牛之力", auraName = "玄牛之力", showKey = "remaining" },
         [30] = { type = "aura", name = "青龙之心", auraName = "青龙之心", showKey = "remaining" },
+        [48] = { type = "aura", name = "活力苏醒", auraName = "活力苏醒", showKey = "remaining" },
 
         [31] = { type = "spell", spellId = 116680, name = "雷光聚神茶" },
         [32] = { type = "spell", spellId = 116680, name = "雷光聚神茶", charge = true },
@@ -149,6 +151,7 @@ Fuyutsui.ClassBlocks = {
 
         [21] = { type = "block", name = "目标生命值" },
         [22] = { type = "block", name = "敌人人数" },
+        [23] = { type = "block", name = "目标距离" },
 
         [31] = { type = "spell", spellId = 322109, name = "轮回之触" },
         [32] = { type = "spell", spellId = 119381, name = "扫堂腿" },
@@ -163,7 +166,7 @@ Fuyutsui.ClassBlocks = {
 }
 
 Fuyutsui.MacrosList = {
-    dynamicSpells = { "氤氲之雾", "活血术", "清创生血", "抚慰之雾", "复苏之雾" },
+    dynamicSpells = { "氤氲之雾", "活血术", "清创生血", "抚慰之雾", "复苏之雾"  },
     specialSpells = {},
     staticSpells = {
         [1] = "扫堂腿",

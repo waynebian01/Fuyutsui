@@ -76,6 +76,10 @@ def run_hunter_logic(state_dict, spec_name):
     首领战 = state_dict.get("首领战", 0)
     难度 = state_dict.get("难度", 0)
     英雄天赋 = state_dict.get("英雄天赋", 0)
+    敌人人数 = state_dict.get("敌人人数", 0)
+    狂野鞭笞 = spells.get("狂野鞭笞", -1)
+    倒刺射击 = spells.get("倒刺射击", -1)
+    倒刺充能 = spells.get("倒刺充能", -1)
 
     失败法术 = _get_failed_spell(state_dict)
     tup = action_map.get(一键辅助)
@@ -90,7 +94,13 @@ def run_hunter_logic(state_dict, spec_name):
             current_step = "施放 召唤宠物1"
             action_hotkey = get_hotkey(0, "召唤宠物1")
         elif 战斗 and 1 <= 目标类型 <= 3:
-            if tup:
+            if 敌人人数 >= 2 and 狂野鞭笞 == 0:
+                current_step = "施放 狂野鞭笞"
+                action_hotkey = get_hotkey(0, "狂野鞭笞")
+            elif 倒刺射击 == 0 and 倒刺充能 ==0:
+                current_step = "施放 倒刺射击"
+                action_hotkey = get_hotkey(0, "倒刺射击")
+            elif tup:
                 current_step = f"施放 {tup[0]}"
                 action_hotkey = get_hotkey(0, tup[1])
             else:

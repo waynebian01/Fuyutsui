@@ -31,7 +31,8 @@ action_map = {
     35: ("英勇打击", "猛击"),
     36: ("浴血奋战", "嗜血"),
     37: ("碎甲猛击", "怒击"),
-    38: ("破坏者", "破坏者")
+    38: ("破坏者", "破坏者"),
+    39: ("斩杀", "斩杀")
 }
 
 failed_spell_map = {
@@ -76,7 +77,8 @@ def run_warrior_logic(state_dict, spec_name):
     首领战 = state_dict.get("首领战", 0)
     难度 = state_dict.get("难度", 0)
     英雄天赋 = state_dict.get("英雄天赋", 0)
-
+    敌人人数 = state_dict.get("敌人人数", 0)
+    目标生命值 = state_dict.get("目标生命值", 0)
     失败法术 = _get_failed_spell(state_dict)
     tup = action_map.get(一键辅助)
     action_hotkey = None
@@ -90,22 +92,64 @@ def run_warrior_logic(state_dict, spec_name):
         current_step = "施放 战斗怒吼"
         action_hotkey = get_hotkey(0, "战斗怒吼")
     elif spec_name == "武器": 
-        if 战斗 and 1 <= 目标类型 <= 3:
-            if 生命值 < 70 and spells.get("胜利在望") == 0:
-                current_step = "施放 胜利在望"
-                action_hotkey = get_hotkey(0, "胜利在望")
-            elif tup:
-                current_step = f"施放 {tup[0]}"
-                action_hotkey = get_hotkey(0, tup[1])
+        英勇打击高亮 = state_dict.get("英勇打击高亮", 0)
+        斩杀高亮 = state_dict.get("斩杀高亮", 0)
+        致死打击 = spells.get("致死打击", -1)
+        巨人打击 = spells.get("巨人打击", -1)
+        崩摧 = spells.get("崩摧", -1)
+        顺劈斩= spells.get("顺劈斩", -1)
+        斩杀 = spells.get("斩杀", -1)
+        压制 = spells.get("压制", -1)
+        压制充能 = spells.get("压制充能", -1)
+        if 英雄天赋 == 1:
+            if 战斗 and 1 <= 目标类型 <= 3:
+                if 生命值 < 70 and spells.get("胜利在望") == 0:
+                    current_step = "施放 胜利在望"
+                    action_hotkey = get_hotkey(0, "胜利在望")
+                elif 一键辅助 == 14:
+                    current_step = "施放 撕裂"
+                    action_hotkey = get_hotkey(0, "撕裂")
+                elif 巨人打击 == 0:
+                    current_step = "施放 巨人打击"
+                    action_hotkey = get_hotkey(0, "巨人打击")
+                elif 崩摧 == 0:
+                    current_step = "施放 崩摧"
+                    action_hotkey = get_hotkey(0, "崩摧")
+                elif 一键辅助 == 22:
+                    current_step = "施放 横扫攻击"
+                    action_hotkey = get_hotkey(0, "横扫攻击")
+                elif 敌人人数>=3 and 顺劈斩 == 0 and 能量值 >= 20:
+                    current_step = "施放 顺劈斩"
+                    action_hotkey = get_hotkey(0, "顺劈斩")
+                elif 敌人人数<=2 and 英勇打击高亮 > 0 and 能量值 >= 20:
+                    current_step = "施放 英勇打击"
+                    action_hotkey = get_hotkey(0, "猛击")
+                elif 致死打击 == 0 and 能量值 >= 30:
+                    current_step = "施放 致死打击"
+                    action_hotkey = get_hotkey(0, "致死打击")
+                elif 压制 == 0:
+                    current_step = "施放 压制"
+                    action_hotkey = get_hotkey(0, "压制")
+                elif 斩杀高亮>0 and 斩杀 == 0:
+                    current_step = "施放 斩杀"
+                    action_hotkey = get_hotkey(0, "斩杀")
+                elif 能量值 >= 50:
+                    current_step = "施放 猛击"
+                    action_hotkey = get_hotkey(0, "猛击")
+            else:
+                current_step = "无匹配技能"     
+        elif 英雄天赋 == 2 and tup:
+            current_step = f"一键辅助-施放 {tup[0]}"
+            action_hotkey = get_hotkey(0, tup[1])
         else:
-            current_step = "无匹配技能"
+            current_step = "无匹配技能"            
     elif spec_name == "狂怒":
         if 战斗 and 1 <= 目标类型 <= 3:
             if 生命值 < 70 and spells.get("胜利在望") == 0:
                 current_step = "施放 胜利在望"
                 action_hotkey = get_hotkey(0, "胜利在望")
             elif tup:
-                current_step = f"施放 {tup[0]}"
+                current_step = f"一键辅助-施放 {tup[0]}"
                 action_hotkey = get_hotkey(0, tup[1])
         else:
             current_step = "无匹配技能"
@@ -123,7 +167,7 @@ def run_warrior_logic(state_dict, spec_name):
                 current_step = "施放 无视苦痛"
                 action_hotkey = get_hotkey(0, "无视苦痛")
             elif tup:
-                current_step = f"施放 {tup[0]}"
+                current_step = f"一键辅助-施放 {tup[0]}"
                 action_hotkey = get_hotkey(0, tup[1])
         else:
             current_step = "无匹配技能"

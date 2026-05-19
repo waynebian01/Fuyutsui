@@ -26,6 +26,8 @@ state:
   1:
     目标生命值: {step: 21, type: "int" }
     敌人人数: {step: 22, type: "int" }
+    斩杀高亮: {step: 23, type: "int" }
+    英勇打击高亮: {step: 24, type: "int" }
     spells:
       胜利在望: {step: 31, type: "int" }
       勇士之矛: {step: 32, type: "int" }
@@ -36,6 +38,13 @@ state:
       破裂投掷: {step: 37, type: "int" }
       碎裂投掷: {step: 38, type: "int" }
       破胆怒吼: {step: 39, type: "int" }
+      压制: {step: 40, type: "int" }
+      压制充能: {step: 41, type: "int" }
+      斩杀: {step: 42, type: "int" }    
+      顺劈斩: {step: 43, type: "int" }
+      致死打击: {step: 44, type: "int" }
+      巨人打击: {step: 45, type: "int" }
+      崩摧: {step: 46, type: "int" }
   2:
     目标生命值: {step: 21, type: "int" }
     敌人人数: {step: 22, type: "int" }
@@ -180,6 +189,7 @@ state:
 3: # 猎人
   keymap: "hunter.yml"
   1:
+    敌人人数: {step: 21, type: "int" }
     spells:
       牺牲咆哮: {step: 39, type: "int" }
       意气风发: {step: 31, type: "int" }
@@ -753,7 +763,8 @@ state:
     灵泉: {step: 28, type: "int" }
     玄牛之力: {step: 29, type: "int" }
     青龙之心: {step: 30, type: "int" }
-    
+    活力苏醒: {step: 48, type: "int" }
+    目标距离: {step: 49, type: "int" }
     spells:
       雷光茶: {step: 31, type: "int" }
       雷光充能: {step: 32, type: "int" }

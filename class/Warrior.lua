@@ -25,6 +25,9 @@ Fuyutsui.ClassBlocks = {
 
         [21] = { type = "block", name = "目标生命值" },
         [22] = { type = "block", name = "敌人人数" },
+        [23] = { type = "aura", name = "斩杀高亮", auraName = "斩杀高亮", showKey = "remaining" },
+        [24] = { type = "aura", name = "英勇打击高亮", auraName = "英勇打击高亮", showKey = "remaining" },
+        
 
 
         [31] = { type = "spell", spellId = 202168, name = "胜利在望" },
@@ -36,6 +39,13 @@ Fuyutsui.ClassBlocks = {
         [37] = { type = "spell", spellId = 384110, name = "破裂投掷" },
         [38] = { type = "spell", spellId = 64382, name = "碎裂投掷" },
         [39] = { type = "spell", spellId = 5246, name = "破胆怒吼" },
+        [40] = { type = "spell", spellId = 7384, name = "压制" },
+        [41] = { type = "spell", spellId = 7384, name = "压制", charge = true },
+        [42] = { type = "spell", spellId = 163201, name = "斩杀" },
+        [43] = { type = "spell", spellId = 845, name = "顺劈斩" },
+        [44] = { type = "spell", spellId = 12294, name = "致死打击" },
+        [45] = { type = "spell", spellId = 167105, name = "巨人打击" },
+        [46] = { type = "spell", spellId = 436358, name = "崩摧" },      
     },
     [2] = {
         [1]  = { type = "block", name = "锚点" },

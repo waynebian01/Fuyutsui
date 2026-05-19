@@ -22,6 +22,7 @@ Fuyutsui.ClassBlocks = {
         [18] = { type = "block", name = "首领战" },
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
+        [21] = { type = "block", name = "敌人人数" },
 
         [30] = { type = "spell", spellId = 53480, name = "牺牲咆哮" },
         [31] = { type = "spell", spellId = 109304, name = "意气风发" },
