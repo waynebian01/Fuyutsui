@@ -294,12 +294,12 @@ function Fuyutsui:SlashCommand(input, editbox)
             local cc = Fuyutsui.db and Fuyutsui.db.char
             if cc then
                 cc.delay = 0
-                print("|cff00ff00[Fuyutsui]|r db.char.delay 已恢复为 0。")
+                self:Print("延迟已恢复。")
                 self:SwitchDelay()
             end
         end)
         if not delayAlreadyActive then
-            print("|cff00ff00[Fuyutsui]|r db.char.delay 已设为 1，" .. sec .. " 秒后恢复为 0。")
+            self:Print("延迟已生效，" .. sec .. " 秒后恢复。")
         end
     elseif command == "help" then
         print("|cff00ff00Fuyutsui|r 命令列表:")

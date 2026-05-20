@@ -735,6 +735,43 @@ function Fuyutsui:updateDiseaseJudge()
         end)
     end
 end
+-- 更新防御光环
+function Fuyutsui:GetDefensiveAuraInstanceID(unit, info)
+    if unit ~= "player" then return end
+    if info.addedAuras then
+        for i = 1, 2 do
+            local aura = C_UnitAuras.GetBuffDataByIndex(unit, i, "HELPFUL|BIG_DEFENSIVE")
+            if not issecretvalue(aura) and aura then
+                state.DefensiveAuraInstanceID = aura.auraInstanceID
+            end
+        end
+    end
+    if info.removedAuraInstanceIDs then
+        for _, v in pairs(info.removedAuraInstanceIDs) do
+            if v == state.DefensiveAuraInstanceID then
+                state.DefensiveAuraInstanceID = nil
+            end
+        end
+    end
+end
+
+function Fuyutsui:GetDefensiveAuraDuration()
+    if blocks and blocks.state["防御光环"] then
+        if state.DefensiveAuraInstanceID then
+            local duration = C_UnitAuras.GetAuraDuration("player", state.DefensiveAuraInstanceID)
+            if duration then
+                local auraduration = duration:EvaluateRemainingDuration(curve255)
+                ---@diagnostic disable-next-line: param-type-mismatch
+                local _, _, b = auraduration:GetRGB()
+                self:CreatTexture(blocks.state["防御光环"], b)
+            else
+                self:CreatTexture(blocks.state["防御光环"], 0)
+            end
+        else
+            self:CreatTexture(blocks.state["防御光环"], 0)
+        end
+    end
+end
 
 -- 更新法术冷却信息
 function Fuyutsui:updateSpellCooldown()
@@ -1582,7 +1619,40 @@ function Fuyutsui:ENCOUNTER_END(_, encounterID, encounterName, difficultyID, gro
     self:updateEncounterID(0, 0)
 end
 
+function Fuyutsui:TestFiltered(unit, auraInstanceID)
+    local AuraFilters = {
+        "HELPFUL",
+        "HELPFUL HARMFUL",
+        "HELPFUL PLAYER",
+        "HELPFUL RAID",
+        "HELPFUL CANCELABLE",
+        "HELPFUL NOT_CANCELABLE",
+        "HELPFUL INCLUDE_NAME_PLATE_ONLY",
+        "HELPFUL MAW",
+        "HELPFUL EXTERNAL_DEFENSIVE",
+        "HELPFUL CROWD_CONTROL",
+        "HELPFUL RAID_IN_COMBAT",
+        "HELPFUL RAID_PLAYER_DISPELLABLE",
+        "HELPFUL BIG_DEFENSIVE",
+        "HELPFUL IMPORTANT",
+    }
+    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID)
+    if aura then
+        for _, filter in pairs(AuraFilters) do
+            local isFiltered = C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, auraInstanceID, filter)
+            local boolColored
+            if isFiltered then
+                boolColored = "|cffff0000" .. tostring(false) .. "|r"
+            else
+                boolColored = "|cff00ff00" .. tostring(true) .. "|r"
+            end
+            print(auraInstanceID, aura.name, filter, boolColored)
+        end
+    end
+end
+
 function Fuyutsui:UNIT_AURA(_, unit, info)
+    self:GetDefensiveAuraInstanceID(unit, info)
     local obj = group[unit]
     if not obj then return end
     getAuraDispelTypeColor(unit)
@@ -1638,6 +1708,7 @@ function Fuyutsui:OnUpdate(elapsed)
     -- 2. 低频逻辑（每 0.2 秒执行）
     self.timeElapsed = self.timeElapsed + elapsed
     if self.timeElapsed > 0.2 then
+        self:GetDefensiveAuraDuration()
         self:updateSpellCooldown()
         self:OnUpdateUnitAura()
         self:updateAuraBlocks()
