@@ -60,6 +60,9 @@ Fuyutsui.ClassBlocks = {
         [43] = { type = "spell", spellId = 472433, name = "福音" },
         [44] = { type = "spell", spellId = 8092, name = "心灵震爆" },
         [45] = { type = "spell", spellId = 32379, name = "暗言术：灭" },
+        [49] = { type = "spell", spellId = 34433, name = "暗影魔" },
+        [50] = { type = "spell", spellId = 1235211, name = "暗影分流" },
+        [48] = { type = "block", name = "延迟" },
 
         [70] = {
             type = "group",
@@ -123,7 +126,7 @@ Fuyutsui.ClassBlocks = {
         [42] = { type = "spell", spellId = 14914, name = "神圣之火" },
         [43] = { type = "spell", spellId = 120517, name = "光晕" },
         [44] = { type = "spell", spellId = 64843, name = "神圣赞美诗" },
-
+        
         [70] = {
             type = "group",
             num = 5,
@@ -186,7 +189,7 @@ Fuyutsui.MacrosList = {
         [1] = "心灵震爆",
         [2] = "惩击",
         [3] = "暗言术：痛",
-        [4] = "真言术：韧",
+        [4] = "[@player]真言术：韧",
         [5] = "神圣新星",
         [6] = "苦修",
         [7] = "真言术：耀",

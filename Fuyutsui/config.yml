@@ -323,6 +323,7 @@ state:
     福音层数: {step: 30, type: "int" }
     祸福相依: {step: 46, type: "int" }
     祸福层数: {step: 47, type: "int" }
+    延迟: {step: 48, type: "int" }
     苦修层数: {step: bar, bar: 1, type: "int"}
     耀层数: {step: bar, bar: 2, type: "int"}
     spells:
@@ -341,7 +342,8 @@ state:
       福音: {step: 43, type: "int" }
       心灵震爆: {step: 44, type: "int" }
       暗言术：灭: {step: 45, type: "int" }
-
+      暗影魔: {step: 49, type: "int" }
+      暗影分流: {step: 50, type: "int" }
     group:
       start: 70
       num: 5
