@@ -911,6 +911,8 @@ state:
       精华破碎: {step: 56, type: "int" }
   2:
     敌人人数: {step: 21, type: "int" }
+    烈火烙印: {step: 22, type: "int" }
+
     spells:
       黑暗: {step: 40, type: "int" }
       复仇回避: {step: 41, type: "int" }
