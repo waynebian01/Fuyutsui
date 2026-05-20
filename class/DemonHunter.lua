@@ -32,7 +32,6 @@ Fuyutsui.ClassBlocks = {
         [44] = { type = "spell", spellId = 207684, name = "悲苦咒符" },
         [45] = { type = "spell", spellId = 217832, name = "禁锢" },
         [46] = { type = "spell", spellId = 258920, name = "献祭光环" },
-
         [47] = { type = "spell", spellId = 179057, name = "混乱新星" },
         [48] = { type = "spell", spellId = 191427, name = "恶魔变形" },
         [49] = { type = "spell", spellId = 232893, name = "邪能之刃" },
@@ -68,6 +67,7 @@ Fuyutsui.ClassBlocks = {
         [20] = { type = "block", name = "英雄天赋" },
 
         [21] = { type = "block", name = "敌人人数" },
+        [22] = { type = "block", name = "防御光环" },
 
         [40] = { type = "spell", spellId = 196718, name = "黑暗" },
         [41] = { type = "spell", spellId = 198793, name = "复仇回避" },

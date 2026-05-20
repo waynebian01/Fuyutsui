@@ -930,7 +930,16 @@ local auras = {
     },
     -- 恶魔猎手
     [12] = {
-
+        ["烈火烙印"] = {
+            remaining = 0,
+            duration = 12,
+            expirationTime = nil,
+            addAuras = {
+                [207771] = { event = e["法术冷却"] },
+            },
+            updateAuras = nil,
+            removeAuras = nil,
+        },
     },
     -- 唤魔师
     [13] = {

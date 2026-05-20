@@ -97,6 +97,14 @@ def run_demonhunter_logic(state_dict, spec_name):
     难度 = state_dict.get("难度", 0)
     英雄天赋 = state_dict.get("英雄天赋", 0)
 
+    黑暗_cd = spells.get("黑暗", -1)
+    复仇回避_cd = spells.get("复仇回避", -1)
+    投掷利刃_cd = spells.get("投掷利刃", -1)
+    投掷利刃_charge = spells.get("投掷利刃充能", -1)
+    悲苦咒符_cd = spells.get("悲苦咒符", -1)
+    禁锢_cd = spells.get("禁锢", -1)
+    献祭光环_cd = spells.get("献祭光环", -1)
+
     失败法术 = _get_failed_spell(state_dict)
     tup = action_map.get(一键辅助)
     action_hotkey = None
@@ -116,8 +124,29 @@ def run_demonhunter_logic(state_dict, spec_name):
         else:
             current_step = "无匹配技能"
     elif spec_name == "复仇":
+        混乱新星_cd = spells.get("混乱新星", -1)
+        恶魔变形_cd = spells.get("恶魔变形", -1)
+        邪能之刃_cd = spells.get("邪能之刃", -1)
+        地狱火撞击_cd = spells.get("地狱火撞击", -1)
+        地狱火撞击_charge = spells.get("地狱火撞击充能", -1)
+        恶魔尖刺_cd = spells.get("恶魔尖刺", -1)
+        烈火烙印_cd = spells.get("烈火烙印", -1)
+        烈火烙印_charge = spells.get("烈火烙印充能", -1)
+        幽魂炸弹_cd = spells.get("幽魂炸弹", -1)
+        灵魂切削_cd = spells.get("灵魂切削", -1)
+        烈焰咒符_cd = spells.get("烈焰咒符", -1)
+        怨念咒符_cd = spells.get("怨念咒符", -1)
+        灵魂裂劈_cd = spells.get("灵魂裂劈", -1)
+        破裂_cd = spells.get("破裂", -1)
+        破裂_charge = spells.get("破裂充能", -1)
+        邪能毁灭_cd = spells.get("邪能毁灭", -1)
+        沉默咒符_cd = spells.get("沉默咒符", -1)
+      
         if 战斗 and 1 <= 目标类型 <= 3:
-            if tup:
+            if 恶魔尖刺_cd == 0:
+                current_step = "施放 恶魔尖刺"
+                action_hotkey = get_hotkey(0, "恶魔尖刺")
+            elif tup:
                 current_step = f"施放 {tup[0]}"
                 action_hotkey = get_hotkey(0, tup[1])
         else:
