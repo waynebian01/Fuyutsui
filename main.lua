@@ -16,9 +16,9 @@ local nameplate = Fuyutsui.nameplate
 local group = Fuyutsui.group
 local groupList = Fuyutsui.groupList
 local spells = {}
-local failedSpell, failedSpellId, failedSpellTimer = nil, nil, nil
+local failedSpell, failedSpellId, failedSpellTimer, updateIndex = nil, nil, nil, 1
 local roleMap, spellsList, EnumPowerType = Fuyutsui.roleMap, Fuyutsui.spellsList, Fuyutsui.EnumPowerType
-local fallbackColor = CreateColor(0, 0, 1)
+local fallbackColor, falseValue = CreateColor(0, 0, 1), CreateColor(0, 0, 0, 1)
 
 -- ================================================================
 --                          创建颜色曲线
@@ -1028,14 +1028,14 @@ function Fuyutsui:updateUnitValid(unit)
     obj.valid = not obj.isDead and obj.canAssist and obj.inSight
 end
 
-local falseValue, updateIndex = CreateColor(0, 0, 0, 1), 1
-function Fuyutsui:updateGroupInRange()
+function Fuyutsui:updateGroupInRangeAndHealth()
     if not blocks or not blocks.groups then return end
     local numUnits = #groupList
     if numUnits >= 1 then
         local unit = groupList[updateIndex]
         local obj = group[unit]
         if not obj then return end
+        self:updateUnitHealthInfo(unit)
         local index = blocks.groups.start + (obj.index - 1) * blocks.groups.num + blocks.groups.role
         obj.isDead = UnitIsDeadOrGhost(unit)
         obj.canAssist = UnitCanAssist("player", unit)
@@ -1098,14 +1098,12 @@ local function updateUnitHealAbsorbCurve(unit)
     if obj.curveTimer then
         obj.curveTimer:Cancel()
     end
-    obj.curveTimer = C_Timer.NewTimer(0.7, function()
+    obj.curveTimer = C_Timer.NewTimer(1, function()
         if group[unit] and group[unit] == obj then
             obj.healAbsorb = 0
             obj.curveTimer = nil
         end
-        Fuyutsui:updateUnitHealthInfo(unit)
     end)
-    Fuyutsui:updateUnitHealthInfo(unit)
 end
 
 local function updateUnitIncomingHealsCurve(spellID)
@@ -1117,13 +1115,11 @@ local function updateUnitIncomingHealsCurve(spellID)
     if isHelpfulSpell then
         obj.inComingHeals = isHelpfulSpell
     end
-    Fuyutsui:updateUnitHealthInfo(unit)
 end
 
 local function updateUnitIncomingHealsCurve2()
     for unit, data in pairs(group) do
         data.inComingHeals = 0
-        Fuyutsui:updateUnitHealthInfo(unit)
     end
 end
 
@@ -1487,7 +1483,6 @@ function Fuyutsui:UNIT_HEALTH(_, unit)
         self:updateTargetHealth()
     end
     if group[unit] then
-        self:updateUnitHealthInfo(unit)
         updateUnitDeathByHealthInfo(unit)
     end
 end
@@ -1497,7 +1492,6 @@ function Fuyutsui:UNIT_MAXHEALTH(_, unit)
         self:updatePlayerHealth()
     end
     if group[unit] then
-        self:updateUnitHealthInfo(unit)
         updateUnitDeathByHealthInfo(unit)
     end
 end
@@ -1508,7 +1502,6 @@ function Fuyutsui:UNIT_HEAL_ABSORB_AMOUNT_CHANGED(_, unit)
     end
     if group[unit] then
         updateUnitHealAbsorbCurve(unit)
-        self:updateUnitHealthInfo(unit)
         updateUnitDeathByHealthInfo(unit)
     end
 end
@@ -1518,7 +1511,6 @@ function Fuyutsui:UNIT_HEAL_PREDICTION(_, unit)
         self:updatePlayerHealth()
     end
     if group[unit] then
-        self:updateUnitHealthInfo(unit)
         updateUnitDeathByHealthInfo(unit)
     end
 end
@@ -1718,7 +1710,7 @@ function Fuyutsui:OnUpdate(elapsed)
     self:updatePlayerCastingInfo()
     self:updatePlayerChannelingInfo()
     self:updatePlayerEmpowerInfo()
-    self:updateGroupInRange()
+    self:updateGroupInRangeAndHealth()
     self:updateAura()
 
     -- 2. 低频逻辑（每 0.2 秒执行）
