@@ -149,6 +149,7 @@ Fuyutsui.ClassBlocks = {
 
         [21] = { type = "block", name = "目标生命值" },
         [22] = { type = "block", name = "敌人人数" },
+        [23] = { type = "block", name = "真气" },
 
         [31] = { type = "spell", spellId = 322109, name = "轮回之触" },
         [32] = { type = "spell", spellId = 119381, name = "扫堂腿" },

@@ -17,7 +17,7 @@ local group = Fuyutsui.group
 local groupList = Fuyutsui.groupList
 local spells = {}
 local failedSpell, failedSpellId, failedSpellTimer = nil, nil, nil
-local roleMap, enumPowerType, spellsList = Fuyutsui.roleMap, Fuyutsui.EnumPowerType, Fuyutsui.spellsList
+local roleMap, spellsList, EnumPowerType = Fuyutsui.roleMap, Fuyutsui.spellsList, Fuyutsui.EnumPowerType
 local fallbackColor = CreateColor(0, 0, 1)
 
 -- ================================================================
@@ -47,6 +47,16 @@ end
 local curve100 = creatColorCurveScaling(100)
 local curve255 = Fuyutsui:creatColorCurve(255, 255)
 local curve10 = Fuyutsui:creatColorCurve(10, 100)
+local powerCurve = {}
+function Fuyutsui:CreatPowerCurve(powerType)
+    if powerCurve[powerType] then return end
+    local powerMax = UnitPowerMax("player", EnumPowerType[powerType])
+    if powerMax >= 250 then
+        powerCurve[powerType] = self:creatColorCurve(1, 100)
+    else
+        powerCurve[powerType] = self:creatColorCurve(1, powerMax)
+    end
+end
 
 -- 单体读条治疗法术
 -- 施法目标的生命值增加值,防止对同一个目标重复施法,导致过量治疗
@@ -212,7 +222,7 @@ function Fuyutsui:updatePlayerBlocks()
     self:updatePlayerChannelingInfo()               -- 8.引导
     self:updatePlayerEmpowerInfo()                  -- 9.蓄力  10.蓄力层数
     self:updatePlayerHealth()                       -- 11.生命值
-    self:updatePlayerPower()                        -- 12.能量值
+    self:updatePlayerPowerType()                    -- 12.能量值
     self:updatePlayerAssistant()                    -- 13.一键辅助
     -- 14. 法术失败
     self:updateTargetValid()                        -- 15.目标类型
@@ -220,6 +230,7 @@ function Fuyutsui:updatePlayerBlocks()
     self:updateGroupCount()                         -- 17.队伍人数
     -- 18. 19. 更新boss战ID和难度
     self:updateHeroTalent()                         -- 20.英雄天赋
+
     self:updatePlayerBarInfo()                      -- 创建玩家bar信息
     self:updateShapeshiftForm()                     -- 姿态
     self:updatePlayerStagger()                      -- 酒池
@@ -458,34 +469,38 @@ function Fuyutsui:updatePlayerHealth()
     self:CreatTexture(blocks.state["生命值"], state.healthPercent)
 end
 
--- 12. 更新玩家能量信息
+local specialPowerMap = {
+    ["COMBO_POINTS"] = "连击点",
+    ["HOLY_POWER"] = "神圣能量",
+    ["ESSENCE"] = "精华能量",
+    ["SOUL_SHARDS"] = "灵魂碎片",
+    ["CHI"] = "真气",
+}
+-- 12. 更新玩家能量值
 function Fuyutsui:updatePlayerPower(powerType)
-    if (state.powerType and powerType == state.powerType) or state.powerType == nil or powerType == nil then
-        local powerPercent = UnitPowerPercent("player", enumPowerType[state.powerType], nil, curve100)
-        ---@diagnostic disable-next-line: param-type-mismatch
-        local _, _, b = powerPercent:GetRGB()
-        state.powerPercent = b
-        self:CreatTexture(blocks.state["能量值"], state.powerPercent)
+    if blocks then
+        local power = UnitPower("player", EnumPowerType[powerType])
+        local specialPower = specialPowerMap[powerType]
+        if isSec(power) then
+            if not powerCurve[powerType] then self:CreatPowerCurve(powerType) end
+            local powerPercent = UnitPowerPercent("player", EnumPowerType[powerType], nil, powerCurve[powerType])
+            ---@diagnostic disable-next-line: param-type-mismatch
+            local _, _, b = powerPercent:GetRGB()
+            state.powerPercent = b
+            self:CreatTexture(blocks.state["能量值"], state.powerPercent)
+        elseif specialPower then
+            local blockIndex = blocks.state[specialPower]
+            if blockIndex then
+                self:CreatTexture(blockIndex, power / 255 or 0)
+            end
+        end
     end
-    if powerType == "COMBO_POINTS" and blocks and blocks.state["连击点"] then
-        local power = UnitPower("player", 4)
-        state.comboPoints = power / 255 or 0
-        self:CreatTexture(blocks.state["连击点"], state.comboPoints)
-    end
-    if powerType == "HOLY_POWER" and blocks and blocks.state["神圣能量"] then
-        local power = UnitPower("player", 9)
-        state.holyPower = power / 255 or 0
-        self:CreatTexture(blocks.state["神圣能量"], state.holyPower)
-    end
-    if powerType == "ESSENCE" and blocks and blocks.state["精华能量"] then
-        local power = UnitPower("player", 19)
-        self:CreatTexture(blocks["精华能量"], power / 255)
-    end
-    if powerType == "SOUL_SHARDS" and blocks and blocks.state["灵魂碎片"] then
-        local power = UnitPower("player", 7)
-        state.soulShards = power / 255 or 0
-        self:CreatTexture(blocks.state["灵魂碎片"], state.soulShards)
-    end
+end
+
+function Fuyutsui:updatePlayerPowerType()
+    local powerType = UnitPowerType("player")
+    self:CreatPowerCurve(powerType)
+    self:updatePlayerPower(powerType)
 end
 
 -- 13. 更新玩家[一键辅助]
@@ -735,6 +750,7 @@ function Fuyutsui:updateDiseaseJudge()
         end)
     end
 end
+
 -- 更新防御光环
 function Fuyutsui:GetDefensiveAuraInstanceID(unit, info)
     if unit ~= "player" then return end

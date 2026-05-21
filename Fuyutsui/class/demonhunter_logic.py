@@ -124,6 +124,15 @@ def run_demonhunter_logic(state_dict, spec_name):
         else:
             current_step = "无匹配技能"
     elif spec_name == "复仇":
+        灵魂残片 = state_dict.get("灵魂残片", 0)
+        投掷利刃_层数 = state_dict.get("投掷利刃", 0)
+        地狱火撞击_层数 = state_dict.get("地狱火撞击", 0)
+        烈火烙印_层数 = state_dict.get("烈火烙印", 0)
+        破裂_层数 = state_dict.get("破裂", 0)
+
+        敌人人数 = state_dict.get("敌人人数", 0)
+        烈火烙印 = state_dict.get("烈火烙印buff", 0)
+
         混乱新星_cd = spells.get("混乱新星", -1)
         恶魔变形_cd = spells.get("恶魔变形", -1)
         邪能之刃_cd = spells.get("邪能之刃", -1)
@@ -146,6 +155,9 @@ def run_demonhunter_logic(state_dict, spec_name):
             if 恶魔尖刺_cd == 0:
                 current_step = "施放 恶魔尖刺"
                 action_hotkey = get_hotkey(0, "恶魔尖刺")
+            elif 烈火烙印 ==0 and 烈火烙印_cd == 0:
+                current_step = "施放 烈火烙印"
+                action_hotkey = get_hotkey(0, "烈火烙印")
             elif tup:
                 current_step = f"施放 {tup[0]}"
                 action_hotkey = get_hotkey(0, tup[1])

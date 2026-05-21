@@ -772,7 +772,7 @@ Fuyutsui.EnumPowerType = {
     ["DEMONIC_FURY"] = 15,
     ["ARCANE_CHARGES"] = 16,
     ["FURY"] = 17,
-    ["PAIN"] = 18,
+    ["PAIN"] = 17, -- 痛苦,原 18, 暂时由愤怒["FURY"]代替, 未知BUG
     ["ESSENCE"] = 19,
     ["SHADOW_ORBS"] = 28,
 }

@@ -786,6 +786,7 @@ state:
   3:
     目标生命值: {step: 21, type: "int" }
     敌人人数: {step: 22, type: "int" }
+    真气: {step: 23, type: "int" }
     spells:
       轮回之触: {step: 31, type: "int" }
       扫堂腿: {step: 32, type: "int" }
@@ -910,8 +911,14 @@ state:
       邪能冲撞: {step: 55, type: "int" }
       精华破碎: {step: 56, type: "int" }
   2:
+    灵魂残片: {step: bar, bar: 1, type: "int"}
+    投掷利刃: {step: bar, bar: 2, type: "int"}
+    地狱火撞击: {step: bar, bar: 3, type: "int"}
+    烈火烙印: {step: bar, bar: 4, type: "int"}
+    破裂: {step: bar, bar: 5, type: "int"}
+
     敌人人数: {step: 21, type: "int" }
-    烈火烙印: {step: 22, type: "int" }
+    烈火烙印buff: {step: 22, type: "int" }
 
     spells:
       黑暗: {step: 40, type: "int" }
