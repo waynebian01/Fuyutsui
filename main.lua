@@ -1033,6 +1033,13 @@ function Fuyutsui:updateDrinkStatus(spellID)
             self:updatePlayerValid()
             drinkStatusTimer = nil
         end)
+    else
+        if drinkStatusTimer then
+            drinkStatusTimer:Cancel()
+            drinkStatusTimer = nil
+        end
+        state.drinkStatus = false
+        self:updatePlayerValid()
     end
 end
 
@@ -1428,24 +1435,23 @@ function Fuyutsui:UNIT_SPELLCAST_EMPOWER_STOP(_, unitTarget, castGUID, spellID, 
 end
 
 function Fuyutsui:UNIT_SPELLCAST_SUCCEEDED(_, unitTarget, castGUID, spellID, castBarID)
-    if unitTarget ~= "player" then return end
-    if not isSec(spellID) then
-        -- printSuccSpell(spellID)
-        self:updateFailedSpellBySuccess(spellID)
-        self:updateAuraBySuccess(spellID, castBarID)
-        if spellID == 384255 then
-            self:ClearAllFuyutsuiBars()
-            print("切换天赋")
-            C_Timer.After(1, function()
-                self:updatePlayerSpecInfo()
-            end)
-        elseif spellID == 200749 then
-            self:ClearAllFuyutsuiBars()
-            print("切换专精")
-            C_Timer.After(1, function()
-                self:updatePlayerSpecInfo()
-            end)
-        end
+    if unitTarget ~= "player" or isSec(spellID) then return end
+    self:updateDrinkStatus(spellID)
+    -- printSuccSpell(spellID)
+    self:updateFailedSpellBySuccess(spellID)
+    self:updateAuraBySuccess(spellID, castBarID)
+    if spellID == 384255 then
+        self:ClearAllFuyutsuiBars()
+        print("切换天赋")
+        C_Timer.After(1, function()
+            self:updatePlayerSpecInfo()
+        end)
+    elseif spellID == 200749 then
+        self:ClearAllFuyutsuiBars()
+        print("切换专精")
+        C_Timer.After(1, function()
+            self:updatePlayerSpecInfo()
+        end)
     end
 end
 
@@ -1459,7 +1465,6 @@ end
 function Fuyutsui:SPELL_UPDATE_COOLDOWN(_, spellID)
     -- self:Print(spellID, C_Spell.GetSpellName(spellID))
     if issecretvalue(spellID) then return end
-    self:updateDrinkStatus(spellID)
     self:updateAuraBySpellCooldown(spellID)
 end
 
