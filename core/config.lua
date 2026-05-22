@@ -516,7 +516,7 @@ Fuyutsui.spellsList = {
     [73685]   = { index = 43, },               -- 生命释放
     [1267068] = { index = 44, },               -- 风暴涌流图腾
     [73920]   = { index = 45, failed = true }, -- 治疗之雨
-    [462603]  = { index = 46, failed = true }, -- 倾盆大雨
+    [462603]  = { index = 46 },                -- 倾盆大雨
     [192077]  = { index = 47, failed = true }, -- 狂风图腾
     [456366]  = { index = 48, },               -- 治疗之雨
     [79206]   = { index = 49, },               -- 灵魂行者的恩赐

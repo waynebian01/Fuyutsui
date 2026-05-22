@@ -215,6 +215,7 @@ function Fuyutsui:updatePlayerBlocks()
     self.Initialize = false
     self.state.isDead = UnitIsDeadOrGhost("player") -- 4.有效性(死亡)
     self.state.isChatOpen = false                   -- 4.有效性(聊天框)
+    self.state.drinkStatus = false                  -- 4.有效性(喝水)
     self:updatePlayerMounted()                      -- 4.有效性(坐骑, 变形)
     self:updatePlayerCombat()                       -- 5.战斗
     self:updatePlayerMoving(IsPlayerMoving())       -- 6.移动
@@ -370,7 +371,7 @@ end
 
 -- 4. 更新玩家有效性
 function Fuyutsui:updatePlayerValid()
-    local valid = not state.isDead and not state.mounted and not state.isChatOpen
+    local valid = not state.isDead and not state.mounted and not state.isChatOpen and not state.drinkStatus
     state.valid = valid and 1 / 255 or 0
     self:CreatTexture(blocks.state["有效性"], state.valid)
 end
@@ -384,6 +385,8 @@ end
 
 -- 6. 更新玩家移动状态
 function Fuyutsui:updatePlayerMoving(boolean)
+    state.drinkStatus = false
+    self:updatePlayerValid()
     state.moving = boolean and 1 / 255 or 0
     self:CreatTexture(blocks.state["移动"], state.moving)
 end
@@ -608,6 +611,7 @@ end
 
 -- 18. 19. 更新boss战ID和难度
 function Fuyutsui:updateEncounterID(encounterID, difficultyID)
+    state.encounterID = encounterID
     --[[更新难度ID
             1 = "5人本普通", -- Normal (Dungeon)
             2 = "5人本英雄", -- Heroic (Dungeon)
@@ -625,8 +629,8 @@ function Fuyutsui:updateEncounterID(encounterID, difficultyID)
         state.bossID = 0
         self:CreatTexture(blocks.state["首领战"], state.bossID)
     end
-    state.difficultyID = difficultyID / 255 or 0
-    self:CreatTexture(blocks.state["难度"], state.difficultyID)
+    state.difficultyID = difficultyID
+    self:CreatTexture(blocks.state["难度"], state.difficultyID / 255 or 0)
 end
 
 -- 20. 更新玩家英雄天赋
@@ -988,24 +992,47 @@ local function addNameplate(unit)
 end
 local testMap = {
     [2393] = true, -- 银月城
-    [2097] = true, -- 艾杰斯亚学院
+}
+local testEncounter = {
+    [2563] = true, -- 茂林古树
 }
 -- 更新范围内敌方姓名版数量
 function Fuyutsui:updateEnemyCount()
     local count = 0
     local inTestMap = state.mapID and testMap[state.mapID]
+    local inTestEncounter = state.encounterID and testEncounter[state.encounterID]
     for unit, data in pairs(nameplate) do
         local minRange, maxRange = updateUnitRange(unit)
         data.minRange = minRange
         data.maxRange = maxRange
         data.affectingCombat = UnitAffectingCombat(unit)
-        if data.canAttack and data.maxRange and data.maxRange <= self.state.specRange and (data.affectingCombat or inTestMap) then
+        if data.canAttack and data.maxRange and data.maxRange <= self.state.specRange
+            and (data.affectingCombat or inTestMap or inTestEncounter) then
             count = count + 1
         end
     end
     state.enemyCount = count / 255 or 0
     if blocks and blocks.state["敌人人数"] then
         self:CreatTexture(blocks.state["敌人人数"], state.enemyCount)
+    end
+end
+
+-- 通过施放成功获取喝水状态
+local drinkStatusTimer = nil
+function Fuyutsui:updateDrinkStatus(spellID)
+    local name = C_Spell.GetSpellName(spellID)
+    if name == "饮水" or name == "进食饮水" then
+        state.drinkStatus = true
+        self:updatePlayerValid()
+        if drinkStatusTimer then
+            drinkStatusTimer:Cancel()
+            drinkStatusTimer = nil
+        end
+        drinkStatusTimer = C_Timer.NewTimer(20, function()
+            state.drinkStatus = false
+            self:updatePlayerValid()
+            drinkStatusTimer = nil
+        end)
     end
 end
 
@@ -1432,6 +1459,7 @@ end
 function Fuyutsui:SPELL_UPDATE_COOLDOWN(_, spellID)
     -- self:Print(spellID, C_Spell.GetSpellName(spellID))
     if issecretvalue(spellID) then return end
+    self:updateDrinkStatus(spellID)
     self:updateAuraBySpellCooldown(spellID)
 end
 
