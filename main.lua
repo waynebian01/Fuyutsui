@@ -950,6 +950,16 @@ function Fuyutsui:updateTargetRangeBlock()
     end
 end
 
+function Fuyutsui:updateTargetCastingInfo()
+    if not UnitExists("target") then return end
+    local cast = UnitCastingDuration("target")
+    if cast then
+        local castingDurationColor = cast:EvaluateElapsedDuration(curve10)
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local _, _, b = castingDurationColor:GetRGB()
+    end
+end
+
 -- 更新目标是否死亡
 function Fuyutsui:updateTargetDeath()
     target.isDead = UnitIsDeadOrGhost("target")
@@ -1390,54 +1400,69 @@ function Fuyutsui:UNIT_SPELLCAST_START(_, unitTarget, castGUID, spellID, castBar
 end
 
 function Fuyutsui:UNIT_SPELLCAST_STOP(_, unitTarget, castGUID, spellID, castBarID)
-    if unitTarget ~= "player" then return end
-    -- print("结束施法时间:", GetTime())
-    updateUnitIncomingHealsCurve2()
-    state.casting = false
-    state.castTargetUnit = nil
-    state.castTargetName = nil
-    state.castTargetIndex = 0
-    self:updatePlayerCasting(0)
+    if unitTarget == "player" then
+        -- print("结束施法时间:", GetTime())
+        updateUnitIncomingHealsCurve2()
+        state.casting = false
+        state.castTargetUnit = nil
+        state.castTargetName = nil
+        state.castTargetIndex = 0
+        self:updatePlayerCasting(0)
+    elseif unitTarget == "target" then
+        target.casting = false
+    end
 end
 
 -- 引导状态
 function Fuyutsui:UNIT_SPELLCAST_CHANNEL_START(_, unitTarget, castGUID, spellID, castBarID)
-    if unitTarget ~= "player" then return end
-    state.channeling = true
-    state.channelingSpellID = spellID
-    self:updatePlayerCasting(spellID)
+    if unitTarget == "player" then
+        state.channeling = true
+        state.channelingSpellID = spellID
+        self:updatePlayerCasting(spellID)
+    elseif unitTarget == "target" then
+        target.channeling = true
+    end
 end
 
 function Fuyutsui:UNIT_SPELLCAST_CHANNEL_STOP(_, unitTarget, castGUID, spellID, castBarID)
-    if unitTarget ~= "player" then return end
-    state.channeling = false
-    state.castTargetUnit = nil
-    state.castTargetName = nil
-    state.castTargetIndex = 0
-    self:updatePlayerCasting(0)
+    if unitTarget == "player" then
+        state.channeling = false
+        state.castTargetUnit = nil
+        state.castTargetName = nil
+        state.castTargetIndex = 0
+        self:updatePlayerCasting(0)
+    elseif unitTarget == "target" then
+        target.channeling = false
+    end
 end
 
 -- 蓄力状态
 function Fuyutsui:UNIT_SPELLCAST_EMPOWER_START(_, unitTarget, castGUID, spellID, castBarID)
-    if unitTarget ~= "player" then return end
-    state.empowering = true
-    state.empoweringSpellID = spellID
-    self:updatePlayerCasting(spellID)
+    if unitTarget == "player" then
+        state.empowering = true
+        state.empoweringSpellID = spellID
+        self:updatePlayerCasting(spellID)
+    elseif unitTarget == "target" then
+        target.empowering = true
+    end
 end
 
 function Fuyutsui:UNIT_SPELLCAST_EMPOWER_STOP(_, unitTarget, castGUID, spellID, complete, interruptedBy, castBarID)
-    if unitTarget ~= "player" then return end
-    state.empowering = false
-    state.castTargetUnit = nil
-    state.castTargetName = nil
-    state.castTargetIndex = 0
-    self:updatePlayerCasting(0)
+    if unitTarget ~= "player" then
+        state.empowering = false
+        state.castTargetUnit = nil
+        state.castTargetName = nil
+        state.castTargetIndex = 0
+        self:updatePlayerCasting(0)
+    elseif unitTarget == "target" then
+        target.empowering = false
+    end
 end
 
 function Fuyutsui:UNIT_SPELLCAST_SUCCEEDED(_, unitTarget, castGUID, spellID, castBarID)
     if unitTarget ~= "player" or isSec(spellID) then return end
     self:updateDrinkStatus(spellID)
-   -- printSuccSpell(spellID)
+    -- printSuccSpell(spellID)
     self:updateFailedSpellBySuccess(spellID)
     self:updateAuraBySuccess(spellID, castBarID)
     if spellID == 384255 then

@@ -425,7 +425,7 @@ Fuyutsui.spellsList = {
     [198793]  = { index = 1, },                -- 复仇回避
     [185123]  = { index = 2, },                -- 投掷利刃
     [207684]  = { index = 3, failed = true },  -- 悲苦咒符
-    [217832]  = { index = 4, failed = true },  -- 禁锢
+    [217832]  = { index = 4 },                 -- 禁锢
     [258920]  = { index = 5, },                -- 献祭光环
     [179057]  = { index = 6, failed = true },  -- 混乱新星
     [191427]  = { index = 7, },                -- 恶魔变形

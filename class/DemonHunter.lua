@@ -77,6 +77,8 @@ Fuyutsui.ClassBlocks = {
         [21] = { type = "block", name = "敌人人数" },
         [22] = { type = "block", name = "防御光环" },
 
+        [31] = { type = "aura", name = "无羁邪怒", auraName = "无羁邪怒", showKey = "remaining" },
+
         [40] = { type = "spell", spellId = 196718, name = "黑暗" },
         [41] = { type = "spell", spellId = 198793, name = "复仇回避" },
         [42] = { type = "spell", spellId = 185123, name = "投掷利刃 " },
@@ -152,7 +154,10 @@ Fuyutsui.ClassBlocks = {
 
 Fuyutsui.MacrosList = {
     dynamicSpells = {},
-    specialSpells = { [19] = "/castsequence reset=3 烈火烙印,x", },
+    specialSpells = {
+         [19] = "/castsequence reset=3 烈火烙印,x",
+         [16] = "/castsequence reset=3 恶魔变形,x",
+         },
     staticSpells = {
         [1] = "复仇回避",
         [2] = "投掷利刃",
@@ -169,7 +174,7 @@ Fuyutsui.MacrosList = {
         [13] = "眼棱",
         [14] = "邪能冲撞",
         [15] = "精华破碎",
-        [16] = "恶魔变形",
+        -- [16] = "恶魔变形",
         [17] = "地狱火撞击",
         [18] = "恶魔尖刺",
         -- [19] = "烈火烙印",

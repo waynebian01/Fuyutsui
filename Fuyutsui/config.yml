@@ -923,6 +923,8 @@ state:
     敌人人数: {step: 21, type: "int" }
     烈火烙印buff: {step: 22, type: "int" }
 
+    无羁邪怒: {step: 31, type: "int" }
+
     spells:
       黑暗: {step: 40, type: "int" }
       复仇回避: {step: 41, type: "int" }
