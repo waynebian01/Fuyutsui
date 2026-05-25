@@ -22,6 +22,10 @@ Fuyutsui.ClassBlocks = {
         [18] = { type = "block", name = "首领战" },
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
+        [21] = { type = "block", name = "敌人人数" },
+        [22] = { type = "block", name = "爆发开关" },
+        [23] = { type = "block", name = "输出模式" },
+        [24] = { type = "block", name = "AOE开关" },
 
         [30] = { type = "spell", spellId = 53480, name = "牺牲咆哮" },
         [31] = { type = "spell", spellId = 109304, name = "意气风发" },
@@ -40,6 +44,9 @@ Fuyutsui.ClassBlocks = {
         [43] = { type = "spell", spellId = 147362, name = "反制射击" },
         [44] = { type = "spell", spellId = 19574, name = "狂野怒火" },
         [45] = { type = "spell", spellId = 1264359, name = "狂野鞭笞" },
+        [46] = { type = "aura", name = "自然之友", auraName = "自然之友", showKey = "remaining" },
+        [47] = { type = "aura", name = "猎人印记", auraName = "猎人印记", showKey = "remaining" },
+        [48] = { type = "aura", name = "狂野怒火光环", auraName = "狂野怒火", showKey = "remaining" },
     },
     [2] = {
         [1] = { type = "block", name = "锚点" },

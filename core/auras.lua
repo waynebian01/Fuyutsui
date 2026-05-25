@@ -38,6 +38,49 @@ local auras = {
             updateAuras = nil,
             removeAuras = nil,
         },
+        ["斩杀高亮"] = {
+            remaining = 0,
+            duration = 15, -- 持续时间给长一点，触发后只要系统没发取消发光的事件，这15秒内终端都会读取到高亮状态
+            expirationTime = nil,
+            addAuras = nil,
+            updateAuras = nil,
+            removeAuras = {
+                [5308]   = { event = e["图标发光隐藏"] }, -- 斩杀（基础/防战）
+                [163201] = { event = e["图标发光隐藏"] }, -- 斩杀（武器）
+                [281000] = { event = e["图标发光隐藏"] }, -- 斩杀（狂暴）
+                [280735] = { event = e["图标发光隐藏"] }, -- 斩杀（屠杀天赋）
+            },
+        },        
+        ["英勇打击高亮"] = {
+            remaining = 0,
+            duration = 15,
+            expirationTime = nil,
+            addAuras = nil,
+            updateAuras = nil,
+            removeAuras = {
+                [1269383] = { event = e["图标发光隐藏"] }, -- 英勇打击
+            },
+        },
+        ["顺劈斩高亮"] = {
+            remaining = 0,
+            duration = 15, 
+            expirationTime = nil,
+            addAuras = nil,
+            updateAuras = nil,
+            removeAuras = {
+                [845] = { event = e["图标发光隐藏"] }, -- 顺劈斩(845)发光结束时取消
+            },
+        },
+        ["致死高亮"] = {
+            remaining = 0,
+            duration = 15, 
+            expirationTime = nil,
+            addAuras = nil,
+            updateAuras = nil,
+            removeAuras = {
+                [12294] = { event = e["图标发光隐藏"] }, -- 致死打击发光结束时取消
+            },
+        },
     },
     -- 圣骑士
     [2] = {
@@ -198,7 +241,39 @@ local auras = {
     },
     -- 猎人
     [3] = {
-
+        ["自然之友"] = {
+            remaining = 0,
+            duration = 8,
+            expirationTime = nil,
+            addAuras = {
+                [1276720] = { event = e["法术冷却"] },
+            },
+            updateAuras = nil,
+            removeAuras = {
+                [34026] = { event = e["施法成功"] }
+            },
+        },
+        ["狂野怒火"] = {
+            remaining = 0,
+            duration = 15,
+            expirationTime = nil,
+            addAuras = {
+                [19574] = { event = e["法术冷却"] },
+            },
+            updateAuras = nil,
+            removeAuras = {
+            },
+        },
+        ["猎人印记"] = {
+            remaining = 0,
+            duration = 255,
+            expirationTime = nil,
+            addAuras = {
+                [257284] = { event = e["法术冷却"] },
+            },
+            updateAuras = nil,
+            removeAuras = nil,
+        },
     },
     -- 盗贼
     [4] = {
@@ -746,7 +821,8 @@ local auras = {
             },
             updateAuras = nil,
             removeAuras = {
-                [116670] = { event = e["施法成功"] },
+                [399491] = { event = e["施法成功"] }, -- 神龙之赐
+                [116670] = { event = e["施法成功"] }, -- 活血术
             },
         },
         ["清空地窖"] = {

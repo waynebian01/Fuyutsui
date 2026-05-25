@@ -76,6 +76,12 @@ def run_hunter_logic(state_dict, spec_name):
     首领战 = state_dict.get("首领战", 0)
     难度 = state_dict.get("难度", 0)
     英雄天赋 = state_dict.get("英雄天赋", 0)
+    敌人人数 = state_dict.get("敌人人数", 0)
+    猎人印记 = state_dict.get("猎人印记", 0)
+    # 控制
+    爆发 = state_dict.get("爆发开关", 0)
+    输出模式 = state_dict.get("输出模式", 0)
+    AOE开关 = state_dict.get("AOE开关", 0)
 
     失败法术 = _get_failed_spell(state_dict)
     tup = action_map.get(一键辅助)
@@ -84,15 +90,50 @@ def run_hunter_logic(state_dict, spec_name):
     unit_info = {}
     
     if spec_name == "兽王":
+        狂野鞭笞 = spells.get("狂野鞭笞", -1)
+        倒刺射击 = spells.get("倒刺射击", -1)
+        倒刺充能 = spells.get("倒刺充能", -1)
+        杀戮命令 = spells.get("杀戮命令", -1)
+        杀戮充能 = spells.get("杀戮充能", -1)
+        狂野怒火 = spells.get("狂野怒火", -1)
+        狂野怒火光环 = state_dict.get("狂野怒火光环", 0)
+        自然之友 = state_dict.get("自然之友", 0)
         if 引导 > 0:
             current_step = "在引导,不执行任何操作"
         elif 一键辅助 == 20:
             current_step = "施放 召唤宠物1"
             action_hotkey = get_hotkey(0, "召唤宠物1")
-        elif 战斗 and 1 <= 目标类型 <= 3:
-            if tup:
+        elif 输出模式 == 0 and 战斗 and 1 <= 目标类型 <= 3:    
+            if 敌人人数 >= 2 and 狂野鞭笞 == 0:
+                current_step = "施放 狂野鞭笞"
+                action_hotkey = get_hotkey(0, "狂野鞭笞")
+            elif 倒刺射击 == 0 and 倒刺充能 ==0:
+                current_step = "施放 倒刺射击"
+                action_hotkey = get_hotkey(0, "倒刺射击")
+            elif tup:
                 current_step = f"施放 {tup[0]}"
                 action_hotkey = get_hotkey(0, tup[1])
+            else:
+                current_step = "战斗中-无匹配技能"
+        elif 输出模式 == 1 and 战斗 == 1 and 1 <= 目标类型 <= 3:
+            if 狂野鞭笞 == 0 and 敌人人数 >= 2:
+                current_step = "施放 狂野鞭笞"
+                action_hotkey = get_hotkey(0, "狂野鞭笞")
+            elif 倒刺充能 == 0 and 倒刺射击 == 0:
+                current_step = "施放 倒刺射击"
+                action_hotkey = get_hotkey(0, "倒刺射击")
+            elif 狂野怒火 == 0 and 爆发 == 1:
+                current_step = "施放 狂野怒火"
+                action_hotkey = get_hotkey(0, "狂野怒火")
+            elif 自然之友 > 0 and 能量值 >= 30 and 杀戮命令 == 0:
+                current_step = "施放 杀戮命令"
+                action_hotkey = get_hotkey(0, "杀戮命令")
+            elif 倒刺射击 == 0 and 能量值<=60:
+                current_step = "施放 倒刺射击"
+                action_hotkey = get_hotkey(0, "倒刺射击")
+            elif 能量值 >= 35:
+                current_step = "施放 眼镜蛇射击"
+                action_hotkey = get_hotkey(0, "眼镜蛇射击")
             else:
                 current_step = "战斗中-无匹配技能"
         else:
