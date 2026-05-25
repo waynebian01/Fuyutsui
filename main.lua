@@ -18,7 +18,8 @@ local groupList = Fuyutsui.groupList
 local spells = {}
 local failedSpell, failedSpellId, failedSpellTimer, updateIndex = nil, nil, nil, 1
 local roleMap, spellsList, EnumPowerType = Fuyutsui.roleMap, Fuyutsui.spellsList, Fuyutsui.EnumPowerType
-local fallbackColor, falseValue = CreateColor(0, 0, 1), CreateColor(0, 0, 0, 1)
+local fallbackColor, falseValueBlack, falseValueWhite = CreateColor(0, 0, 1, 1), CreateColor(0, 0, 0, 1),
+    CreateColor(0, 0, 1, 1)
 
 -- ================================================================
 --                          创建颜色曲线
@@ -46,7 +47,8 @@ end
 
 local curve100 = creatColorCurveScaling(100)
 local curve255 = Fuyutsui:creatColorCurve(255, 255)
-local curve10 = Fuyutsui:creatColorCurve(10, 100)
+local castCurve = Fuyutsui:creatColorCurve(2.55, 255)
+
 local powerCurve = {}
 function Fuyutsui:CreatPowerCurve(powerType)
     if powerCurve[powerType] then return end
@@ -396,7 +398,7 @@ function Fuyutsui:updatePlayerCastingInfo()
     if state.casting then
         local cast = UnitCastingDuration("player")
         if cast then
-            local castingDurationColor = cast:EvaluateElapsedDuration(curve10)
+            local castingDurationColor = cast:EvaluateElapsedDuration(castCurve)
             ---@diagnostic disable-next-line: param-type-mismatch
             local _, _, b = castingDurationColor:GetRGB()
             state.castingDuration = b
@@ -416,7 +418,7 @@ function Fuyutsui:updatePlayerChannelingInfo()
     if state.channeling then
         local channel = UnitChannelDuration("player")
         if channel then
-            local channelDurationColor = channel:EvaluateRemainingDuration(curve10)
+            local channelDurationColor = channel:EvaluateRemainingDuration(castCurve)
             ---@diagnostic disable-next-line: param-type-mismatch
             local _, _, b = channelDurationColor:GetRGB()
             state.channelingDuration = b
@@ -437,7 +439,7 @@ function Fuyutsui:updatePlayerEmpowerInfo()
         local empowerStages = UnitEmpoweredStageDurations("player")
         local empowerDuration = UnitEmpoweredChannelDuration("player")
         if empowerDuration then
-            local empowerDurationColor = empowerDuration:EvaluateRemainingDuration(curve10)
+            local empowerDurationColor = empowerDuration:EvaluateRemainingDuration(castCurve)
             ---@diagnostic disable-next-line: param-type-mismatch
             local _, _, b = empowerDurationColor:GetRGB()
             state.empowerDuration = b
@@ -445,7 +447,7 @@ function Fuyutsui:updatePlayerEmpowerInfo()
         end
         if empowerStages then
             for k, v in pairs(empowerStages) do
-                local empower = v:EvaluateRemainingDuration(curve10)
+                local empower = v:EvaluateRemainingDuration(castCurve)
                 ---@diagnostic disable-next-line: param-type-mismatch
                 local _, _, b = empower:GetRGB()
                 state.empowerStage = (k - 1) / 255
@@ -954,9 +956,41 @@ function Fuyutsui:updateTargetCastingInfo()
     if not UnitExists("target") then return end
     local cast = UnitCastingDuration("target")
     if cast then
-        local castingDurationColor = cast:EvaluateElapsedDuration(curve10)
+        local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo("target")
+        local castingDurationColor = cast:EvaluateRemainingDuration(castCurve)
+        local booleanValue = EvaluateColorFromBoolean(notInterruptible, falseValueWhite, castingDurationColor)
         ---@diagnostic disable-next-line: param-type-mismatch
-        local _, _, b = castingDurationColor:GetRGB()
+        local _, _, b = booleanValue:GetRGB()
+        target.castingDuration = b
+        if blocks and blocks.state["目标施法"] then
+            self:CreatTexture(blocks.state["目标施法"], b)
+        end
+    else
+        target.castingDuration = 0
+        if blocks and blocks.state["目标施法"] then
+            self:CreatTexture(blocks.state["目标施法"], 0)
+        end
+    end
+end
+
+function Fuyutsui:updateTargetChannelInfo()
+    if not UnitExists("target") then return end
+    local channel = UnitChannelDuration("target")
+    if channel then
+        local _, _, _, _, _, _, notInterruptible = UnitChannelInfo("target")
+        local channelDurationColor = channel:EvaluateRemainingDuration(castCurve)
+        local booleanValue = EvaluateColorFromBoolean(notInterruptible, falseValueWhite, channelDurationColor)
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local _, _, b = booleanValue:GetRGB()
+        target.channelingDuration = b
+        if blocks and blocks.state["目标引导"] then
+            self:CreatTexture(blocks.state["目标引导"], b)
+        end
+    else
+        target.channelingDuration = 0
+        if blocks and blocks.state["目标引导"] then
+            self:CreatTexture(blocks.state["目标引导"], 0)
+        end
     end
 end
 
@@ -1091,7 +1125,7 @@ function Fuyutsui:updateGroupInRangeAndHealth()
             local inRange = UnitIsUnit(unit, "player") and true or UnitInRange(unit)
             local roleValue = roleMap[obj.role] and roleMap[obj.role] / 255 or 5 / 255
             local trueValue = CreateColor(0, 0, roleValue, 1)
-            local booleanValue = EvaluateColorFromBoolean(inRange, trueValue, falseValue)
+            local booleanValue = EvaluateColorFromBoolean(inRange, trueValue, falseValueBlack)
             local _, _, b = booleanValue:GetRGB()
             self:CreatTexture(index, b)
         else
@@ -1783,6 +1817,8 @@ function Fuyutsui:OnUpdate(elapsed)
     self:updatePlayerCastingInfo()
     self:updatePlayerChannelingInfo()
     self:updatePlayerEmpowerInfo()
+    self:updateTargetCastingInfo()
+    self:updateTargetChannelInfo()
     self:updateGroupInRangeAndHealth()
     self:updateAura()
 
