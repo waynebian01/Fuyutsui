@@ -480,6 +480,7 @@ state:
     爆发开关: {step: 24, type: "int" }
     输出模式: {step: 25, type: "int" }
     AOE开关: {step: 26, type: "int" }
+    目标距离: {step: 32, type: "int" }
 
     疾病判断: {step: 27, type: "int" }
     鲁莽药水冷却: {step: 28, type: "int" }

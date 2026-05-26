@@ -164,6 +164,7 @@ def run_deathknight_logic(state_dict, spec_name):
         寒冰锁链 = state_dict.get("寒冰锁链", 0)
         暗影之爪层数 = state_dict.get("暗影之爪层数", 0)
         凋萎 = state_dict.get("凋萎", 0)
+        目标距离 = state_dict.get("目标距离")
         
         # 冷却
         亡者复生_cd = spells.get("亡者复生", -1)
@@ -181,14 +182,9 @@ def run_deathknight_logic(state_dict, spec_name):
 
         施放灵魂收割, 施放腐化 = False, False
         # 腐化层数为0时, 且"灵魂收割"为0时, 且目标生命值小于35或割魂索命大于0时, 施放"灵魂收割"
-        if 腐化层数 == 0 and 灵魂收割_cd == 0 and (目标生命值 < 35 or 割魂索命 > 0):
+        if 腐化层数 >= 0 and 灵魂收割_cd == 0 and 首领战 > 0 and (目标生命值 < 35 or 割魂索命 > 0):
             施放灵魂收割 = True
         # "亡者指挥官"即将结束时, 腐化层数为1时, 优先施放"灵魂收割", 其次腐化
-        if 腐化层数 == 1 and 0 < 亡者指挥官 <= 3:
-            if 0 <= 灵魂收割_cd <= 1 and (目标生命值 < 35 or 割魂索命 > 0):
-                施放灵魂收割 = True
-            else:
-                施放腐化 = True
         # "亡者指挥官"时, 腐化层数大于等于2时, 优先施放"灵魂收割", 其次腐化
         if 腐化层数 >= 2 and 亡者指挥官 > 1:
             if 0 <= 灵魂收割_cd <= 1 and (目标生命值 < 35 or 割魂索命 > 0):
@@ -226,7 +222,7 @@ def run_deathknight_logic(state_dict, spec_name):
             current_step = "施放 亡者复生"
             action_hotkey = get_hotkey(0, "亡者复生")
         elif 战斗 and 1 <= 目标类型 <= 3:
-            if 生命值 <= 80 and 黑暗援助 > 0:
+            if 生命值 <= 30 and 黑暗援助 > 0:
                 current_step = "施放 灵界打击"
                 action_hotkey = get_hotkey(0, "灵界打击")
             elif 生命值 <= 30 and 能量值 >= 40:
@@ -238,11 +234,11 @@ def run_deathknight_logic(state_dict, spec_name):
                 action_hotkey = get_hotkey(0, tup[1])
             # 手写逻辑
             elif 输出模式 == 1:
-                if 0 <= 脓疮毒镰2 <= 1 and 脓疮毒镰 > 0:
+                if 0 <= 脓疮毒镰2 <= 1 and 脓疮毒镰 > 0 and 目标距离 <=5:
                     current_step = "施放 脓疮毒镰"
                     action_hotkey = get_hotkey(0, "脓疮打击")
                 # 保持脓疮毒镰buff
-                elif 脓疮毒镰2 <= 3 and 脓疮毒镰 == 0 and 符文 >= 2:
+                elif 脓疮毒镰2 <= 3 and 脓疮毒镰 == 0 and 符文 >= 2 and 目标距离 <=5:
                     current_step = "施放 脓疮打击"
                     action_hotkey = get_hotkey(0, "脓疮打击")
                 # 没有疾病时, 施放爆发
@@ -313,21 +309,12 @@ def run_deathknight_logic(state_dict, spec_name):
                 elif 0 < 禁断知识 <= 5 and 能量值 >= 30 and 敌人人数 >= 3:
                     current_step = "施放 扩散"
                     action_hotkey = get_hotkey(0, "扩散")
-                # 使用"天灾打击"打破"寒冰锁链"
-                elif 黑暗突变_cd > 43 and 寒冰锁链 > 0 and 符文 > 0:
-                    current_step = "施放 天灾打击"
-                    action_hotkey = get_hotkey(0, "天灾打击")
                 # 保持脓疮毒镰buff
-                elif 脓疮毒镰 > 0 and (脓疮毒镰2 == 0 or 脓疮毒镰 < 3):
+                elif 脓疮毒镰 > 0 and (脓疮毒镰2 == 0 or 脓疮毒镰 < 3) and 目标距离 <=5:
                     current_step = "施放 脓疮毒镰"
                     action_hotkey = get_hotkey(0, "脓疮打击")
-                # AOE 时, 施放"枯萎凋零"
                 # 当腐化在CD时, 且腐化层数小于3层, 且亡者指挥官有buff时, 施放"枯萎凋零"
-                elif 能量值 < 90 and 凋零层数 > 0 and 敌人人数 >= 3 and 移动 == False and 亡者指挥官 > 10:
-                    current_step = "施放 枯萎凋零"
-                    action_hotkey = get_hotkey(0, "枯萎凋零")
-                # 当不开启爆发且"枯萎凋零"有两层时, 直接施放.
-                elif 爆发开关 == 0 and 敌人人数 >= 3 and 移动 == False and 凋零_buff == 0 and 凋零层数 == 2:
+                elif 能量值 < 90 and 凋零层数 > 0 and 移动 == False and 亡者指挥官 > 10 and (敌人人数 >= 3 or 首领战 == 70):
                     current_step = "施放 枯萎凋零"
                     action_hotkey = get_hotkey(0, "枯萎凋零")
                 elif 符文 > 0 and 黑暗突变_cd > 25 and 能量值 < 30:
@@ -348,7 +335,7 @@ def run_deathknight_logic(state_dict, spec_name):
                     current_step = "施放 扩散"
                     action_hotkey = get_hotkey(0, "扩散")
                 # 没有"食尸鬼层数" 或 没有"脓疮毒镰buff", 使用"脓疮打击"
-                elif (食尸鬼层数 == 0 or 脓疮毒镰2 == 0) and 符文 >= 2:
+                elif (食尸鬼层数 == 0 or 脓疮毒镰2 == 0) and 符文 >= 2 and 目标距离 < 5:
                     current_step = "施放 脓疮打击"
                     action_hotkey = get_hotkey(0, "脓疮打击")
                 elif 凋萎 > 0 and 黑暗突变_cd == 0 and 食尸鬼层数 > 0 and 符文 > 0:

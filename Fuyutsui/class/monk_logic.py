@@ -190,13 +190,13 @@ def run_monk_logic(state_dict, spec_name):
         # 不需要驱散的首领 ID
         no_dispel_bosses = {64}
 
-        if 施法技能 == 30:  # 氤氲之雾
+        if 施法技能 == 29:  # 氤氲之雾
             玄牛之力 = 0
             生生不息1 = 0
-        if 施法技能 == 26:  # 神龙之赐
+        if 施法技能 == 25:  # 神龙之赐
             神龙层数 = 0
             生生不息2 = 0
-        if 施法技能 == 27:  # 活血术
+        if 施法技能 == 26:  # 活血术
             生生不息2 = 0
 
         驱散单位 = None
@@ -225,16 +225,16 @@ def run_monk_logic(state_dict, spec_name):
 
         if 队伍类型 == 46 or 队伍类型 == 0:
             if 引导 > 0:
-                if 施法技能 == 31 and 能量值 >= 90: # 法力茶打断
+                if 施法技能 == 30 and 能量值 >= 90: # 法力茶打断
                     current_step = "施放 复苏之雾"
                     action_hotkey = get_hotkey(1, "复苏之雾")
-                elif 施法技能 == 28 and 生命值最低单位 is not None and count80 >= 3: # 毛线神龙1
+                elif 施法技能 == 27 and 生命值最低单位 is not None and count80 >= 3: # 毛线神龙1
                     current_step = f"施放 活血术 on {生命值最低单位}"
                     action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
-                elif 施法技能 == 28 and 生命值最低单位 is not None and 最低生命值 <= 60: # 毛线神龙2
+                elif 施法技能 == 27 and 生命值最低单位 is not None and 最低生命值 <= 60: # 毛线神龙2
                     current_step = f"施放 活血术 on {生命值最低单位}"
                     action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
-                elif 施法技能 == 28 and 1 <= 目标类型 <= 3 and 目标距离<=5: # 毛线打断
+                elif 施法技能 == 27 and 1 <= 目标类型 <= 3 and 目标距离<=5: # 毛线打断
                     current_step = "施放 复苏之雾"
                     action_hotkey = get_hotkey(1, "复苏之雾")
                 elif 清创生血 == 0 and 驱散单位 is not None:
@@ -298,10 +298,10 @@ def run_monk_logic(state_dict, spec_name):
 
         elif 队伍类型 <= 40:  # 团队
             if 引导 > 0:
-                if 施法技能 == 31 and 能量值 >= 95: # 法力茶
+                if 施法技能 == 30 and 能量值 >= 95: # 法力茶
                     current_step = "施放 复苏之雾"
                     action_hotkey = get_hotkey(1, "复苏之雾")
-                elif 施法技能 == 31 and 战斗 and count80 >= 3 and 神龙层数 >= 8: # 法力茶
+                elif 施法技能 == 30 and 战斗 and count80 >= 3 and 神龙层数 >= 8: # 法力茶
                     current_step = f"施放 活血术 on {生命值最低单位}"
                     action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
                 else:

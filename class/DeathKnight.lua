@@ -110,6 +110,7 @@ Fuyutsui.ClassBlocks = {
         [25] = { type = "block", name = "输出模式" },
         [26] = { type = "block", name = "AOE开关" },
         [30] = { type = "block", name = "爆发药水开关" },
+        [32] = { type = "block", name = "目标距离" },
 
         [27] = { type = "block", name = "疾病判断" },
         [28] = { type = "block", name = "鲁莽药水冷却" },
