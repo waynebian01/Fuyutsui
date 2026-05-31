@@ -950,6 +950,8 @@ state:
     烈火烙印buff: {step: 22, type: "int" }
     目标施法: {step: 23, type: "int" }
     目标引导: {step: 24, type: "int" }
+    焦点施法: {step: 25, type: "int" }
+    焦点引导: {step: 26, type: "int" }
     无羁邪怒: {step: 31, type: "int" }
 
     spells:

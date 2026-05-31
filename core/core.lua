@@ -380,6 +380,7 @@ Fuyutsui.state = {
 }
 Fuyutsui.blocks = {}
 Fuyutsui.target = {}
+Fuyutsui.focus = {}
 Fuyutsui.nameplate = {}
 Fuyutsui.group = {}
 Fuyutsui.groupList = {}

@@ -196,7 +196,7 @@ def _priest_discipline_logic(state_dict):
     elif 绝望祷言 == 0 and 生命值 < 50:
         current_step = "施放 绝望祷言"
         action_hotkey = get_hotkey(0, "绝望祷言")
-    elif 渐隐术 == 0 and 生命值 < 90:
+    elif 渐隐术 == 0 and 生命值 < 60:
         current_step = "施放 渐隐术"
         action_hotkey = get_hotkey(0, "渐隐术")
     elif 奥术洪流 == 0 and 能量值 <= 90:
@@ -268,6 +268,9 @@ def _priest_discipline_logic(state_dict):
             elif 暗影愈合单位 is not None and (not 移动 or 圣光涌动 > 0):
                 current_step = f"施放 暗影愈合 on {暗影愈合单位}, 暗影愈合"
                 action_hotkey = get_hotkey(int(暗影愈合单位), "快速治疗")
+            elif 盾 == 0 and 需盾队伍单位 is not None and 虚空之盾 > 0:
+                current_step = f"施放 真言术：盾 on {需盾队伍单位}, 需盾单位"
+                action_hotkey = get_hotkey(int(需盾队伍单位), "真言术：盾")
             elif 暗影魔 == 0 and 灭 == 0 and 战斗 and 1 <= 目标类型 <= 3 and 目标生命值 < 20:
                 current_step = "施放 暗言术：灭"
                 action_hotkey = get_hotkey(0, "暗言术：灭")

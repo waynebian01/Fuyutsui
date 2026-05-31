@@ -12,6 +12,7 @@ local rc = LibStub("LibRangeCheck-3.0")
 local state = Fuyutsui.state
 local blocks = Fuyutsui.blocks
 local target = Fuyutsui.target
+local focus = Fuyutsui.focus
 local nameplate = Fuyutsui.nameplate
 local group = Fuyutsui.group
 local groupList = Fuyutsui.groupList
@@ -952,7 +953,60 @@ function Fuyutsui:updateTargetRangeBlock()
     end
 end
 
+function Fuyutsui:updateUnitCastingOrChannelingInfo(unit)
+    if not UnitExists(unit) then return end
+    local obj, castingDuration, channelingDuration
+    if unit == "target" then
+        obj = "目标"
+        castingDuration = target.castingDuration
+        channelingDuration = target.channelingDuration
+    elseif unit == "focus" then
+        obj = "焦点"
+        castingDuration = focus.castingDuration
+        channelingDuration = focus.channelingDuration
+    end
+    local cast = UnitCastingDuration(unit)
+    local channel = UnitChannelDuration(unit)
+    if cast then
+        if unit == "target" and blocks and blocks.state["目标施法"] then
+            -- 由 updateTargetCastingInfo 处理
+        else
+            local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(unit)
+            local castingDurationColor = cast:EvaluateRemainingDuration(castCurve)
+            local booleanValue = EvaluateColorFromBoolean(notInterruptible, falseValueWhite, castingDurationColor)
+            ---@diagnostic disable-next-line: param-type-mismatch
+            local _, _, b = booleanValue:GetRGB()
+            castingDuration = b
+            if blocks and blocks.state[obj .. "施法"] then
+                self:CreatTexture(blocks.state[obj .. "施法"], b)
+            end
+        end
+    elseif channel then
+        local _, _, _, _, _, _, notInterruptible = UnitChannelInfo("target")
+        local channelDurationColor = channel:EvaluateRemainingDuration(castCurve)
+        local booleanValue = EvaluateColorFromBoolean(notInterruptible, falseValueWhite, channelDurationColor)
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local _, _, b = booleanValue:GetRGB()
+        channelingDuration = b
+        if blocks and blocks.state[obj .. "引导"] then
+            self:CreatTexture(blocks.state[obj .. "引导"], b)
+        end
+    else
+        castingDuration = 0
+        channelingDuration = 0
+        if blocks then
+            if blocks.state[obj .. "施法"] and not (unit == "target" and blocks.state["目标施法"]) then
+                self:CreatTexture(blocks.state[obj .. "施法"], 0)
+            end
+            if blocks.state[obj .. "引导"] then
+                self:CreatTexture(blocks.state[obj .. "引导"], 0)
+            end
+        end
+    end
+end
+
 function Fuyutsui:updateTargetCastingInfo()
+    if not blocks or not blocks.state["目标施法"] then return end
     if not UnitExists("target") then return end
     local cast = UnitCastingDuration("target")
     if cast then
@@ -962,35 +1016,10 @@ function Fuyutsui:updateTargetCastingInfo()
         ---@diagnostic disable-next-line: param-type-mismatch
         local _, _, b = booleanValue:GetRGB()
         target.castingDuration = b
-        if blocks and blocks.state["目标施法"] then
-            self:CreatTexture(blocks.state["目标施法"], b)
-        end
+        self:CreatTexture(blocks.state["目标施法"], b)
     else
         target.castingDuration = 0
-        if blocks and blocks.state["目标施法"] then
-            self:CreatTexture(blocks.state["目标施法"], 0)
-        end
-    end
-end
-
-function Fuyutsui:updateTargetChannelInfo()
-    if not UnitExists("target") then return end
-    local channel = UnitChannelDuration("target")
-    if channel then
-        local _, _, _, _, _, _, notInterruptible = UnitChannelInfo("target")
-        local channelDurationColor = channel:EvaluateRemainingDuration(castCurve)
-        local booleanValue = EvaluateColorFromBoolean(notInterruptible, falseValueWhite, channelDurationColor)
-        ---@diagnostic disable-next-line: param-type-mismatch
-        local _, _, b = booleanValue:GetRGB()
-        target.channelingDuration = b
-        if blocks and blocks.state["目标引导"] then
-            self:CreatTexture(blocks.state["目标引导"], b)
-        end
-    else
-        target.channelingDuration = 0
-        if blocks and blocks.state["目标引导"] then
-            self:CreatTexture(blocks.state["目标引导"], 0)
-        end
+        self:CreatTexture(blocks.state["目标施法"], 0)
     end
 end
 
@@ -1818,7 +1847,8 @@ function Fuyutsui:OnUpdate(elapsed)
     self:updatePlayerChannelingInfo()
     self:updatePlayerEmpowerInfo()
     self:updateTargetCastingInfo()
-    self:updateTargetChannelInfo()
+    self:updateUnitCastingOrChannelingInfo("target")
+    self:updateUnitCastingOrChannelingInfo("focus")
     self:updateGroupInRangeAndHealth()
     self:updateAura()
 
