@@ -67,12 +67,20 @@ Fuyutsui.ClassBlocks = {
         [23] = { type = "block", name = "敌人人数" },
 
         [24] = { type = "aura", name = "黑暗援助", auraName = "黑暗援助", showKey = "remaining" },
+        [25] = { type = "aura", name = "杀戮机器", auraName = "杀戮机器", showKey = "count" },
+        [26] = { type = "aura", name = "白霜", auraName = "白霜", showKey = "remaining" },
+        [27] = { type = "aura", name = "锋锐", auraName = "锋锐", showKey = "remaining" },
+
 
         [40] = { type = "spell", spellId = 49576, name = "死亡之握" },
         [41] = { type = "spell", spellId = 51052, name = "反魔法领域" },
         [42] = { type = "spell", spellId = 221562, name = "窒息" },
         [43] = { type = "spell", spellId = 207167, name = "致盲冰雨" },
-
+        [44] = { type = "spell", spellId = 51271, name = "冰柱" },
+        [45] = { type = "spell", spellId = 279302, name = "冰龙" },
+        [46] = { type = "spell", spellId = 439843, name = "死神" },
+        [47] = { type = "spell", spellId = 47568, name = "符文武器" },
+        [48] = { type = "spell", spellId = 47568, name = "符文武器", charge = true },
     },
     [3] = {
         ["countBars"] = {
@@ -170,7 +178,7 @@ Fuyutsui.MacrosList = {
         [19] = "冰封之韧",
         [20] = "巫妖之躯",
         [21] = "[@cursor]反魔法领域",
-        [22] = "窒息",
+        [22] = "[target=focus,exists] 窒息;窒息",
         [23] = "致盲冰雨",
         [24] = "血魔之握",
         [25] = "憎恶附肢",

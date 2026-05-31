@@ -140,7 +140,6 @@ def run_demonhunter_logic(state_dict, spec_name):
 
         敌人人数 = state_dict.get("敌人人数", 0)
         烈火烙印 = state_dict.get("烈火烙印buff", 0)
-        无羁邪怒 = state_dict.get("无羁邪怒", 0)
 
         混乱新星_cd = spells.get("混乱新星", -1)
         恶魔变形_cd = spells.get("恶魔变形", -1)
@@ -164,10 +163,7 @@ def run_demonhunter_logic(state_dict, spec_name):
             if 恶魔尖刺_cd == 0:
                 current_step = "施放 恶魔尖刺"
                 action_hotkey = get_hotkey(0, "恶魔尖刺")
-            elif 无羁邪怒 > 0:
-                current_step = "施放 恶魔变形"
-                action_hotkey = get_hotkey(0, "恶魔变形")
-            elif 烈火烙印 == 0 and 烈火烙印_层数 == 2:
+            elif 烈火烙印 == 0 and 烈火烙印_cd == 0:
                 current_step = "施放 烈火烙印"
                 action_hotkey = get_hotkey(0, "烈火烙印")
             elif not 移动 and 邪能毁灭_cd == 0 and 能量值 >= 50 and( 生命值 <= 80 or 敌人人数 >= 5):

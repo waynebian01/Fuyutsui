@@ -206,7 +206,7 @@
 206: {unit: 0, 技能: "风领主之击", 热键: "CTRL-SHIFT-NUMPADDECIMAL"}
 207: {unit: 0, 技能: "怒雷破", 热键: "CTRL-SHIFT-NUMPADPLUS"}
 208: {unit: 0, 技能: "升龙霸", 热键: "CTRL-SHIFT-NUMPADMINUS"}
-209: {unit: 0, 技能: "", 热键: "CTRL-SHIFT-NUMPADMULTIPLY"}
+209: {unit: 0, 技能: "银月城生命药水", 热键: "CTRL-SHIFT-NUMPADMULTIPLY"}
 210: {unit: 0, 技能: "", 热键: "CTRL-SHIFT-NUMPADDIVIDE"}
 211: {unit: 0, 技能: "", 热键: "CTRL-SHIFT-F1"}
 212: {unit: 0, 技能: "", 热键: "CTRL-SHIFT-F2"}

@@ -1016,18 +1016,6 @@ local auras = {
             updateAuras = nil,
             removeAuras = nil,
         },
-        ["无羁邪怒"] = {
-            remaining = 0,
-            duration = 12,
-            expirationTime = nil,
-            addAuras = {
-                [187827] = { event = e["图标发光显示"] },
-            },
-            updateAuras = nil,
-            removeAuras = {
-                [187827] = { event = e["图标发光隐藏"] },
-            },
-        }
     },
     -- 唤魔师
     [13] = {

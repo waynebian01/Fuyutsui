@@ -66,8 +66,7 @@ Fuyutsui.ClassBlocks = {
 
         [48] = { type = "block", name = "延迟" },
         [52] = { type = "block", name = "大红冷却" },
-        [53] = { type = "block", name = "目标引导" },
-        [54] = { type = "block", name = "目标施法" },
+
         [70] = {
             type = "group",
             num = 5,
@@ -173,8 +172,7 @@ Fuyutsui.ClassBlocks = {
         [25] = { type = "block", name = "目标距离" },
         [26] = { type = "block", name = "目标生命值" },
         [27] = { type = "block", name = "施法技能" },
-        [28] = { type = "block", name = "目标引导" },
-        [29] = { type = "block", name = "目标施法" },
+
         [31] = { type = "spell", spellId = 8122, name = "心灵尖啸" },
         [32] = { type = "spell", spellId = 32375, name = "群体驱散" },
         [33] = { type = "spell", spellId = 527, name = "纯净术" },

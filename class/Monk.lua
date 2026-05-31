@@ -90,6 +90,7 @@ Fuyutsui.ClassBlocks = {
         [23] = { type = "block", name = "施法目标" },
         [49] = { type = "block", name = "目标距离" },
         [50] = { type = "block", name = "爆发开关" },
+        [51] = { type = "block", name = "大红冷却" },
 
         [25] = { type = "aura", name = "生生不息1", auraName = "生生不息1", showKey = "remaining" },
         [26] = { type = "aura", name = "生生不息2", auraName = "生生不息2", showKey = "remaining" },

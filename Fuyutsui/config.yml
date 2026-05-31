@@ -343,12 +343,9 @@ state:
     祸福层数: {step: 47, type: "int" }
     延迟: {step: 48, type: "int" }
     大红冷却: {step: 52, type: "int" }
-    目标引导: {step: 53, type: "int" }
-    目标施法: {step: 54, type: "int" }
     
     苦修层数: {step: bar, bar: 1, type: "int"}
     耀层数: {step: bar, bar: 2, type: "int"}
-
     spells:
       心灵尖啸: {step: 31, type: "int" }
       群体驱散: {step: 32, type: "int" }
@@ -368,7 +365,6 @@ state:
       暗影魔: {step: 49, type: "int" }
       暗影分流: {step: 50, type: "int" }
       渐隐术: {step: 51, type: "int" }
-
     group:
       start: 70
       num: 5
@@ -422,8 +418,7 @@ state:
     目标距离: {step: 25, type: "int" }
     目标生命值: {step: 26, type: "int" }
     施法技能: {step: 27, type: "int" }
-    目标引导: {step: 28, type: "int" }
-    目标施法: {step: 29, type: "int" }
+    
     spells:
       心灵尖啸: {step: 31, type: "int" }
       群体驱散: {step: 32, type: "int" }
@@ -459,7 +454,11 @@ state:
       血魔之握: {step: 48, type: "int" }
       憎恶附肢: {step: 49, type: "int" }
   2:
+
     符文: {step: 21, type: "int" }
+    白霜: {step: 26, type: "int" }
+    杀戮机器: {step: 25, type: "int" }
+    锋锐: {step: 27, type: "int" }
     目标生命值: {step: 22, type: "int" }
     敌人人数: {step: 23, type: "int" }
     黑暗援助: {step: 24, type: "int" }
@@ -468,6 +467,11 @@ state:
       反魔法领域: {step: 41, type: "int" }
       窒息: {step: 42, type: "int" }
       致盲冰雨: {step: 43, type: "int" }
+      冰柱: {step: 44, type: "int" }
+      冰龙: {step: 45, type: "int" }
+      死神: {step: 46, type: "int" }
+      符文冷却: {step: 47, type: "int" }
+      符文充能: {step: 48, type: "int" }
   3:
     食尸鬼层数: {step: bar, bar: 1, type: "int"}
     腐化层数: {step: bar, bar: 2, type: "int"}
@@ -496,7 +500,7 @@ state:
     禁断知识: {step: 46, type: "int" }
     脓疮毒镰: {step: 47, type: "int" }
     脓疮毒镰2: {step: 48, type: "int" }
-    枯萎凋零: {step: 48, type: "int" }
+    枯萎凋零: {step: 49, type: "int" }
     亡者指挥官: {step: 50, type: "int" }
     寒冰锁链: {step: 51, type: "int" }
     暗影之爪层数: {step: 52, type: "int" }
@@ -785,6 +789,7 @@ state:
     活力苏醒: {step: 48, type: "int" }
     目标距离: {step: 49, type: "int" }
     爆发开关: {step: 50, type: "int" }
+    大红冷却: {step: 51, type: "int" }
     
     spells:
       雷光茶: {step: 31, type: "int" }
@@ -949,9 +954,6 @@ state:
 
     敌人人数: {step: 21, type: "int" }
     烈火烙印buff: {step: 22, type: "int" }
-    目标施法: {step: 23, type: "int" }
-    目标引导: {step: 24, type: "int" }
-    无羁邪怒: {step: 31, type: "int" }
 
     spells:
       黑暗: {step: 40, type: "int" }

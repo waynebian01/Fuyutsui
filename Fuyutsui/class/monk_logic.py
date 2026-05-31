@@ -67,6 +67,7 @@ def run_monk_logic(state_dict, spec_name):
     难度 = state_dict.get("难度", 0)
     英雄天赋 = state_dict.get("英雄天赋", 0)
     爆发 = state_dict.get("爆发开关", 0)
+    大红冷却 = spells.get("大红冷却", -1)
     失败法术 = _get_failed_spell(state_dict)
     tup = action_map.get(一键辅助)
     action_hotkey = None
@@ -228,10 +229,10 @@ def run_monk_logic(state_dict, spec_name):
                 if 施法技能 == 30 and 能量值 >= 90: # 法力茶打断
                     current_step = "施放 复苏之雾"
                     action_hotkey = get_hotkey(1, "复苏之雾")
-                elif 施法技能 == 27 and 生命值最低单位 is not None and count80 >= 3: # 毛线神龙1
+                elif 施法技能 == 27 and 生命值最低单位 is not None and 最低生命值 <= 80: # 毛线神龙2
                     current_step = f"施放 活血术 on {生命值最低单位}"
                     action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
-                elif 施法技能 == 27 and 生命值最低单位 is not None and 最低生命值 <= 60: # 毛线神龙2
+                elif 施法技能 == 27 and 生命值最低单位 is not None and count80 >= 1: # 毛线神龙1
                     current_step = f"施放 活血术 on {生命值最低单位}"
                     action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
                 elif 施法技能 == 27 and 1 <= 目标类型 <= 3 and 目标距离<=5: # 毛线打断
@@ -251,6 +252,9 @@ def run_monk_logic(state_dict, spec_name):
             elif 活力苏醒 > 0 and 生命值最低单位 is not None and count80 >= 3 and 一键辅助 != 19:
                 current_step = f"施放 活血术 on {生命值最低单位}"
                 action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
+            elif 活力苏醒 > 0 and 首领战>0 and 生命值最低单位 is not None and 最低生命值 <= 80 and 一键辅助 != 19:
+                current_step = f"施放 活血术 on {生命值最低单位}"
+                action_hotkey = get_hotkey(int(生命值最低单位), "活血术")
             elif not 战斗:
                 if 活力苏醒 <= 0 and 生命值最低单位 is not None and 最低生命值 <= 90:
                     current_step = f"施放 抚慰之雾 on {生命值最低单位}"
@@ -268,7 +272,10 @@ def run_monk_logic(state_dict, spec_name):
                     current_step = "不执行任何操作"
                     return None, current_step, unit_info
             elif 战斗:
-                if 作茧缚命 == 0 and 生命值最低单位 is not None and 最低生命值 <= 30 :
+                if 大红冷却 == 0 and 生命值 <= 30:
+                    current_step = "使用 生命药水"
+                    action_hotkey = get_hotkey(0, "银月城生命药水")
+                elif 作茧缚命 == 0 and 生命值最低单位 is not None and 最低生命值 <= 30 :
                     current_step = f"施放 作茧缚命 on {生命值最低单位}"
                     action_hotkey = get_hotkey(int(生命值最低单位), "作茧缚命")
                 elif 活力苏醒 <= 0 and 生命值最低单位 is not None and 最低生命值 <= 80 and 1 <= 目标类型 <= 3 and 目标距离>5 :
@@ -278,6 +285,9 @@ def run_monk_logic(state_dict, spec_name):
                 elif 1 <= 目标类型 <= 3 and 雷光茶 == 0 and 爆发==1:
                     current_step = "施放 雷光聚神茶"
                     action_hotkey = get_hotkey(0, "雷光聚神茶")
+                elif 首领战>0 and 一键辅助 != 9 and 复苏之雾 == 0 and 复苏充能 <= 1 and 无复苏单位 is not None:
+                    current_step = f"施放 复苏之雾 on {无复苏单位}"
+                    action_hotkey = get_hotkey(int(无复苏单位), "复苏之雾")
                 elif 1 <= 目标类型 <= 3 and tup:
                     current_step = f"施放 {tup[0]}"
                     action_hotkey = get_hotkey(0, tup[1])
