@@ -66,8 +66,9 @@ Fuyutsui.ClassBlocks = {
 
         [48] = { type = "block", name = "延迟" },
         [52] = { type = "block", name = "大红冷却" },
-        [53] = { type = "block", name = "目标引导" },
-        [54] = { type = "block", name = "目标施法" },
+        [53] = { type = "block", name = "敌人人数" },
+        [54] = { type = "block", name = "有光环敌人数量" },
+        [55] = { type = "block", name = "目标光环数量" },
         [70] = {
             type = "group",
             num = 5,

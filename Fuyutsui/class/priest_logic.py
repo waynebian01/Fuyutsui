@@ -80,6 +80,9 @@ def _priest_discipline_logic(state_dict):
     施法目标 = int(state_dict.get("施法目标", 0))
     延迟 = int(state_dict.get("延迟", 0))
     大红冷却 = int(state_dict.get("大红冷却", 0))
+    敌人人数 = int(state_dict.get("敌人人数", 0))
+    有光环敌人数 = int(state_dict.get("有光环敌人数", 0))
+    目标光环数量 = int(state_dict.get("目标光环数量", 0))
 
     虚空之盾 = int(state_dict.get("虚空之盾", 0))
     圣光涌动 = int(state_dict.get("圣光涌动", 0))
@@ -196,7 +199,7 @@ def _priest_discipline_logic(state_dict):
     elif 绝望祷言 == 0 and 生命值 < 50:
         current_step = "施放 绝望祷言"
         action_hotkey = get_hotkey(0, "绝望祷言")
-    elif 渐隐术 == 0 and 生命值 < 60:
+    elif 渐隐术 == 0 and 生命值 < 90:
         current_step = "施放 渐隐术"
         action_hotkey = get_hotkey(0, "渐隐术")
     elif 奥术洪流 == 0 and 能量值 <= 90:
@@ -277,6 +280,9 @@ def _priest_discipline_logic(state_dict):
             elif 战斗 and 1 <= 目标类型 <= 3 and 一键辅助 == 14:
                 current_step = "施放 暗言术：痛"
                 action_hotkey = get_hotkey(0, "暗言术：痛")
+            elif 苦修 == 0 and 目标光环数量 >= 1 and 敌人人数 >= 3 and 1 <= 有光环敌人数 <= 2:
+                current_step = "施放 苦修"
+                action_hotkey = get_hotkey(0, "苦修")
             elif (无救赎数_90 >= 2 or count_耀阈值 >= 3) and 耀 == 0 and 福音层数 > 0:
                 current_step = "施放 真言术：耀"
                 action_hotkey = get_hotkey(0, "耀")

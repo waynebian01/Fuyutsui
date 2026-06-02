@@ -85,6 +85,15 @@ target.friendCurve:SetType(Enum.LuaCurveType.Step)
 --                          通用函数
 -- ================================================================
 
+-- 更新单位拥有玩家光环的数量
+function Fuyutsui:updateUnitAuraCount(unit)
+    local auraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs(unit, "HARMFUL|PLAYER", 1, 4)
+    if auraInstanceIDs then
+        return #auraInstanceIDs
+    end
+    return 0
+end
+
 -- 更新单位距离
 local function updateUnitRange(unit)
     local minRange, maxRange = rc:GetRange(unit)
@@ -264,7 +273,7 @@ function Fuyutsui:loadPlayerBlocks(specIndex)
         countBars = {},
     }
     for k, v in pairs(t) do
-        if k == "countBars" then
+        if k == "countBars" and type(v) == "table" then
             for key, value in pairs(v) do
                 blocks.countBars[key] = value
             end
@@ -593,6 +602,15 @@ function Fuyutsui:updateTargetValid()
     self:CreatTexture(blocks.state["目标类型"], target.type)
 end
 
+function Fuyutsui:updateTargetAuraCount()
+    if not UnitExists("target") then return end
+    if blocks and blocks.state["目标光环数量"] then
+        local auraCount = self:updateUnitAuraCount("target")
+        state.targetAuraCount = auraCount / 255 or 0
+        self:CreatTexture(blocks.state["目标光环数量"], state.targetAuraCount)
+    end
+end
+
 -- 16. 更新玩家队伍类型
 function Fuyutsui:updateGroupType()
     local index = 0
@@ -809,6 +827,7 @@ function Fuyutsui:updateSpellCooldown()
             ---@diagnostic disable-next-line: param-type-mismatch
             local value = EvaluateColorFromBoolean(cdInfo.isEnabled, result, fallbackColor)
             local _, _, b = value:GetRGB()
+            ---@diagnostic disable-next-line: undefined-field
             if cdInfo.isOnGCD then b = 0 end
             self:CreatTexture(index, b)
         else
@@ -1072,6 +1091,7 @@ local testEncounter = {
 -- 更新范围内敌方姓名版数量
 function Fuyutsui:updateEnemyCount()
     local count = 0
+    local hasAuraCount = 0
     local inTestMap = state.mapID and testMap[state.mapID]
     local inTestEncounter = state.encounterID and testEncounter[state.encounterID]
     for unit, data in pairs(nameplate) do
@@ -1082,11 +1102,21 @@ function Fuyutsui:updateEnemyCount()
         if data.canAttack and data.maxRange and data.maxRange <= self.state.specRange
             and (data.affectingCombat or inTestMap or inTestEncounter) then
             count = count + 1
+            local hasAura = self:updateUnitAuraCount(unit)
+            if hasAura > 0 then
+                hasAuraCount = hasAuraCount + 1
+            end
         end
     end
     state.enemyCount = count / 255 or 0
-    if blocks and blocks.state["敌人人数"] then
-        self:CreatTexture(blocks.state["敌人人数"], state.enemyCount)
+    state.hasAuraEnemyCount = hasAuraCount / 255 or 0
+    if blocks then
+        if blocks.state["敌人人数"] then
+            self:CreatTexture(blocks.state["敌人人数"], state.enemyCount)
+        end
+        if blocks.state["有光环敌人数量"] then
+            self:CreatTexture(blocks.state["有光环敌人数量"], state.hasAuraEnemyCount)
+        end
     end
 end
 
@@ -1851,7 +1881,7 @@ function Fuyutsui:OnUpdate(elapsed)
     self:updateUnitCastingOrChannelingInfo("focus")
     self:updateGroupInRangeAndHealth()
     self:updateAura()
-
+    self:updateTargetAuraCount()
     -- 2. 低频逻辑（每 0.2 秒执行）
     self.timeElapsed = self.timeElapsed + elapsed
     if self.timeElapsed > 0.2 then
