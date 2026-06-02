@@ -4,6 +4,7 @@
 使用 CustomTkinter，背景半透明，文字保持清晰。
 """
 import json
+import random
 import re
 import threading
 import time
@@ -17,7 +18,12 @@ import importlib
 from utils import *
 from GetPixels import get_info
 
-title = "冬月"
+def _gen_random_garbled_title(length: int = 8) -> str:
+    # 使用可显示的 CJK 区间随机字符，生成“乱码风”标题。
+    return "".join(chr(random.randint(0x4E00, 0x9FFF)) for _ in range(length))
+
+
+title = _gen_random_garbled_title()
 
 # 主窗口默认尺寸（未保存过位置/记录损坏时使用）
 DEFAULT_MAIN_GEOMETRY = "400x110"
