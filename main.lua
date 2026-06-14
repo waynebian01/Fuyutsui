@@ -19,8 +19,8 @@ local groupList = Fuyutsui.groupList
 local spells = {}
 local failedSpell, failedSpellId, failedSpellTimer, updateIndex = nil, nil, nil, 1
 local roleMap, spellsList, EnumPowerType = Fuyutsui.roleMap, Fuyutsui.spellsList, Fuyutsui.EnumPowerType
-local fallbackColor, falseValueBlack, falseValueWhite = CreateColor(0, 0, 1, 1), CreateColor(0, 0, 0, 1),
-    CreateColor(0, 0, 1, 1)
+local ColorValue255, ColorValue0, ColorValue1 = CreateColor(0, 0, 1, 1), CreateColor(0, 0, 0, 1),
+    CreateColor(0, 0, 1 / 255, 1)
 
 -- ================================================================
 --                          创建颜色曲线
@@ -388,11 +388,21 @@ function Fuyutsui:updatePlayerValid()
     self:CreatTexture(blocks.state["有效性"], state.valid)
 end
 
--- 5. 更新玩家战斗状态
+-- 5. 更新玩家战斗时间
 function Fuyutsui:updatePlayerCombat()
     local combat = UnitAffectingCombat("player")
-    state.combat = combat and 1 / 255 or 0
-    self:CreatTexture(blocks.state["战斗"], state.combat)
+    state.combat = combat
+end
+
+function Fuyutsui:updatePlayerCombatTime()
+    if state.combat then
+        local combatTime = GetTime() - state.combatStartTime
+        state.combatTime = math.min(1, combatTime / 255)
+        self:CreatTexture(blocks.state["战斗"], state.combatTime)
+    else
+        state.combatTime = 0
+        self:CreatTexture(blocks.state["战斗"], 0)
+    end
 end
 
 -- 6. 更新玩家移动状态
@@ -823,9 +833,9 @@ function Fuyutsui:updateSpellCooldown()
         local cdInfo = GetSpellCooldown(spellID)
         if cdDurationObj and cdInfo then
             local result = cdDurationObj:EvaluateRemainingDuration(curve255, 1)
-            fallbackColor:SetRGBA(0, index, 254 / 255)
+            ColorValue255:SetRGBA(0, index, 254 / 255)
             ---@diagnostic disable-next-line: param-type-mismatch
-            local value = EvaluateColorFromBoolean(cdInfo.isEnabled, result, fallbackColor)
+            local value = EvaluateColorFromBoolean(cdInfo.isEnabled, result, ColorValue255)
             local _, _, b = value:GetRGB()
             ---@diagnostic disable-next-line: undefined-field
             if cdInfo.isOnGCD then b = 0 end
@@ -972,73 +982,77 @@ function Fuyutsui:updateTargetRangeBlock()
     end
 end
 
+local unitZHMap = {
+    ["target"] = "目标",
+    ["focus"] = "焦点",
+    ["boss1"] = "首领1",
+    ["boss2"] = "首领2",
+    ["boss3"] = "首领3",
+    ["boss4"] = "首领4",
+    ["boss5"] = "首领5",
+}
+
 function Fuyutsui:updateUnitCastingOrChannelingInfo(unit)
     if not UnitExists(unit) then return end
-    local obj, castingDuration, channelingDuration
-    if unit == "target" then
-        obj = "目标"
-        castingDuration = target.castingDuration
-        channelingDuration = target.channelingDuration
-    elseif unit == "focus" then
-        obj = "焦点"
-        castingDuration = focus.castingDuration
-        channelingDuration = focus.channelingDuration
-    end
+    local obj = unitZHMap[unit]
+    if not obj then return end
+
     local cast = UnitCastingDuration(unit)
-    local channel = UnitChannelDuration(unit)
     if cast then
-        if unit == "target" and blocks and blocks.state["目标施法"] then
-            -- 由 updateTargetCastingInfo 处理
-        else
-            local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(unit)
-            local castingDurationColor = cast:EvaluateRemainingDuration(castCurve)
-            local booleanValue = EvaluateColorFromBoolean(notInterruptible, falseValueWhite, castingDurationColor)
-            ---@diagnostic disable-next-line: param-type-mismatch
-            local _, _, b = booleanValue:GetRGB()
-            castingDuration = b
-            if blocks and blocks.state[obj .. "施法"] then
+        local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo(unit)
+        local interruptibleColor = EvaluateColorFromBoolean(notInterruptible, ColorValue0, ColorValue1)
+
+        local castingDurationColor = cast:EvaluateRemainingDuration(castCurve)
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local _, _, b = castingDurationColor:GetRGB()
+        local _, _, interruptible = interruptibleColor:GetRGB()
+        if blocks then
+            if blocks.state[obj .. "施法"] then
                 self:CreatTexture(blocks.state[obj .. "施法"], b)
             end
-        end
-    elseif channel then
-        local _, _, _, _, _, _, notInterruptible = UnitChannelInfo("target")
-        local channelDurationColor = channel:EvaluateRemainingDuration(castCurve)
-        local booleanValue = EvaluateColorFromBoolean(notInterruptible, falseValueWhite, channelDurationColor)
-        ---@diagnostic disable-next-line: param-type-mismatch
-        local _, _, b = booleanValue:GetRGB()
-        channelingDuration = b
-        if blocks and blocks.state[obj .. "引导"] then
-            self:CreatTexture(blocks.state[obj .. "引导"], b)
+            if blocks.state[obj .. "施法可打断"] then
+                self:CreatTexture(blocks.state[obj .. "施法可打断"], interruptible)
+            end
         end
     else
-        castingDuration = 0
-        channelingDuration = 0
         if blocks then
-            if blocks.state[obj .. "施法"] and not (unit == "target" and blocks.state["目标施法"]) then
+            if blocks.state[obj .. "施法"] then
                 self:CreatTexture(blocks.state[obj .. "施法"], 0)
             end
+
+            if blocks.state[obj .. "施法可打断"] then
+                self:CreatTexture(blocks.state[obj .. "施法可打断"], 0)
+            end
+        end
+    end
+    local channel = UnitChannelDuration(unit)
+    if channel then
+        local _, _, _, _, _, _, notInterruptible, _, _, _, castBarID = UnitChannelInfo(unit)
+        local interruptibleColor = EvaluateColorFromBoolean(notInterruptible, ColorValue0, ColorValue1)
+        local _, _, interruptible = interruptibleColor:GetRGB()
+        if castBarID then
+            local channelDurationColor = channel:EvaluateRemainingDuration(castCurve)
+            ---@diagnostic disable-next-line: param-type-mismatch
+            local _, _, b = channelDurationColor:GetRGB()
+            if blocks then
+                if blocks.state[obj .. "引导"] then
+                    self:CreatTexture(blocks.state[obj .. "引导"], b)
+                end
+                if blocks.state[obj .. "引导可打断"] then
+                    self:CreatTexture(blocks.state[obj .. "引导可打断"], interruptible)
+                end
+            end
+        end
+    else
+        if blocks then
             if blocks.state[obj .. "引导"] then
                 self:CreatTexture(blocks.state[obj .. "引导"], 0)
             end
-        end
-    end
-end
 
-function Fuyutsui:updateTargetCastingInfo()
-    if not blocks or not blocks.state["目标施法"] then return end
-    if not UnitExists("target") then return end
-    local cast = UnitCastingDuration("target")
-    if cast then
-        local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo("target")
-        local castingDurationColor = cast:EvaluateRemainingDuration(castCurve)
-        local booleanValue = EvaluateColorFromBoolean(notInterruptible, falseValueWhite, castingDurationColor)
-        ---@diagnostic disable-next-line: param-type-mismatch
-        local _, _, b = booleanValue:GetRGB()
-        target.castingDuration = b
-        self:CreatTexture(blocks.state["目标施法"], b)
-    else
-        target.castingDuration = 0
-        self:CreatTexture(blocks.state["目标施法"], 0)
+            if blocks.state[obj .. "引导可打断"] then
+                self:CreatTexture(blocks.state[obj .. "引导可打断"], 0)
+            end
+        end
     end
 end
 
@@ -1184,7 +1198,7 @@ function Fuyutsui:updateGroupInRangeAndHealth()
             local inRange = UnitIsUnit(unit, "player") and true or UnitInRange(unit)
             local roleValue = roleMap[obj.role] and roleMap[obj.role] / 255 or 5 / 255
             local trueValue = CreateColor(0, 0, roleValue, 1)
-            local booleanValue = EvaluateColorFromBoolean(inRange, trueValue, falseValueBlack)
+            local booleanValue = EvaluateColorFromBoolean(inRange, trueValue, ColorValue0)
             local _, _, b = booleanValue:GetRGB()
             self:CreatTexture(index, b)
         else
@@ -1448,12 +1462,13 @@ end
 -- 战斗状态更新
 function Fuyutsui:PLAYER_REGEN_DISABLED()
     self:updateTargetType()
-    self:updatePlayerCombat()
+    state.combat = true
+    state.combatStartTime = GetTime()
 end
 
 function Fuyutsui:PLAYER_REGEN_ENABLED()
     self:updateTargetType()
-    self:updatePlayerCombat()
+    state.combat = false
 end
 
 -- 移动状态更新
@@ -1870,13 +1885,14 @@ function Fuyutsui:StartFrameUpdates()
 end
 
 Fuyutsui.timeElapsed = 0
+Fuyutsui.timeElapsed1 = 0
 function Fuyutsui:OnUpdate(elapsed)
     -- 1. 高频逻辑（每帧执行）
     -- 这里的函数必须确保能被访问到，如果是成员函数请加 self:
     self:updatePlayerCastingInfo()
     self:updatePlayerChannelingInfo()
     self:updatePlayerEmpowerInfo()
-    self:updateTargetCastingInfo()
+
     self:updateUnitCastingOrChannelingInfo("target")
     self:updateUnitCastingOrChannelingInfo("focus")
     self:updateGroupInRangeAndHealth()
@@ -1895,5 +1911,10 @@ function Fuyutsui:OnUpdate(elapsed)
         self:updateEnemyCount()
         self:updateItemCoolDown()
         self.timeElapsed = 0
+    end
+    self.timeElapsed1 = self.timeElapsed1 + elapsed
+    if self.timeElapsed1 > 1 then
+        self:updatePlayerCombatTime()
+        self.timeElapsed1 = 0
     end
 end

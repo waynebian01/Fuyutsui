@@ -80,7 +80,11 @@ Fuyutsui.ClassBlocks = {
         [24] = { type = "block", name = "目标引导" },
         [25] = { type = "block", name = "焦点施法" },
         [26] = { type = "block", name = "焦点引导" },
-
+        [27] = { type = "block", name = "目标施法可打断" },
+        [28] = { type = "block", name = "目标引导可打断" },
+        [29] = { type = "block", name = "焦点施法可打断" },
+        [30] = { type = "block", name = "焦点引导可打断" },
+        
         [31] = { type = "aura", name = "无羁邪怒", auraName = "无羁邪怒", showKey = "remaining" },
 
         [40] = { type = "spell", spellId = 196718, name = "黑暗" },
