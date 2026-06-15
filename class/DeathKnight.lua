@@ -155,7 +155,7 @@ Fuyutsui.ClassBlocks = {
 }
 Fuyutsui.MacrosList = {
     dynamicSpells = {},
-    specialSpells = { [38] = "/castsequence reset=3 死亡之握,x", },
+    specialSpells = { [38] = "/castsequence reset=0.5 死亡之握,x", },
     staticSpells = {
         [1] = "亡者复生",
         [2] = "亡者大军",

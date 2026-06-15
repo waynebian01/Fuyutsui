@@ -470,6 +470,9 @@ local auras = {
             updateAuras = {
                 [47541] = { event = e["施法成功"], step = -1 }, -- 凋零缠绕
                 [207317] = { event = e["施法成功"], step = -1 }, -- 扩散
+
+                [1242174] = { event = e["施法成功"], step = -1 }, -- 凋零缠绕
+                [383269] = { event = e["施法成功"], step = -1 }, -- 扩散
             },
             removeAuras = nil,
         },
