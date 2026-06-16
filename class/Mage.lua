@@ -22,6 +22,18 @@ Fuyutsui.ClassBlocks = {
         [18] = { type = "block", name = "首领战" },
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
+
+        [21] = { type = "block", name = "目标施法" },
+        [22] = { type = "block", name = "目标施法可打断" },
+        [23] = { type = "block", name = "焦点施法" },
+        [24] = { type = "block", name = "焦点施法可打断" },
+
+        [25] = { type = "block", name = "目标引导" },
+        [26] = { type = "block", name = "目标引导可打断" },
+        [27] = { type = "block", name = "焦点引导" },
+        [28] = { type = "block", name = "焦点引导可打断" },
+
+
     },
     [2] = {
         [1] = { type = "block", name = "锚点" },
@@ -44,6 +56,17 @@ Fuyutsui.ClassBlocks = {
         [18] = { type = "block", name = "首领战" },
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
+
+        [21] = { type = "block", name = "目标施法" },
+        [22] = { type = "block", name = "目标施法可打断" },
+        [23] = { type = "block", name = "焦点施法" },
+        [24] = { type = "block", name = "焦点施法可打断" },
+
+        [25] = { type = "block", name = "目标引导" },
+        [26] = { type = "block", name = "目标引导可打断" },
+        [27] = { type = "block", name = "焦点引导" },
+        [28] = { type = "block", name = "焦点引导可打断" },
+
     },
     [3] = {
         [1] = { type = "block", name = "锚点" },
@@ -76,6 +99,16 @@ Fuyutsui.ClassBlocks = {
         [34] = { type = "aura", name = "冰冻之雨", auraName = "冰冻之雨", showKey = "remaining" },
         [35] = { type = "aura", name = "寒冰指", auraName = "寒冰指", showKey = "remaining" },
         [36] = { type = "aura", name = "寒冰指层数", auraName = "寒冰指", showKey = "count" },
+
+        [37] = { type = "block", name = "目标施法" },
+        [38] = { type = "block", name = "目标施法可打断" },
+        [39] = { type = "block", name = "焦点施法" },
+        [40] = { type = "block", name = "焦点施法可打断" },
+
+        [41] = { type = "block", name = "目标引导" },
+        [42] = { type = "block", name = "目标引导可打断" },
+        [43] = { type = "block", name = "焦点引导" },
+        [44] = { type = "block", name = "焦点引导可打断" },
     },
 }
 

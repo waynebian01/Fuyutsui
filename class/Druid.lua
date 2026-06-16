@@ -34,6 +34,15 @@ Fuyutsui.ClassBlocks = {
         [35] = { type = "spell", spellId = 102793, name = "乌索尔旋风" },
         [36] = { type = "spell", spellId = 78675, name = "日光术" },
 
+        [37] = { type = "block", name = "目标施法" },
+        [38] = { type = "block", name = "目标施法可打断" },
+        [39] = { type = "block", name = "焦点施法" },
+        [40] = { type = "block", name = "焦点施法可打断" },
+
+        [41] = { type = "block", name = "目标引导" },
+        [42] = { type = "block", name = "目标引导可打断" },
+        [43] = { type = "block", name = "焦点引导" },
+        [44] = { type = "block", name = "焦点引导可打断" },
     },
     [2] = {
         [1] = { type = "block", name = "锚点" },
@@ -66,6 +75,16 @@ Fuyutsui.ClassBlocks = {
         [33] = { type = "spell", spellId = 99, name = "夺魂咆哮" },
         [34] = { type = "spell", spellId = 29166, name = "激活" },
         [35] = { type = "spell", spellId = 102793, name = "乌索尔旋风" },
+
+        [37] = { type = "block", name = "目标施法" },
+        [38] = { type = "block", name = "目标施法可打断" },
+        [39] = { type = "block", name = "焦点施法" },
+        [40] = { type = "block", name = "焦点施法可打断" },
+
+        [41] = { type = "block", name = "目标引导" },
+        [42] = { type = "block", name = "目标引导可打断" },
+        [43] = { type = "block", name = "焦点引导" },
+        [44] = { type = "block", name = "焦点引导可打断" },
     },
     [3] = {
         [1] = { type = "block", name = "锚点" },
@@ -115,6 +134,16 @@ Fuyutsui.ClassBlocks = {
         [42] = { type = "spell", spellId = 1252871, name = "赤红之月" },
         [43] = { type = "spell", spellId = 6807, name = "重殴" },
         [44] = { type = "spell", spellId = 77758, name = "痛击" },
+
+        [45] = { type = "block", name = "目标施法" },
+        [46] = { type = "block", name = "目标施法可打断" },
+        [47] = { type = "block", name = "焦点施法" },
+        [48] = { type = "block", name = "焦点施法可打断" },
+
+        [49] = { type = "block", name = "目标引导" },
+        [50] = { type = "block", name = "目标引导可打断" },
+        [51] = { type = "block", name = "焦点引导" },
+        [52] = { type = "block", name = "焦点引导可打断" },
     },
     [4] = {
         [1] = { type = "block", name = "锚点" },
@@ -142,6 +171,9 @@ Fuyutsui.ClassBlocks = {
         [22] = { type = "block", name = "目标距离" },
         [23] = { type = "block", name = "连击点" },
         [24] = { type = "block", name = "施法技能" },
+
+        [25] = { type = "block", name = "目标施法" },
+        [26] = { type = "block", name = "目标施法可打断" },
 
         [29] = { type = "aura", name = "节能施法", auraName = "节能施法", showKey = "remaining" },
         [30] = { type = "aura", name = "丛林之魂", auraName = "丛林之魂", showKey = "remaining" },

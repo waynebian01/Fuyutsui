@@ -23,8 +23,19 @@ Fuyutsui.ClassBlocks = {
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
 
-        [23] = { type = "block", name = "灵魂碎片" },
-        [24] = { type = "block", name = "施法技能" },
+        [21] = { type = "block", name = "灵魂碎片" },
+        [22] = { type = "block", name = "施法技能" },
+
+        [23] = { type = "block", name = "目标施法" },
+        [24] = { type = "block", name = "目标施法可打断" },
+        [25] = { type = "block", name = "焦点施法" },
+        [26] = { type = "block", name = "焦点施法可打断" },
+
+        [27] = { type = "block", name = "目标引导" },
+        [28] = { type = "block", name = "目标引导可打断" },
+        [29] = { type = "block", name = "焦点引导" },
+        [30] = { type = "block", name = "焦点引导可打断" },
+
 
         [31] = { type = "spell", spellId = 5782, name = "恐惧" },
         [32] = { type = "spell", spellId = 6789, name = "死亡缠绕" },
@@ -76,6 +87,16 @@ Fuyutsui.ClassBlocks = {
         [23] = { type = "block", name = "灵魂碎片" },
         [24] = { type = "block", name = "施法技能" },
 
+        [52] = { type = "block", name = "目标施法" },
+        [53] = { type = "block", name = "目标施法可打断" },
+        [54] = { type = "block", name = "焦点施法" },
+        [55] = { type = "block", name = "焦点施法可打断" },
+
+        [56] = { type = "block", name = "目标引导" },
+        [57] = { type = "block", name = "目标引导可打断" },
+        [58] = { type = "block", name = "焦点引导" },
+        [59] = { type = "block", name = "焦点引导可打断" },
+
         [31] = { type = "spell", spellId = 5782, name = "恐惧" },
         [32] = { type = "spell", spellId = 6789, name = "死亡缠绕" },
         [33] = { type = "spell", spellId = 20707, name = "灵魂石" },
@@ -121,6 +142,19 @@ Fuyutsui.ClassBlocks = {
         [18] = { type = "block", name = "首领战" },
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
+
+        [21] = { type = "block", name = "目标施法" },
+        [22] = { type = "block", name = "目标施法可打断" },
+        [23] = { type = "block", name = "焦点施法" },
+        [24] = { type = "block", name = "焦点施法可打断" },
+
+        [25] = { type = "block", name = "目标引导" },
+        [26] = { type = "block", name = "目标引导可打断" },
+        [27] = { type = "block", name = "焦点引导" },
+        [28] = { type = "block", name = "焦点引导可打断" },
+        
+        [29] = { type = "block", name = "灵魂碎片" },
+        [30] = { type = "block", name = "施法技能" },
 
         [31] = { type = "spell", spellId = 5782, name = "恐惧" },
         [32] = { type = "spell", spellId = 6789, name = "死亡缠绕" },

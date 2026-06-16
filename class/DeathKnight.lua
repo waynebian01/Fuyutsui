@@ -27,6 +27,16 @@ Fuyutsui.ClassBlocks = {
         [22] = { type = "block", name = "目标生命值" },
         [23] = { type = "block", name = "敌人人数" },
 
+        [24] = { type = "block", name = "目标施法" },
+        [25] = { type = "block", name = "目标施法可打断" },
+        [26] = { type = "block", name = "焦点施法" },
+        [27] = { type = "block", name = "焦点施法可打断" },
+
+        [28] = { type = "block", name = "目标引导" },
+        [29] = { type = "block", name = "目标引导可打断" },
+        [30] = { type = "block", name = "焦点引导" },
+        [31] = { type = "block", name = "焦点引导可打断" },
+
         [40] = { type = "spell", spellId = 49576, name = "死亡之握" },
         [41] = { type = "spell", spellId = 51052, name = "反魔法领域" },
         [42] = { type = "spell", spellId = 221562, name = "窒息" },
@@ -71,6 +81,15 @@ Fuyutsui.ClassBlocks = {
         [26] = { type = "aura", name = "白霜", auraName = "白霜", showKey = "remaining" },
         [27] = { type = "aura", name = "锋锐", auraName = "锋锐", showKey = "remaining" },
 
+        [28] = { type = "block", name = "目标施法" },
+        [29] = { type = "block", name = "目标施法可打断" },
+        [30] = { type = "block", name = "焦点施法" },
+        [31] = { type = "block", name = "焦点施法可打断" },
+
+        [32] = { type = "block", name = "目标引导" },
+        [33] = { type = "block", name = "目标引导可打断" },
+        [34] = { type = "block", name = "焦点引导" },
+        [35] = { type = "block", name = "焦点引导可打断" },
 
         [40] = { type = "spell", spellId = 49576, name = "死亡之握" },
         [41] = { type = "spell", spellId = 51052, name = "反魔法领域" },

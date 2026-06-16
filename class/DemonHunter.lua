@@ -24,6 +24,15 @@ Fuyutsui.ClassBlocks = {
         [20] = { type = "block", name = "英雄天赋" },
 
         [21] = { type = "block", name = "敌人人数" },
+        [22] = { type = "block", name = "目标施法" },
+        [23] = { type = "block", name = "目标施法可打断" },
+        [24] = { type = "block", name = "焦点施法" },
+        [25] = { type = "block", name = "焦点施法可打断" },
+
+        [26] = { type = "block", name = "目标引导" },
+        [27] = { type = "block", name = "目标引导可打断" },
+        [28] = { type = "block", name = "焦点引导" },
+        [29] = { type = "block", name = "焦点引导可打断" },
 
         [40] = { type = "spell", spellId = 196718, name = "黑暗" },
         [41] = { type = "spell", spellId = 198793, name = "复仇回避" },
@@ -84,7 +93,7 @@ Fuyutsui.ClassBlocks = {
         [28] = { type = "block", name = "目标引导可打断" },
         [29] = { type = "block", name = "焦点施法可打断" },
         [30] = { type = "block", name = "焦点引导可打断" },
-        
+
         [31] = { type = "aura", name = "无羁邪怒", auraName = "无羁邪怒", showKey = "remaining" },
 
         [40] = { type = "spell", spellId = 196718, name = "黑暗" },
@@ -137,6 +146,16 @@ Fuyutsui.ClassBlocks = {
 
         [21] = { type = "block", name = "敌人人数" },
 
+        [22] = { type = "block", name = "目标施法" },
+        [23] = { type = "block", name = "目标施法可打断" },
+        [24] = { type = "block", name = "焦点施法" },
+        [25] = { type = "block", name = "焦点施法可打断" },
+
+        [26] = { type = "block", name = "目标引导" },
+        [27] = { type = "block", name = "目标引导可打断" },
+        [28] = { type = "block", name = "焦点引导" },
+        [29] = { type = "block", name = "焦点引导可打断" },
+        
         [40] = { type = "spell", spellId = 196718, name = "黑暗" },
         [41] = { type = "spell", spellId = 198793, name = "复仇回避" },
         [42] = { type = "spell", spellId = 185123, name = "投掷利刃 " },

@@ -69,6 +69,10 @@ Fuyutsui.ClassBlocks = {
         [53] = { type = "block", name = "敌人人数" },
         [54] = { type = "block", name = "有光环敌人数量" },
         [55] = { type = "block", name = "目标光环数量" },
+
+        [56] = { type = "block", name = "目标施法" },
+        [57] = { type = "block", name = "目标施法可打断" },
+
         [70] = {
             type = "group",
             num = 5,
@@ -132,6 +136,10 @@ Fuyutsui.ClassBlocks = {
         [43] = { type = "spell", spellId = 120517, name = "光晕" },
         [44] = { type = "spell", spellId = 64843, name = "神圣赞美诗" },
 
+        [45] = { type = "block", name = "目标施法" },
+        [46] = { type = "block", name = "目标施法可打断" },
+
+
         [70] = {
             type = "group",
             num = 5,
@@ -174,8 +182,7 @@ Fuyutsui.ClassBlocks = {
         [25] = { type = "block", name = "目标距离" },
         [26] = { type = "block", name = "目标生命值" },
         [27] = { type = "block", name = "施法技能" },
-        [28] = { type = "block", name = "目标引导" },
-        [29] = { type = "block", name = "目标施法" },
+
         [31] = { type = "spell", spellId = 8122, name = "心灵尖啸" },
         [32] = { type = "spell", spellId = 32375, name = "群体驱散" },
         [33] = { type = "spell", spellId = 527, name = "纯净术" },
@@ -190,6 +197,16 @@ Fuyutsui.ClassBlocks = {
         [41] = { type = "spell", spellId = 15286, name = "吸血鬼的拥抱" },
         [42] = { type = "spell", spellId = 120644, name = "光晕" },
         [43] = { type = "spell", spellId = 1242173, name = "虚空齐射", forcedKnown = true },
+
+        [44] = { type = "block", name = "目标施法" },
+        [45] = { type = "block", name = "目标施法可打断" },
+        [46] = { type = "block", name = "焦点施法" },
+        [47] = { type = "block", name = "焦点施法可打断" },
+
+        [48] = { type = "block", name = "目标引导" },
+        [49] = { type = "block", name = "目标引导可打断" },
+        [50] = { type = "block", name = "焦点引导" },
+        [51] = { type = "block", name = "焦点引导可打断" },
 
     },
 }

@@ -26,6 +26,16 @@ Fuyutsui.ClassBlocks = {
         [21] = { type = "block", name = "目标生命值" },
         [22] = { type = "block", name = "敌人人数" },
 
+        [23] = { type = "block", name = "目标施法" },
+        [24] = { type = "block", name = "目标施法可打断" },
+        [25] = { type = "block", name = "焦点施法" },
+        [26] = { type = "block", name = "焦点施法可打断" },
+
+        [27] = { type = "block", name = "目标引导" },
+        [28] = { type = "block", name = "目标引导可打断" },
+        [29] = { type = "block", name = "焦点引导" },
+        [30] = { type = "block", name = "焦点引导可打断" },
+
         [31] = { type = "spell", spellId = 57994, name = "风剪" },
         [32] = { type = "spell", spellId = 198103, name = "土元素" },
         [33] = { type = "spell", spellId = 192058, name = "电能图腾" },
@@ -63,6 +73,16 @@ Fuyutsui.ClassBlocks = {
 
         [21] = { type = "block", name = "目标生命值" },
         [22] = { type = "block", name = "敌人人数" },
+
+        [23] = { type = "block", name = "目标施法" },
+        [24] = { type = "block", name = "目标施法可打断" },
+        [25] = { type = "block", name = "焦点施法" },
+        [26] = { type = "block", name = "焦点施法可打断" },
+
+        [27] = { type = "block", name = "目标引导" },
+        [28] = { type = "block", name = "目标引导可打断" },
+        [29] = { type = "block", name = "焦点引导" },
+        [30] = { type = "block", name = "焦点引导可打断" },
 
         [31] = { type = "spell", spellId = 57994, name = "风剪" },
         [32] = { type = "spell", spellId = 198103, name = "土元素" },
@@ -107,6 +127,16 @@ Fuyutsui.ClassBlocks = {
         [21] = { type = "block", name = "延迟" },
         [22] = { type = "block", name = "施法技能" },
         [23] = { type = "block", name = "施法目标" },
+
+        [58] = { type = "block", name = "目标施法" },
+        [59] = { type = "block", name = "目标施法可打断" },
+        [60] = { type = "block", name = "焦点施法" },
+        [61] = { type = "block", name = "焦点施法可打断" },
+
+        [62] = { type = "block", name = "目标引导" },
+        [63] = { type = "block", name = "目标引导可打断" },
+        [64] = { type = "block", name = "焦点引导" },
+        [65] = { type = "block", name = "焦点引导可打断" },
 
         [24] = { type = "aura", name = "飞旋之土", auraName = "飞旋之土", showKey = "remaining" },
         [25] = { type = "aura", name = "潮汐奔涌", auraName = "潮汐奔涌", showKey = "remaining" },

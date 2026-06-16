@@ -30,6 +30,16 @@ Fuyutsui.ClassBlocks = {
         [25] = { type = "aura", name = "顺劈斩高亮", auraName = "顺劈斩高亮", showKey = "remaining" },
         [26] = { type = "aura", name = "致死高亮", auraName = "致死高亮", showKey = "remaining" },
 
+        [47] = { type = "block", name = "目标施法" },
+        [48] = { type = "block", name = "目标施法可打断" },
+        [49] = { type = "block", name = "焦点施法" },
+        [50] = { type = "block", name = "焦点施法可打断" },
+
+        [51] = { type = "block", name = "目标引导" },
+        [52] = { type = "block", name = "目标引导可打断" },
+        [53] = { type = "block", name = "焦点引导" },
+        [54] = { type = "block", name = "焦点引导可打断" },
+
 
         [31] = { type = "spell", spellId = 202168, name = "胜利在望" },
         [32] = { type = "spell", spellId = 376079, name = "勇士之矛" },
@@ -46,7 +56,7 @@ Fuyutsui.ClassBlocks = {
         [43] = { type = "spell", spellId = 845, name = "顺劈斩" },
         [44] = { type = "spell", spellId = 12294, name = "致死打击" },
         [45] = { type = "spell", spellId = 167105, name = "巨人打击" },
-        [46] = { type = "spell", spellId = 436358, name = "崩摧" },      
+        [46] = { type = "spell", spellId = 436358, name = "崩摧" },
     },
     [2] = {
         [1]  = { type = "block", name = "锚点" },
@@ -69,8 +79,19 @@ Fuyutsui.ClassBlocks = {
         [18] = { type = "block", name = "首领战" },
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
-        [21] = { type = "block", name = "敌人人数" },
 
+        [21] = { type = "block", name = "目标施法" },
+        [22] = { type = "block", name = "目标施法可打断" },
+        [23] = { type = "block", name = "焦点施法" },
+        [24] = { type = "block", name = "焦点施法可打断" },
+
+        [25] = { type = "block", name = "目标引导" },
+        [26] = { type = "block", name = "目标引导可打断" },
+        [27] = { type = "block", name = "焦点引导" },
+        [28] = { type = "block", name = "焦点引导可打断" },
+
+        [29] = { type = "block", name = "敌人人数" },
+        [30] = { type = "block", name = "目标生命值" },
         [31] = { type = "spell", spellId = 202168, name = "胜利在望" },
         [32] = { type = "spell", spellId = 376079, name = "勇士之矛" },
         [33] = { type = "spell", spellId = 6544, name = "英勇飞跃" },
@@ -106,6 +127,16 @@ Fuyutsui.ClassBlocks = {
 
         [21] = { type = "block", name = "目标生命值" },
         [22] = { type = "block", name = "敌人人数" },
+
+        [47] = { type = "block", name = "目标施法" },
+        [48] = { type = "block", name = "目标施法可打断" },
+        [49] = { type = "block", name = "焦点施法" },
+        [50] = { type = "block", name = "焦点施法可打断" },
+
+        [51] = { type = "block", name = "目标引导" },
+        [52] = { type = "block", name = "目标引导可打断" },
+        [53] = { type = "block", name = "焦点引导" },
+        [54] = { type = "block", name = "焦点引导可打断" },
 
         [25] = { type = "aura", name = "盾牌格挡", auraName = "盾牌格挡", showKey = "remaining" },
 

@@ -23,6 +23,16 @@ Fuyutsui.ClassBlocks = {
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
 
+        [21] = { type = "block", name = "目标施法" },
+        [22] = { type = "block", name = "目标施法可打断" },
+        [23] = { type = "block", name = "焦点施法" },
+        [24] = { type = "block", name = "焦点施法可打断" },
+
+        [25] = { type = "block", name = "目标引导" },
+        [26] = { type = "block", name = "目标引导可打断" },
+        [27] = { type = "block", name = "焦点引导" },
+        [28] = { type = "block", name = "焦点引导可打断" },
+
         [31] = { type = "spell", spellId = 5938, name = "毒刃" },
         [32] = { type = "spell", spellId = 2094, name = "致盲" },
         [33] = { type = "spell", spellId = 1966, name = "佯攻" },
@@ -67,6 +77,16 @@ Fuyutsui.ClassBlocks = {
         [18] = { type = "block", name = "首领战" },
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
+
+        [21] = { type = "block", name = "目标施法" },
+        [22] = { type = "block", name = "目标施法可打断" },
+        [23] = { type = "block", name = "焦点施法" },
+        [24] = { type = "block", name = "焦点施法可打断" },
+
+        [25] = { type = "block", name = "目标引导" },
+        [26] = { type = "block", name = "目标引导可打断" },
+        [27] = { type = "block", name = "焦点引导" },
+        [28] = { type = "block", name = "焦点引导可打断" },
 
         [31] = { type = "spell", spellId = 5938, name = "毒刃" },
         [32] = { type = "spell", spellId = 2094, name = "致盲" },
@@ -116,6 +136,16 @@ Fuyutsui.ClassBlocks = {
         [18] = { type = "block", name = "首领战" },
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
+
+        [21] = { type = "block", name = "目标施法" },
+        [22] = { type = "block", name = "目标施法可打断" },
+        [23] = { type = "block", name = "焦点施法" },
+        [24] = { type = "block", name = "焦点施法可打断" },
+
+        [25] = { type = "block", name = "目标引导" },
+        [26] = { type = "block", name = "目标引导可打断" },
+        [27] = { type = "block", name = "焦点引导" },
+        [28] = { type = "block", name = "焦点引导可打断" },
 
         [31] = { type = "spell", spellId = 5938, name = "毒刃" },
         [32] = { type = "spell", spellId = 2094, name = "致盲" },

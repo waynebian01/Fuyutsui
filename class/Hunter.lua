@@ -47,6 +47,16 @@ Fuyutsui.ClassBlocks = {
         [46] = { type = "aura", name = "自然之友", auraName = "自然之友", showKey = "remaining" },
         [47] = { type = "aura", name = "猎人印记", auraName = "猎人印记", showKey = "remaining" },
         [48] = { type = "aura", name = "狂野怒火光环", auraName = "狂野怒火", showKey = "remaining" },
+
+        [49] = { type = "block", name = "目标施法" },
+        [50] = { type = "block", name = "目标施法可打断" },
+        [51] = { type = "block", name = "焦点施法" },
+        [52] = { type = "block", name = "焦点施法可打断" },
+
+        [53] = { type = "block", name = "目标引导" },
+        [54] = { type = "block", name = "目标引导可打断" },
+        [55] = { type = "block", name = "焦点引导" },
+        [56] = { type = "block", name = "焦点引导可打断" },
     },
     [2] = {
         [1] = { type = "block", name = "锚点" },
@@ -69,6 +79,16 @@ Fuyutsui.ClassBlocks = {
         [18] = { type = "block", name = "首领战" },
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
+
+        [21] = { type = "block", name = "目标施法" },
+        [22] = { type = "block", name = "目标施法可打断" },
+        [23] = { type = "block", name = "焦点施法" },
+        [24] = { type = "block", name = "焦点施法可打断" },
+
+        [25] = { type = "block", name = "目标引导" },
+        [26] = { type = "block", name = "目标引导可打断" },
+        [27] = { type = "block", name = "焦点引导" },
+        [28] = { type = "block", name = "焦点引导可打断" },
 
         [30] = { type = "spell", spellId = 53480, name = "牺牲咆哮" },
         [31] = { type = "spell", spellId = 109304, name = "意气风发" },
@@ -108,6 +128,16 @@ Fuyutsui.ClassBlocks = {
         [19] = { type = "block", name = "难度" },
         [20] = { type = "block", name = "英雄天赋" },
 
+        [21] = { type = "block", name = "目标施法" },
+        [22] = { type = "block", name = "目标施法可打断" },
+        [23] = { type = "block", name = "焦点施法" },
+        [24] = { type = "block", name = "焦点施法可打断" },
+
+        [25] = { type = "block", name = "目标引导" },
+        [26] = { type = "block", name = "目标引导可打断" },
+        [27] = { type = "block", name = "焦点引导" },
+        [28] = { type = "block", name = "焦点引导可打断" },
+        
         [30] = { type = "spell", spellId = 53480, name = "牺牲咆哮" },
         [31] = { type = "spell", spellId = 109304, name = "意气风发" },
         [32] = { type = "spell", spellId = 19577, name = "胁迫" },

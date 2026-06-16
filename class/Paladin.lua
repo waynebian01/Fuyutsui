@@ -52,6 +52,9 @@ Fuyutsui.ClassBlocks = {
         [45] = { type = "spell", spellId = 200025, name = "美德道标" },
         [46] = { type = "block", name = "大红冷却" },
         [47] = { type = "block", name = "延迟" },
+        [48] = { type = "block", name = "目标施法" },
+        [49] = { type = "block", name = "目标施法可打断" },
+        
         [70] = {
             type = "group",
             num = 6,
@@ -118,6 +121,16 @@ Fuyutsui.ClassBlocks = {
         [49] = { type = "block", name = "大红冷却" },
         [50] = { type = "block", name = "延迟" },
 
+        [51] = { type = "block", name = "目标施法" },
+        [52] = { type = "block", name = "目标施法可打断" },
+        [53] = { type = "block", name = "焦点施法" },
+        [54] = { type = "block", name = "焦点施法可打断" },
+
+        [55] = { type = "block", name = "目标引导" },
+        [56] = { type = "block", name = "目标引导可打断" },
+        [57] = { type = "block", name = "焦点引导" },
+        [58] = { type = "block", name = "焦点引导可打断" },
+
         [70] = {
             type = "group",
             num = 3,
@@ -178,6 +191,16 @@ Fuyutsui.ClassBlocks = {
         [45] = { type = "spell", spellId = 31884, name = "复仇之怒" },
         [46] = { type = "block", name = "大红冷却" },
         [47] = { type = "block", name = "延迟" },
+
+        [48] = { type = "block", name = "目标施法" },
+        [49] = { type = "block", name = "目标施法可打断" },
+        [50] = { type = "block", name = "焦点施法" },
+        [51] = { type = "block", name = "焦点施法可打断" },
+
+        [52] = { type = "block", name = "目标引导" },
+        [53] = { type = "block", name = "目标引导可打断" },
+        [54] = { type = "block", name = "焦点引导" },
+        [55] = { type = "block", name = "焦点引导可打断" },
 
         [70] = {
             type = "group",

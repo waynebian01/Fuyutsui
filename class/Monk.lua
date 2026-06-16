@@ -58,6 +58,16 @@ Fuyutsui.ClassBlocks = {
         [52] = { type = "spell", spellId = 132578, name = "玄牛下凡" },
         [53] = { type = "spell", spellId = 205523, name = "幻灭踢" },
 
+        [54] = { type = "block", name = "目标施法" },
+        [55] = { type = "block", name = "目标施法可打断" },
+        [56] = { type = "block", name = "焦点施法" },
+        [57] = { type = "block", name = "焦点施法可打断" },
+
+        [58] = { type = "block", name = "目标引导" },
+        [59] = { type = "block", name = "目标引导可打断" },
+        [60] = { type = "block", name = "焦点引导" },
+        [61] = { type = "block", name = "焦点引导可打断" },
+
     },
     [2] = {
         ["countBars"] = {
@@ -90,6 +100,9 @@ Fuyutsui.ClassBlocks = {
         [23] = { type = "block", name = "施法目标" },
         [49] = { type = "block", name = "目标距离" },
         [50] = { type = "block", name = "爆发开关" },
+
+        [51] = { type = "block", name = "目标施法" },
+        [52] = { type = "block", name = "目标施法可打断" },
 
         [25] = { type = "aura", name = "生生不息1", auraName = "生生不息1", showKey = "remaining" },
         [26] = { type = "aura", name = "生生不息2", auraName = "生生不息2", showKey = "remaining" },
@@ -163,6 +176,17 @@ Fuyutsui.ClassBlocks = {
         [37] = { type = "spell", spellId = 198898, name = "赤精之歌" },
         [38] = { type = "spell", spellId = 116844, name = "平心之环" },
         [39] = { type = "spell", spellId = 115078, name = "分筋错骨" },
+
+        [41] = { type = "block", name = "目标施法" },
+        [42] = { type = "block", name = "目标施法可打断" },
+        [43] = { type = "block", name = "焦点施法" },
+        [44] = { type = "block", name = "焦点施法可打断" },
+
+        [45] = { type = "block", name = "目标引导" },
+        [46] = { type = "block", name = "目标引导可打断" },
+        [47] = { type = "block", name = "焦点引导" },
+        [48] = { type = "block", name = "焦点引导可打断" },
+
     },
 }
 

@@ -25,6 +25,16 @@ Fuyutsui.ClassBlocks = {
 
         [21] = { type = "block", name = "施法技能" },
 
+        [22] = { type = "block", name = "目标施法" },
+        [23] = { type = "block", name = "目标施法可打断" },
+        [24] = { type = "block", name = "焦点施法" },
+        [25] = { type = "block", name = "焦点施法可打断" },
+
+        [26] = { type = "block", name = "目标引导" },
+        [27] = { type = "block", name = "目标引导可打断" },
+        [28] = { type = "block", name = "焦点引导" },
+        [29] = { type = "block", name = "焦点引导可打断" },
+
         [31] = { type = "spell", spellId = 365585, name = "净除" },
         [32] = { type = "spell", spellId = 363916, name = "黑曜鳞片" },
         [33] = { type = "spell", spellId = 363916, name = "黑曜鳞片", charge = true },
@@ -71,6 +81,16 @@ Fuyutsui.ClassBlocks = {
 
         [21] = { type = "block", name = "施法技能" },
         [22] = { type = "block", name = "精华能量" },
+
+        [23] = { type = "block", name = "目标施法" },
+        [24] = { type = "block", name = "目标施法可打断" },
+        [25] = { type = "block", name = "焦点施法" },
+        [26] = { type = "block", name = "焦点施法可打断" },
+
+        [27] = { type = "block", name = "目标引导" },
+        [28] = { type = "block", name = "目标引导可打断" },
+        [29] = { type = "block", name = "焦点引导" },
+        [30] = { type = "block", name = "焦点引导可打断" },
 
         [31] = { type = "spell", spellId = 365585, name = "净除" },
         [32] = { type = "spell", spellId = 363916, name = "黑曜鳞片" },
