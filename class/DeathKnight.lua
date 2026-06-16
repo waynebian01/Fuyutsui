@@ -125,6 +125,16 @@ Fuyutsui.ClassBlocks = {
         [29] = { type = "block", name = "大红冷却" },
         [31] = { type = "block", name = "延迟" },
 
+        [33] = { type = "block", name = "目标施法" },
+        [34] = { type = "block", name = "目标施法可打断" },
+        [35] = { type = "block", name = "焦点施法" },
+        [36] = { type = "block", name = "焦点施法可打断" },
+
+        [37] = { type = "block", name = "目标引导" },
+        [38] = { type = "block", name = "目标引导可打断" },
+        [39] = { type = "block", name = "焦点引导" },
+        [40] = { type = "block", name = "焦点引导可打断" },
+
         [41] = { type = "aura", name = "次级食尸鬼", auraName = "次级食尸鬼", showKey = "remaining" },
         [42] = { type = "aura", name = "割魂索命", auraName = "割魂索命", showKey = "remaining" },
         [43] = { type = "aura", name = "末日突降", auraName = "末日突降", showKey = "remaining" },
