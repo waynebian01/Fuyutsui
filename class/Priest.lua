@@ -213,7 +213,10 @@ Fuyutsui.ClassBlocks = {
 
 Fuyutsui.MacrosList = {
     dynamicSpells = { "苦修", "快速治疗", "真言术：盾", "愈合祷言", "纯净术", "圣言术：静" },
-    specialSpells = { [36] = "/castsequence reset=0.3 真言术：耀,x", },
+    specialSpells = { 
+        [36] = "/castsequence reset=0.3 真言术：耀,x", 
+        [39] = "/stopcasting",
+    },
     staticSpells = {
         [1] = "心灵震爆",
         [2] = "惩击",

@@ -19,8 +19,7 @@ local groupList = Fuyutsui.groupList
 local spells = {}
 local failedSpell, failedSpellId, failedSpellTimer, updateIndex = nil, nil, nil, 1
 local roleMap, spellsList, EnumPowerType = Fuyutsui.roleMap, Fuyutsui.spellsList, Fuyutsui.EnumPowerType
-local ColorValue255, ColorValue0, ColorValue1 = CreateColor(0, 0, 1, 1), CreateColor(0, 0, 0, 1),
-    CreateColor(0, 0, 1 / 255, 1)
+local ColorValue255, ColorValue0, ColorValue1 = CreateColor(0, 0, 1, 1), CreateColor(0, 0, 0, 1), CreateColor(0, 0, 1 / 255, 1)
 
 -- ================================================================
 --                          创建颜色曲线
@@ -69,7 +68,7 @@ local helpfulSpells = {
     [82326] = 40,   -- 圣光术
     [19750] = 15,   -- 圣光闪现
     [8936] = 15,    -- 愈合
-    [186263] = 50,  -- 暗影愈合
+    [186263] = 60,  -- 暗影愈合
     [77472] = 15,   -- 治疗波
 }
 
