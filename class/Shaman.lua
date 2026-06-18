@@ -233,5 +233,6 @@ Fuyutsui.MacrosList = {
         [38] = "[@cursor]治疗之雨",
         [39] = "[@cursor]狂风图腾",
         [40] = "[@target]净化灵魂",
+        [41] = "[@focus]风剪",
     },
 }

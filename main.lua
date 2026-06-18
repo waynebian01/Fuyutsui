@@ -1481,6 +1481,9 @@ end
 function Fuyutsui:PLAYER_ENTERING_WORLD()
     state.mapID = C_Map.GetBestMapForUnit("player") or 0
     self:updateHeroTalent()
+    C_Timer.After(5, function()
+        self:updateGroup()
+    end)
 end
 
 function Fuyutsui:PLAYER_TALENT_UPDATE()
