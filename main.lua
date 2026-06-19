@@ -1935,7 +1935,7 @@ function Fuyutsui:updatePlayerAuraInfo(unit, info)
     end
     if info.addedAuras then
         for k, v in pairs(info.addedAuras) do
-            print("|cnGREEN_FONT_COLOR:新增光环: |r", v.spellId, C_Spell.GetSpellLink(v.spellId))
+            -- print("|cnGREEN_FONT_COLOR:新增光环: |r", v.spellId, C_Spell.GetSpellLink(v.spellId))
             if v.isHelpful then
                 state.auras.buffs[v.auraInstanceID] = v
             elseif v.isHarmful then
