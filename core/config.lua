@@ -269,7 +269,7 @@ Fuyutsui.spellsList = {
     [116844]  = { index = 6, failed = true },  -- 平心之环
     [115078]  = { index = 7, failed = true },  -- 分筋错骨
     [132578]  = { index = 8, failed = true },  -- 玄牛下凡
-    [100780]  = { index = 9, },               -- 猛虎掌
+    [100780]  = { index = 9, },                -- 猛虎掌
     [322729]  = { index = 10, },               -- 神鹤引项踢
     [205523]  = { index = 11, },               -- 幻灭踢
     [325153]  = { index = 12, },               -- 爆炸酒桶
@@ -781,7 +781,7 @@ Fuyutsui.EnumPowerType = {
     ["DEMONIC_FURY"] = 15,
     ["ARCANE_CHARGES"] = 16,
     ["FURY"] = 17,
-    ["PAIN"] = 17, -- 痛苦,原 18, 暂时由愤怒["FURY"]代替, 未知BUG
+    ["PAIN"] = 18,
     ["ESSENCE"] = 19,
     ["SHADOW_ORBS"] = 28,
 }
@@ -826,7 +826,7 @@ Fuyutsui.rangeSpecID = {
     -- Paladin
     [65] = 30,   -- 神圣
     [66] = 25,   -- 防护
-    [70] = 10,   -- 惩戒
+    [70] = 30,   -- 惩戒
     [1451] = 25, -- Initial
     -- Priest
     [256] = 46,  -- 戒律

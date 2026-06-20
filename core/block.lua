@@ -187,8 +187,8 @@ end
 -- ================================================================
 local AURA_LAYER_PADDING = 4                                                   -- 尺寸递增
 local AURA_ICON_SIZE = 25                                                      -- 图标尺寸
-local AURA_WHITE_BLOCK_SIZE = AURA_ICON_SIZE + AURA_LAYER_PADDING              -- 白底尺寸
-local AURA_COOLDOWN_BLOCK_SIZE = AURA_WHITE_BLOCK_SIZE + AURA_LAYER_PADDING    -- 冷却尺寸
+local AURA_WHITE_BLOCK_SIZE = AURA_ICON_SIZE + 3                               -- 白底尺寸
+local AURA_COOLDOWN_BLOCK_SIZE = AURA_WHITE_BLOCK_SIZE + 4                     -- 冷却尺寸
 local AURA_MARKER_WIDTH = 2                                                    -- 标记宽度
 local AURA_ICON_SPACING = 0                                                    -- 图标间距
 local AURA_APP_BAR_MAX = 20                                                    -- 光环层数条 最大值
@@ -201,11 +201,12 @@ local AURA_SLOT_SIZE = AURA_COOLDOWN_BLOCK_SIZE                                -
 local AURA_SLOT_PITCH = AURA_SLOT_SIZE + AURA_ICON_SPACING                     -- 槽位间距
 local AURA_APP_BAR_BG_SEG_WIDTH = AURA_APP_BAR_BG_WIDTH / AURA_APP_BAR_MAX     -- 光环层数条 背景段宽度
 local AURA_ROW_HEIGHT = AURA_SLOT_SIZE + AURA_APP_BAR_HEIGHT                   -- 行高
+local AURA_ROW_SPACING = 4                                                     -- 两行之间的额外间距
 local auraDurationCurve = Fuyutsui:creatColorCurve(255, 255)                   -- 光环持续时间曲线
 
 local auraIconBars = CreateFrame("Frame", "FuyutsuiAuraIcons", UIParent)       -- 光环图标容器
 auraIconBars:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, BAR_CONFIG.heightOffset - 4)
-auraIconBars:SetSize(screenWidth, AURA_ROW_HEIGHT * 2)
+auraIconBars:SetSize(screenWidth, AURA_ROW_HEIGHT * 2 + AURA_ROW_SPACING)
 auraIconBars:SetFrameStrata("TOOLTIP")
 auraIconBars:SetFrameLevel(1)
 
@@ -235,8 +236,8 @@ local function updateRowMarkers(startMarker, endMarker, count, rowOffset)
     endMarker:Show()
 end
 
-local function getAuraRemainingB(auraInstanceID)
-    local duration = C_UnitAuras.GetAuraDuration("player", auraInstanceID)
+local function getAuraRemainingB(unit, auraInstanceID)
+    local duration = C_UnitAuras.GetAuraDuration(unit, auraInstanceID)
     if duration then
         local auraduration = duration:EvaluateRemainingDuration(auraDurationCurve)
         ---@diagnostic disable-next-line: param-type-mismatch
@@ -311,7 +312,7 @@ local function collectAurasSorted(auraTable)
     return list
 end
 
-local function updateAuraIconRow(slots, auras, rowOffset, borderR)
+local function updateAuraIconRow(slots, auras, rowOffset, borderR, unit)
     local sorted = collectAurasSorted(auras)
     local slotIndex = 0
     for i, aura in ipairs(sorted) do
@@ -326,7 +327,7 @@ local function updateAuraIconRow(slots, auras, rowOffset, borderR)
             AURA_MARKER_WIDTH + (slotIndex - 1) * AURA_SLOT_PITCH, rowOffset)
         slot:Show()
 
-        local b = getAuraRemainingB(aura.auraInstanceID)
+        local b = getAuraRemainingB(unit, aura.auraInstanceID)
         local borderG = i / 255
         setSlotCooldownColor(slot, borderR, borderG, b)
         setSlotAppBarBgColor(slot, borderR, borderG)
@@ -351,11 +352,12 @@ local function updateAuraIconRow(slots, auras, rowOffset, borderR)
     return slotIndex
 end
 
----@param playerAuras table { buffs = {}, debuffs = {} }
-function Fuyutsui:UpdatePlayerAuraIcons(playerAuras)
-    if not playerAuras then return end
-    local buffCount = updateAuraIconRow(buffIconSlots, playerAuras.buffs or {}, 0, 2 / 255)
+---@param AurasTable table
+function Fuyutsui:UpdateAuraIcons(AurasTable, AurasTable2)
+    if not AurasTable then return end
+    local buffCount = updateAuraIconRow(buffIconSlots, AurasTable or {}, 0, 2 / 255, "player")
     updateRowMarkers(buffRowStartMarker, buffRowEndMarker, buffCount, 0)
-    local debuffCount = updateAuraIconRow(debuffIconSlots, playerAuras.debuffs or {}, -AURA_ROW_HEIGHT, 3 / 255)
-    updateRowMarkers(debuffRowStartMarker, debuffRowEndMarker, debuffCount, -AURA_ROW_HEIGHT)
+    local debuffCount = updateAuraIconRow(debuffIconSlots, AurasTable2 or {}, -AURA_ROW_HEIGHT - AURA_ROW_SPACING,
+    3 / 255, "target")
+    updateRowMarkers(debuffRowStartMarker, debuffRowEndMarker, debuffCount, -AURA_ROW_HEIGHT - AURA_ROW_SPACING)
 end

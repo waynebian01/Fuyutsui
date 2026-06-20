@@ -1,19 +1,26 @@
 local addon, ns = ...
 local isSec = issecretvalue
-local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
-local GetSpellChargeDuration = C_Spell.GetSpellChargeDuration
-local GetSpellCooldown = C_Spell.GetSpellCooldown
-local GetSpellName = C_Spell.GetSpellName
-local IsSpellKnown = C_SpellBook.IsSpellKnown
-local IsSpellInSpellBook = C_SpellBook.IsSpellInSpellBook
-local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
-
 local rc = LibStub("LibRangeCheck-3.0")
 
-local state = Fuyutsui.state
-state.auras = { buffs = {}, debuffs = {}, }
+local GetAuraDuration = C_UnitAuras.GetAuraDuration
+local GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex
+local GetUnitAuraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs
+local GetAuraDispelTypeColor = C_UnitAuras.GetAuraDispelTypeColor
+local GetAuraDataByAuraInstanceID = C_UnitAuras.GetAuraDataByAuraInstanceID
+local IsAuraFilteredOutByInstanceID = C_UnitAuras.IsAuraFilteredOutByInstanceID
+
+local GetSpellName = C_Spell.GetSpellName
+local GetSpellCooldown = C_Spell.GetSpellCooldown
+local GetSpellChargeDuration = C_Spell.GetSpellChargeDuration
+local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
+local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
+
+local IsSpellKnown = C_SpellBook.IsSpellKnown
+local IsSpellInSpellBook = C_SpellBook.IsSpellInSpellBook
+
+local state = Fuyutsui.state; state.auras = { buffs = {}, debuffs = {}, }
 local blocks = Fuyutsui.blocks
-local target = Fuyutsui.target
+local target = Fuyutsui.target; target.auras = { debuffs = {} }
 local focus = Fuyutsui.focus
 local nameplate = Fuyutsui.nameplate
 local group = Fuyutsui.group
@@ -90,7 +97,7 @@ target.friendCurve:SetType(Enum.LuaCurveType.Step)
 
 -- 更新单位拥有玩家光环的数量
 function Fuyutsui:updateUnitAuraCount(unit)
-    local auraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs(unit, "HARMFUL|PLAYER", 1, 4)
+    local auraInstanceIDs = GetUnitAuraInstanceIDs(unit, "HARMFUL|PLAYER", 1, 4)
     if auraInstanceIDs then
         return #auraInstanceIDs
     end
@@ -246,7 +253,7 @@ function Fuyutsui:updatePlayerBlocks()
     self:updatePlayerPowerType()                    -- 12.能量值
     self:updatePlayerAssistant()                    -- 13.一键辅助
     -- 14. 法术失败
-    self:updateTargetValid()                        -- 15.目标类型
+    self:updateTargetType()                         -- 15.目标类型
     self:updateGroupType()                          -- 16.队伍类型
     self:updateGroupCount()                         -- 17.队伍人数
     -- 18. 19. 更新boss战ID和难度
@@ -626,23 +633,23 @@ local function getTargetDispelType()
         return 0
     end
 
-    local auraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs(unit, filter, 1, 4)
+    local auraInstanceIDs = GetUnitAuraInstanceIDs(unit, filter, 1, 4)
 
     if auraInstanceIDs and #auraInstanceIDs > 0 then
-        local color = C_UnitAuras.GetAuraDispelTypeColor(unit, auraInstanceIDs[1], curve)
+        local color = GetAuraDispelTypeColor(unit, auraInstanceIDs[1], curve)
         return color.b
     end
     return b
 end
 
-function Fuyutsui:updateTargetValid()
+function Fuyutsui:updateTargetType()
     local targetType = 0
 
-    if target.inRange and not target.isDead then
+    if not target.isDead then
         targetType = getTargetDispelType()
     end
     target.type = targetType
-    self:CreatTexture(blocks.state["目标类型"], target.type)
+    self:CreatTexture(blocks.state["目标类型"], targetType)
 end
 
 function Fuyutsui:updateTargetAuraCount()
@@ -823,7 +830,7 @@ end
 function Fuyutsui:GetDefensiveAuraInstanceID(unit, info)
     if info.addedAuras then
         for i = 1, 2 do
-            local aura = C_UnitAuras.GetBuffDataByIndex(unit, i, "HELPFUL|BIG_DEFENSIVE")
+            local aura = GetAuraDataByIndex(unit, i, "HELPFUL|BIG_DEFENSIVE")
             if not issecretvalue(aura) and aura then
                 state.DefensiveAuraInstanceID = aura.auraInstanceID
             end
@@ -832,7 +839,7 @@ function Fuyutsui:GetDefensiveAuraInstanceID(unit, info)
     if info.updatedAuraInstanceIDs then
         for _, v in pairs(info.updatedAuraInstanceIDs) do
             if v == state.DefensiveAuraInstanceID then
-                local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, v)
+                local aura = GetAuraDataByAuraInstanceID(unit, v)
                 state.DefensiveAuraInstanceID = aura
             end
         end
@@ -849,7 +856,7 @@ end
 function Fuyutsui:GetDefensiveAuraDuration()
     if blocks and blocks.state["防御光环"] then
         if state.DefensiveAuraInstanceID then
-            local duration = C_UnitAuras.GetAuraDuration("player", state.DefensiveAuraInstanceID)
+            local duration = GetAuraDuration("player", state.DefensiveAuraInstanceID)
             if duration then
                 local auraduration = duration:EvaluateRemainingDuration(curve255)
                 ---@diagnostic disable-next-line: param-type-mismatch
@@ -984,8 +991,8 @@ function Fuyutsui:updatePlayerFullAura()
         debuffs = {},
     }
     for i = 1, 40 do
-        local buff = C_UnitAuras.GetBuffDataByIndex(unit, i, "HELPFUL")
-        local debuff = C_UnitAuras.GetDebuffDataByIndex(unit, i, "HARMFUL")
+        local buff = GetAuraDataByIndex(unit, i, "HELPFUL")
+        local debuff = GetAuraDataByIndex(unit, i, "HARMFUL")
         if buff then
             state.auras.buffs[buff.auraInstanceID] = buff
         end
@@ -1081,10 +1088,10 @@ end
     ]]
 
 -- 更新目标是否可以攻击
-function Fuyutsui:updateTargetType()
+function Fuyutsui:updateTargetCanAttack()
     target.canAttack = UnitCanAttack("player", "target")
     target.canAssist = UnitCanAssist("player", "target")
-    self:updateTargetValid()
+    self:updateTargetType()
 end
 
 function Fuyutsui:updateTargetRangeBlock()
@@ -1094,12 +1101,12 @@ function Fuyutsui:updateTargetRangeBlock()
     if target.canAttack then
         if target.maxRange and self.state.specRange then
             target.inRange = target.maxRange <= self.state.specRange
-            self:updateTargetValid()
+            self:updateTargetType()
         end
     elseif target.canAssist then
         if target.maxRange then
             target.inRange = target.maxRange <= 40
-            self:updateTargetValid()
+            self:updateTargetType()
         end
     end
     if blocks and blocks.state["目标距离"] and target.maxRange then
@@ -1185,7 +1192,7 @@ end
 -- 更新目标是否死亡
 function Fuyutsui:updateTargetDeath()
     target.isDead = UnitIsDeadOrGhost("target")
-    self:updateTargetValid()
+    self:updateTargetType()
 end
 
 -- 更新目标生命值
@@ -1199,11 +1206,23 @@ function Fuyutsui:updateTargetHealth()
     end
 end
 
+function Fuyutsui:updateTargetFullAura()
+    local unit = "target"
+    target.auras = { debuffs = {} }
+    for i = 1, 40 do
+        local debuff = GetAuraDataByIndex(unit, i, "HARMFUL|PLAYER")
+        if debuff then
+            target.auras.debuffs[debuff.auraInstanceID] = debuff
+        end
+    end
+end
+
 -- 更新目标完整信息
 function Fuyutsui:updateTargetFullInfo()
-    self:updateTargetType()
+    self:updateTargetCanAttack()
     self:updateTargetDeath()
     self:updateTargetHealth()
+    self:updateTargetFullAura()
 end
 
 -- ================================================================
@@ -1408,7 +1427,7 @@ function Fuyutsui:updateUnitFullAura(unit)
     if not obj then return end
     obj.aura = {}
     for i = 1, 40 do
-        local buff = C_UnitAuras.GetBuffDataByIndex(unit, i, "HELPFUL")
+        local buff = GetAuraDataByIndex(unit, i, "HELPFUL")
         if buff and not isSec(buff.spellId) and buff.sourceUnit == "player" then
             obj.aura[buff.auraInstanceID] = buff
         end
@@ -1452,7 +1471,7 @@ function Fuyutsui:OnUpdateUnitAura()
             local index = blocks.groups.start + (data.index - 1) * blocks.groups.num + i
             local maxAura = getMaxAuraByTable(unit, spellIds)
             if maxAura and maxAura.auraInstanceID then
-                local duration = C_UnitAuras.GetAuraDuration(unit, maxAura.auraInstanceID)
+                local duration = GetAuraDuration(unit, maxAura.auraInstanceID)
                 if maxAura.expirationTime == 0 then
                     self:CreatTexture(index, 1)
                 elseif duration then
@@ -1577,13 +1596,13 @@ end
 
 -- 战斗状态更新
 function Fuyutsui:PLAYER_REGEN_DISABLED()
-    self:updateTargetType()
+    self:updateTargetCanAttack()
     state.combat = true
     state.combatStartTime = GetTime()
 end
 
 function Fuyutsui:PLAYER_REGEN_ENABLED()
-    self:updateTargetType()
+    self:updateTargetCanAttack()
     state.combat = false
 end
 
@@ -1890,12 +1909,12 @@ end
 
 function Fuyutsui:NAME_PLATE_UNIT_ADDED(_, unit)
     addNameplate(unit)
-    self:updateTargetType()
+    self:updateTargetCanAttack()
 end
 
 function Fuyutsui:NAME_PLATE_UNIT_REMOVED(_, unit)
     nameplate[unit] = nil
-    self:updateTargetType()
+    self:updateTargetCanAttack()
 end
 
 function Fuyutsui:UPDATE_SHAPESHIFT_FORM()
@@ -1933,10 +1952,10 @@ function Fuyutsui:TestFiltered(unit, auraInstanceID)
         "HELPFUL BIG_DEFENSIVE",
         "HELPFUL IMPORTANT",
     }
-    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID)
+    local aura = GetAuraDataByAuraInstanceID(unit, auraInstanceID)
     if aura then
         for _, filter in pairs(AuraFilters) do
-            local isFiltered = C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, auraInstanceID, filter)
+            local isFiltered = IsAuraFilteredOutByInstanceID(unit, auraInstanceID, filter)
             local boolColored
             if isFiltered then
                 boolColored = "|cffff0000" .. tostring(false) .. "|r"
@@ -1961,37 +1980,65 @@ function FuyutsuiPrintPlayerAuraInfo()
 end
 
 function Fuyutsui:updatePlayerAuraInfo(unit, info)
-    if info.isFullUpdate then
-        self:updatePlayerFullAura()
-    end
+    local auras = state.auras
+    if info.isFullUpdate then self:updatePlayerFullAura() end
     if info.addedAuras then
         for k, v in pairs(info.addedAuras) do
             -- print("|cnGREEN_FONT_COLOR:新增光环: |r", v.spellId, C_Spell.GetSpellLink(v.spellId))
             if v.isHelpful then
-                state.auras.buffs[v.auraInstanceID] = v
+                auras.buffs[v.auraInstanceID] = v
             elseif v.isHarmful then
-                state.auras.debuffs[v.auraInstanceID] = v
+                auras.debuffs[v.auraInstanceID] = v
             end
         end
     end
     if info.updatedAuraInstanceIDs then
         for _, v in pairs(info.updatedAuraInstanceIDs) do
-            local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, v)
+            local aura = GetAuraDataByAuraInstanceID(unit, v)
             if aura then
-                if state.auras.buffs[aura.auraInstanceID] then
-                    state.auras.buffs[aura.auraInstanceID] = aura
-                elseif state.auras.debuffs[aura.auraInstanceID] then
-                    state.auras.debuffs[aura.auraInstanceID] = aura
+                if auras.buffs[aura.auraInstanceID] then
+                    auras.buffs[aura.auraInstanceID] = aura
+                elseif auras.debuffs[aura.auraInstanceID] then
+                    auras.debuffs[aura.auraInstanceID] = aura
                 end
             end
         end
     end
     if info.removedAuraInstanceIDs then
         for _, v in pairs(info.removedAuraInstanceIDs) do
-            if state.auras.buffs[v] then
-                state.auras.buffs[v] = nil
-            elseif state.auras.debuffs[v] then
-                state.auras.debuffs[v] = nil
+            if auras.buffs[v] then
+                auras.buffs[v] = nil
+            elseif auras.debuffs[v] then
+                auras.debuffs[v] = nil
+            end
+        end
+    end
+end
+
+function Fuyutsui:updateTargetAuraInfo(unit, info)
+    if info.isFullUpdate then
+        self:updateTargetFullAura()
+    end
+    if info.addedAuras then
+        for k, v in pairs(info.addedAuras) do
+            local isFiltered = IsAuraFilteredOutByInstanceID(unit, v.auraInstanceID, "HARMFUL|PLAYER")
+            if not isFiltered then
+                target.auras.debuffs[v.auraInstanceID] = v
+            end
+        end
+    end
+    if info.updatedAuraInstanceIDs then
+        for _, v in pairs(info.updatedAuraInstanceIDs) do
+            local aura = GetAuraDataByAuraInstanceID(unit, v)
+            if aura and target.auras.debuffs[v] then
+                target.auras.debuffs[v] = aura
+            end
+        end
+    end
+    if info.removedAuraInstanceIDs then
+        for _, v in pairs(info.removedAuraInstanceIDs) do
+            if target.auras.debuffs[v] then
+                target.auras.debuffs[v] = nil
             end
         end
     end
@@ -2013,7 +2060,7 @@ function Fuyutsui:updateGroupAuraInfo(unit, info)
         end
         if info.updatedAuraInstanceIDs then
             for _, v in pairs(info.updatedAuraInstanceIDs) do
-                local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, v)
+                local aura = GetAuraDataByAuraInstanceID(unit, v)
                 -- print("|cnYELLOW_FONT_COLOR:更新光环: |r", aura.auraInstanceID, aura.spellId, aura.name)
                 if aura and not isSec(aura.spellId) and aura.sourceUnit == "player" then
                     obj.aura[v] = aura
@@ -2028,9 +2075,9 @@ function Fuyutsui:updateGroupAuraInfo(unit, info)
         end
         if blocks.groups then
             local index = blocks.groups.start + (obj.index - 1) * blocks.groups.num + blocks.groups.dispel
-            local auraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs(unit, "HARMFUL|RAID_PLAYER_DISPELLABLE", 1, 4)
+            local auraInstanceIDs = GetUnitAuraInstanceIDs(unit, "HARMFUL|RAID_PLAYER_DISPELLABLE", 1, 4)
             if auraInstanceIDs and #auraInstanceIDs > 0 then
-                local color = C_UnitAuras.GetAuraDispelTypeColor(unit, auraInstanceIDs[1], dispelCurve)
+                local color = GetAuraDispelTypeColor(unit, auraInstanceIDs[1], dispelCurve)
                 if color then
                     self:CreatTexture(index, color.b)
                 end
@@ -2043,7 +2090,9 @@ end
 
 function Fuyutsui:UNIT_AURA(_, unit, info)
     self:updateGroupAuraInfo(unit, info)
-    if unit == "player" then
+    if unit == "target" then
+        self:updateTargetAuraInfo(unit, info)
+    elseif unit == "player" then
         self:updatePlayerAuraInfo(unit, info)
         self:GetDefensiveAuraInstanceID(unit, info)
         self:updateMaelstromWeaponCount()
@@ -2088,7 +2137,7 @@ function Fuyutsui:OnUpdate(elapsed)
     self.timeElapsed = self.timeElapsed + elapsed
     if self.timeElapsed > 0.2 then
         self:GetDefensiveAuraDuration()
-        self:UpdatePlayerAuraIcons(state.auras)
+        self:UpdateAuraIcons(state.auras.buffs, target.auras.debuffs)
         self:updateSpellCooldown()
         self:OnUpdateUnitAura()
         self:updateAuraBlocks()
