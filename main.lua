@@ -114,6 +114,11 @@ local function printSuccSpell(spellID)
     succIndex = succIndex + 1
 end
 
+local function printSuccSpell2(spellID)
+    local spellName = C_Spell.GetSpellName(spellID)
+    print("[] = { type = \"spell\", spellId = " .. spellID .. ", name = \"" .. spellName .. "\" },")
+end
+
 local function getSpellChargesInfo()
     local charges = C_Spell.GetSpellCharges(1247378)
     for k, v in pairs(charges) do
@@ -1657,6 +1662,7 @@ function Fuyutsui:UNIT_SPELLCAST_SUCCEEDED(_, unitTarget, castGUID, spellID, cas
     if unitTarget ~= "player" or isSec(spellID) then return end
     self:updateDrinkStatus(spellID)
     -- printSuccSpell(spellID)
+    -- printSuccSpell2(spellID)
     self:updateFailedSpellBySuccess(spellID)
     self:updateAuraBySuccess(spellID, castBarID)
     if spellID == 384255 then
@@ -1935,7 +1941,7 @@ function Fuyutsui:updatePlayerAuraInfo(unit, info)
     end
     if info.addedAuras then
         for k, v in pairs(info.addedAuras) do
-            -- print("|cnGREEN_FONT_COLOR:新增光环: |r", v.spellId, C_Spell.GetSpellLink(v.spellId))
+            print("|cnGREEN_FONT_COLOR:新增光环: |r", v.spellId, C_Spell.GetSpellLink(v.spellId))
             if v.isHelpful then
                 state.auras.buffs[v.auraInstanceID] = v
             elseif v.isHarmful then

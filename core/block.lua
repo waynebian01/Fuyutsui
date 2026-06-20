@@ -185,16 +185,25 @@ end
 -- ================================================================
 --                     玩家光环图标（BAR_CONFIG 下方）
 -- ================================================================
-local AURA_ICON_SIZE = 20
+local AURA_ICON_SIZE = 25
 local AURA_WHITE_BORDER_WIDTH = 2
 local AURA_BORDER_WIDTH = 2
 local AURA_MARKER_WIDTH = 2
+local AURA_ICON_SPACING = 1
+local AURA_APP_BAR_MAX = 20
+local AURA_APP_BAR_HEIGHT = 2
+local AURA_WHITE_FRAME_SIZE = AURA_ICON_SIZE
+local AURA_APP_BAR_WIDTH = AURA_WHITE_FRAME_SIZE + 1
+local AURA_APP_BAR_BG_EXTRA_RIGHT = 1
+local AURA_APP_BAR_BG_WIDTH = AURA_APP_BAR_WIDTH + AURA_APP_BAR_BG_EXTRA_RIGHT
 local AURA_SLOT_SIZE = AURA_ICON_SIZE + AURA_WHITE_BORDER_WIDTH * 2 + AURA_BORDER_WIDTH * 2
-local AURA_ROW_HEIGHT = AURA_SLOT_SIZE
+local AURA_SLOT_PITCH = AURA_SLOT_SIZE + AURA_ICON_SPACING
+local AURA_APP_BAR_BG_SEG_WIDTH = AURA_APP_BAR_BG_WIDTH / AURA_APP_BAR_MAX
+local AURA_ROW_HEIGHT = AURA_SLOT_SIZE + AURA_APP_BAR_HEIGHT
 local auraDurationCurve = Fuyutsui:creatColorCurve(255, 255)
 
 local auraIconBars = CreateFrame("Frame", "FuyutsuiAuraIcons", UIParent)
-auraIconBars:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 1, BAR_CONFIG.heightOffset - 4)
+auraIconBars:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, BAR_CONFIG.heightOffset - 4)
 auraIconBars:SetSize(screenWidth, AURA_ROW_HEIGHT * 2)
 auraIconBars:SetFrameStrata("TOOLTIP")
 auraIconBars:SetFrameLevel(1)
@@ -221,7 +230,7 @@ local function updateRowMarkers(startMarker, endMarker, count, rowOffset)
 
     endMarker:ClearAllPoints()
     endMarker:SetPoint("TOPLEFT", auraIconBars, "TOPLEFT",
-        AURA_MARKER_WIDTH + count * AURA_SLOT_SIZE, rowOffset)
+        AURA_MARKER_WIDTH + count * AURA_SLOT_SIZE + math.max(0, count - 1) * AURA_ICON_SPACING, rowOffset)
     endMarker:Show()
 end
 
@@ -291,6 +300,29 @@ local function createAuraIconSlot(parent)
     slot.whiteRight:SetPoint("BOTTOMLEFT", slot.icon, "BOTTOMRIGHT", 0, 0)
     slot.whiteRight:SetColorTexture(1, 1, 1, 1)
 
+    slot.appBarFrame = CreateFrame("Frame", nil, slot)
+    slot.appBarFrame:SetSize(AURA_APP_BAR_BG_WIDTH, AURA_APP_BAR_HEIGHT)
+    slot.appBarFrame:SetPoint("TOP", slot.whiteBottom, "BOTTOM", 0, 0)
+    slot.appBarFrame:SetFrameLevel(20)
+
+    slot.appBarBg = {}
+    for segIndex = 1, AURA_APP_BAR_MAX do
+        local tex = slot.appBarFrame:CreateTexture(nil, "OVERLAY")
+        tex:SetSize(AURA_APP_BAR_BG_SEG_WIDTH, AURA_APP_BAR_HEIGHT)
+        tex:SetPoint("TOPLEFT", slot.appBarFrame, "TOPLEFT", (segIndex - 1) * AURA_APP_BAR_BG_SEG_WIDTH, 0)
+        slot.appBarBg[segIndex] = tex
+    end
+
+    slot.appBar = CreateFrame("StatusBar", nil, slot.appBarFrame)
+    slot.appBar:SetSize(AURA_APP_BAR_WIDTH, AURA_APP_BAR_HEIGHT)
+    slot.appBar:SetPoint("TOPLEFT", slot.appBarFrame, "TOPLEFT", 0, 0)
+    slot.appBar:SetFrameLevel(21)
+    slot.appBar:SetStatusBarTexture("Interface\\ChatFrame\\ChatFrameBackground")
+    slot.appBar:GetStatusBarTexture():SetDrawLayer("OVERLAY")
+    slot.appBar:SetStatusBarColor(1, 1, 1, 1)
+    slot.appBar:SetMinMaxValues(0, AURA_APP_BAR_MAX)
+    slot.appBar:SetValue(0)
+
     return slot
 end
 
@@ -299,6 +331,12 @@ local function setSlotBorderColor(slot, r, g, b)
     slot.borderBottom:SetColorTexture(r, g, b, 1)
     slot.borderLeft:SetColorTexture(r, g, b, 1)
     slot.borderRight:SetColorTexture(r, g, b, 1)
+end
+
+local function setSlotAppBarBgColor(slot, r, g)
+    for segIndex = 1, AURA_APP_BAR_MAX do
+        slot.appBarBg[segIndex]:SetColorTexture(r, g, segIndex / 255, 1)
+    end
 end
 
 local function collectAurasSorted(auraTable)
@@ -324,11 +362,13 @@ local function updateAuraIconRow(slots, auras, rowOffset, borderR)
         end
         slot:ClearAllPoints()
         slot:SetPoint("TOPLEFT", auraIconBars, "TOPLEFT",
-            AURA_MARKER_WIDTH + (slotIndex - 1) * AURA_SLOT_SIZE, rowOffset)
+            AURA_MARKER_WIDTH + (slotIndex - 1) * AURA_SLOT_PITCH, rowOffset)
         slot:Show()
 
         local b = getAuraRemainingB(aura.auraInstanceID)
-        setSlotBorderColor(slot, borderR, i / 255, b)
+        local borderG = i / 255
+        setSlotBorderColor(slot, borderR, borderG, b)
+        setSlotAppBarBgColor(slot, borderR, borderG)
 
         local icon = aura.icon
         if not icon and aura.spellId then
@@ -340,6 +380,9 @@ local function updateAuraIconRow(slots, auras, rowOffset, borderR)
         else
             slot.icon:Hide()
         end
+
+        local applications = aura.applications or 0
+        slot.appBar:SetValue(applications)
     end
     for i = slotIndex + 1, #slots do
         slots[i]:Hide()

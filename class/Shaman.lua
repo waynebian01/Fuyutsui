@@ -101,6 +101,19 @@ Fuyutsui.ClassBlocks = {
 
         [42] = { type = "block", name = "漩涡武器层数" },
 
+        [43] = { type = "spell", spellId = 187874, name = "毁灭闪电" },
+        [44] = { type = "spell", spellId = 60103, name = "熔岩猛击" },
+        [45] = { type = "spell", spellId = 17364, name = "风暴打击" },
+        [46] = { type = "spell", spellId = 470057, name = "流电炽焰" },
+        [47] = { type = "spell", spellId = 196884, name = "狂野扑击" },
+        [48] = { type = "spell", spellId = 108271, name = "星界转移" },
+
+        [49] = { type = "block", name = "爆发开关" },
+        [50] = { type = "block", name = "输出模式" },
+        [51] = { type = "block", name = "AOE开关" },
+        [52] = { type = "block", name = "爆发药水开关" },
+        [53] = { type = "block", name = "目标距离" },
+        [54] = { type = "block", name = "延迟" },
     },
     [3] = {
 

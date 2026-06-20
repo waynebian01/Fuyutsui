@@ -785,6 +785,18 @@ local auras = {
             updateAuras = nil,
             removeAuras = nil,
         },
+        ["升腾 - 增强"] = {
+            name = "升腾",
+            spellId = 114051,
+            remaining = 0,
+            duration = 6,
+            expirationTime = nil,
+            addAuras = {
+                [114052] = { event = e["法术冷却"] },
+            },
+            updateAuras = nil,
+            removeAuras = nil,
+        },
         ["倾盆大雨"] = {
             name = "倾盆大雨",
             spellId = 462488,
@@ -800,6 +812,16 @@ local auras = {
             updateAuras = {
                 [462603] = { event = e["施法成功"], step = -1 }, -- 激流
             },
+            removeAuras = nil,
+        },
+        ["毁灭闪电"] = {
+            remaining = 0,
+            duration = 10,
+            expirationTime = nil,
+            addAuras = {
+                [1252415] = { event = e["法术冷却"] },
+            },
+            updateAuras = nil,
             removeAuras = nil,
         },
     },
