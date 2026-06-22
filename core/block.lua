@@ -1,11 +1,13 @@
 local addon, ns = ...
 local screenWidth = GetScreenWidth()
 
+local BLOCK_FIX_COUNT = 510
+local BLOCK_FIRST_SCHEME_MAX = 255
 local BLOCK_FIX_CONFIG = {
-    blockCount = 255,               -- 总色块数量
-    blockWidth = screenWidth / 255, -- 色块宽度
-    blockHeight = 1,                -- 色块高度
-    blockSpacing = 0,               -- 色块间距
+    blockCount = BLOCK_FIX_COUNT,               -- 总色块数量
+    blockWidth = screenWidth / BLOCK_FIX_COUNT, -- 色块宽度
+    blockHeight = 1,                            -- 色块高度
+    blockSpacing = 0,                           -- 色块间距
 }
 
 local BAR_CONFIG = {
@@ -29,7 +31,7 @@ colorBars:SetFrameStrata("TOOLTIP") -- 确保在最上层
 colorBars:SetFrameLevel(10000)
 -- colorBars:Raise()   -- Increases the frame's frame level above all other frames in its strata
 
--- 存储纹理的数组 (1 到 255)
+-- 存储纹理的数组 (1 到 510)
 local pixelTextures = {}
 
 -- 获取特定索引的纹理（如果不存在则创建）
@@ -46,10 +48,15 @@ local function creatTextureByIndex(i)
 end
 
 -- 更新或创建静态色块 (按索引)
+-- 索引 1..255: (0, i/255, b, 1)；索引 256..510: (1/255, i/256, b, 1)
 function Fuyutsui:CreatTexture(i, b)
     local tex = creatTextureByIndex(i)
     if tex then
-        tex:SetColorTexture(0, i / 255, b, 1)
+        if i > BLOCK_FIRST_SCHEME_MAX then
+            tex:SetColorTexture(1 / 255, (i - BLOCK_FIRST_SCHEME_MAX) / 255, b, 1)
+        else
+            tex:SetColorTexture(0, i / 255, b, 1)
+        end
     end
 end
 
@@ -186,26 +193,25 @@ end
 -- ================================================================
 --                     玩家光环图标
 -- ================================================================
-local AURA_LAYER_PADDING = 4                                                   -- 尺寸递增
-local AURA_ICON_SIZE = 25                                                      -- 图标尺寸
-local AURA_WHITE_BLOCK_SIZE = AURA_ICON_SIZE + 3                               -- 白底尺寸
-local AURA_COOLDOWN_BLOCK_SIZE = AURA_WHITE_BLOCK_SIZE + 4                     -- 冷却尺寸
-local AURA_MARKER_WIDTH = 2                                                    -- 标记宽度
-local AURA_ICON_SPACING = 0                                                    -- 图标间距
-local AURA_APP_BAR_MAX = 20                                                    -- 光环层数条 最大值
-local AURA_APP_BAR_HEIGHT = 2                                                  -- 光环层数条 高度
-local AURA_WHITE_FRAME_SIZE = AURA_ICON_SIZE                                   -- 白底尺寸
-local AURA_APP_BAR_WIDTH = AURA_WHITE_FRAME_SIZE + 1                           -- 光环层数条 宽度
-local AURA_APP_BAR_BG_EXTRA_RIGHT = 1                                          -- 光环层数条 背景额外宽度
-local AURA_APP_BAR_BG_WIDTH = AURA_APP_BAR_WIDTH + AURA_APP_BAR_BG_EXTRA_RIGHT -- 光环层数条 背景宽度
-local AURA_SLOT_SIZE = AURA_COOLDOWN_BLOCK_SIZE                                -- 槽位尺寸
-local AURA_SLOT_PITCH = AURA_SLOT_SIZE + AURA_ICON_SPACING                     -- 槽位间距
-local AURA_APP_BAR_BG_SEG_WIDTH = AURA_APP_BAR_BG_WIDTH / AURA_APP_BAR_MAX     -- 光环层数条 背景段宽度
-local AURA_ROW_HEIGHT = AURA_SLOT_SIZE + AURA_APP_BAR_HEIGHT                   -- 行高
-local AURA_ROW_SPACING = 4                                                     -- 两行之间的额外间距
-local auraDurationCurve = Fuyutsui:creatColorCurve(255, 255)                   -- 光环持续时间曲线
+local AURA_LAYER_PADDING = 4                                                    -- 尺寸递增
+local AURA_ICON_SIZE = 22                                                       -- 图标尺寸
+local AURA_WHITE_BLOCK_SIZE = AURA_ICON_SIZE + 3                                -- 白底尺寸
+local AURA_COOLDOWN_BLOCK_SIZE = AURA_WHITE_BLOCK_SIZE + 4                      -- 冷却尺寸
+local AURA_MARKER_WIDTH = 2                                                     -- 标记宽度
+local AURA_ICON_SPACING = 0                                                     -- 图标间距
+local AURA_APP_BAR_MAX = 20                                                     -- 光环层数条 最大值 (0-20)
+local AURA_APP_BAR_BG_COUNT = AURA_APP_BAR_MAX + 1                              -- 背景色块数量 (0-20 共 21 格)
+local AURA_APP_BAR_HEIGHT = 2                                                   -- 光环层数条 高度
+local AURA_APP_BAR_WIDTH = 20                                                   -- StatusBar 宽度 (固定 20px)
+local AURA_APP_BAR_BG_WIDTH = 21                                                -- 背景宽度 (固定 21px)
+local AURA_SLOT_SIZE = AURA_COOLDOWN_BLOCK_SIZE                                 -- 槽位尺寸
+local AURA_SLOT_PITCH = AURA_SLOT_SIZE + AURA_ICON_SPACING                      -- 槽位间距
+local AURA_APP_BAR_BG_SEG_WIDTH = AURA_APP_BAR_BG_WIDTH / AURA_APP_BAR_BG_COUNT -- 光环层数条 背景段宽度
+local AURA_ROW_HEIGHT = AURA_SLOT_SIZE + AURA_APP_BAR_HEIGHT                    -- 行高
+local AURA_ROW_SPACING = 4                                                      -- 两行之间的额外间距
+local auraDurationCurve = Fuyutsui:creatColorCurve(255, 255)                    -- 光环持续时间曲线
 
-local auraIconBars = CreateFrame("Frame", "FuyutsuiAuraIcons", UIParent)       -- 光环图标容器
+local auraIconBars = CreateFrame("Frame", "FuyutsuiAuraIcons", UIParent)        -- 光环图标容器
 auraIconBars:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, BAR_CONFIG.heightOffset - 4)
 auraIconBars:SetSize(screenWidth, AURA_ROW_HEIGHT * 2 + AURA_ROW_SPACING)
 auraIconBars:SetFrameStrata("TOOLTIP")
@@ -317,10 +323,10 @@ local function createAuraIconSlot(parent)
     slot.appBarFrame:SetFrameLevel(20)
 
     slot.appBarBg = {}
-    for segIndex = 1, AURA_APP_BAR_MAX do
+    for segIndex = 0, AURA_APP_BAR_MAX do
         local tex = slot.appBarFrame:CreateTexture(nil, "OVERLAY")
         tex:SetSize(AURA_APP_BAR_BG_SEG_WIDTH, AURA_APP_BAR_HEIGHT)
-        tex:SetPoint("TOPLEFT", slot.appBarFrame, "TOPLEFT", (segIndex - 1) * AURA_APP_BAR_BG_SEG_WIDTH, 0)
+        tex:SetPoint("TOPLEFT", slot.appBarFrame, "TOPLEFT", segIndex * AURA_APP_BAR_BG_SEG_WIDTH, 0)
         slot.appBarBg[segIndex] = tex
     end
 
@@ -342,7 +348,7 @@ local function setSlotCooldownColor(slot, r, g, b)
 end
 
 local function setSlotAppBarBgColor(slot, r, g)
-    for segIndex = 1, AURA_APP_BAR_MAX do
+    for segIndex = 0, AURA_APP_BAR_MAX do
         slot.appBarBg[segIndex]:SetColorTexture(r, g, segIndex / 255, 1)
     end
 end
@@ -369,8 +375,8 @@ local function updateAuraIconRow(slots, auras, rowOffset, borderR, unit)
             slots[slotIndex] = slot
         end
         slot:ClearAllPoints()
-        slot:SetPoint("TOPLEFT", auraIconBars, "TOPLEFT",
-            AURA_MARKER_WIDTH + (slotIndex - 1) * AURA_SLOT_PITCH, rowOffset)
+        slot:SetPoint("TOPLEFT", auraIconBars, "TOPLEFT", AURA_MARKER_WIDTH + (slotIndex - 1) * AURA_SLOT_PITCH,
+            rowOffset)
         slot:Show()
 
         local b = getAuraRemainingB(unit, aura.auraInstanceID)
